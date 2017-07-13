@@ -1,1 +1,7 @@
-﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.Cpp.Platform.targets(57,5): error MSB8020: The build tools for v141 (Platform Toolset = 'v141') cannot be found. To build using the v141 build tools, please install v141 build tools.  Alternatively, you may upgrade to the current Visual Studio tools by selecting the Project menu or right-click the solution, and then selecting "Retarget solution".
+﻿  window.cpp
+  main.cpp
+  Generating Code...
+  LINK : C:\Users\Gus\Documents\Projects\Neon-Engine\Debug\NeonEngine.exe not found or not built by the last incremental link; performing full link
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  NeonEngine.vcxproj -> C:\Users\Gus\Documents\Projects\Neon-Engine\Debug\NeonEngine.exe
+  NeonEngine.vcxproj -> C:\Users\Gus\Documents\Projects\Neon-Engine\Debug\NeonEngine.pdb (Partial PDB)

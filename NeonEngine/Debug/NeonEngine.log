@@ -1,7 +1,0 @@
-﻿  window.cpp
-  main.cpp
-  Generating Code...
-  LINK : C:\Users\Gus\Documents\Projects\Neon-Engine\Debug\NeonEngine.exe not found or not built by the last incremental link; performing full link
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  NeonEngine.vcxproj -> C:\Users\Gus\Documents\Projects\Neon-Engine\Debug\NeonEngine.exe
-  NeonEngine.vcxproj -> C:\Users\Gus\Documents\Projects\Neon-Engine\Debug\NeonEngine.pdb (Partial PDB)

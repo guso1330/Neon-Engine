@@ -89,12 +89,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Gus\Documents\Projects\Neon-Engine\Dependencies\glew\include;C:\Users\Gus\Documents\Projects\Neon-Engine\Dependencies\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Gus\Documents\Projects\Neon-Engine\Dependencies\glad\include;C:\Users\Gus\Documents\Projects\Neon-Engine\Dependencies\glfw\include;C:\Users\Gus\Documents\Projects\Neon-Engine\Dependencies\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>C:\Users\Gus\Documents\Projects\Neon-Engine\Dependencies\glew\lib\Release\Win32;C:\Users\Gus\Documents\Projects\Neon-Engine\Dependencies\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -145,11 +145,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\app\window.cpp" />
+    <ClCompile Include="src\shaders\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app\window.h" />
+    <ClInclude Include="src\shaders\shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

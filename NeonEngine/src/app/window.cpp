@@ -1,6 +1,9 @@
 #include "window.h"
 
 namespace neon {
+
+	void windowResize(GLFWwindow *window, int width, int height);
+
 	Window::Window(unsigned int width, unsigned int height, bool fullscreen, const char* title) :
 		m_width(width),
 		m_height(height),
@@ -8,52 +11,79 @@ namespace neon {
 		m_title(title) {
 		if (!init()) {
 			std::cerr << "Error: window did not initialize" << std::endl;
+			glfwTerminate();
 		}
+	}
+
+	Window::~Window() {
+		glfwTerminate();
 	}
 
 	bool Window::init() {
-		glfwInit();
+		if (!glfwInit()) {
+			std::cerr << "Failed to initalize GLFW" << std::endl;
+			return false;
+		}
 
+		/* Setting meta data for the window properties */
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+		#ifdef __APPLE__ // handle mac compatibility
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		#endif
+		/* glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); */
 
-		GLFWwindow *window = glfwCreateWindow(m_width, m_height, "Neon Engine", nullptr, nullptr);
+		/* Create variable to store the window */
+		m_window = glfwCreateWindow(m_width, m_height, "Neon Engine", nullptr, nullptr);
 
-		int screenWidth, screenHeight;
-		// accurate value to the width of the screen relative to screen size
-		glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
-
-		if (window == nullptr) {
+		/* Check if the window has opened */
+		if (m_window == nullptr) {
 			std::cerr << "Failed to create GLFW window" << std::endl;
-			glfwTerminate();
-
-			return EXIT_FAILURE;
+			return false;
 		}
 
-		glfwMakeContextCurrent(window);
+		/* Set the newly created window to the current context */
+		glfwMakeContextCurrent(m_window);
+		glfwSetWindowSizeCallback(m_window, windowResize);
 
-		// Basically use GLEW the modern way
-		glewExperimental = GL_TRUE;
-		if (GLEW_OK != glewInit()) {
-			std::cerr << "Failed to initialize GLEW" << std::endl;
-
-			return EXIT_FAILURE;
+		/* Setting up glad and initializing it */
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		{
+			std::cerr << "Failed to initialize GLAD" << std::endl;
+			return false;
 		}
 
-		glViewport(0, 0, screenWidth, screenHeight);
-		while (!glfwWindowShouldClose(window)) {
-			glfwPollEvents();
+		/* Print Renderer and OpenGL info */
+		const GLubyte *renderer = glGetString(GL_RENDERER);
+		const GLubyte *version = glGetString(GL_VERSION);
+		std::cout << "Neon Engine - Version 0.1" << std::endl;
+		std::cout << "Renderer: " << renderer << std::endl;
+		std::cout << "OpenGL Version: " << version << std::endl;
 
-			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-
-			// NOTE: draw opengl stuff
-			glfwSwapBuffers(window);
-		}
-
-		glfwTerminate();
+		return true;
 	}
+
+	bool Window::closed() const {
+		return glfwWindowShouldClose(m_window) == 1;
+	}
+
+	void Window::update() {
+		glfwPollEvents();
+		glfwGetFramebufferSize(m_window, &m_width, &m_height);
+		glfwSwapBuffers(m_window);
+	}
+
+	void Window::clear() const {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	void Window::setClearColor(float r, float g, float b, float a) {
+		glClearColor(r, g, b, a);
+	}
+
+	void windowResize(GLFWwindow *window, int width, int height) {
+		glViewport(0, 0, width, height);
+	}
+
 }

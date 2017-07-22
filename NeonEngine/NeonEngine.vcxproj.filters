@@ -15,6 +15,7 @@
     <ClCompile Include="src\app\window.cpp">
       <Filter>src\app</Filter>
     </ClCompile>
+    <ClCompile Include="src\glad\glad.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app\window.h">

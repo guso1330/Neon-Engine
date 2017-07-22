@@ -16,10 +16,16 @@
       <Filter>src\app</Filter>
     </ClCompile>
     <ClCompile Include="src\glad\glad.c" />
+    <ClCompile Include="src\shaders\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app\window.h">
       <Filter>src\app</Filter>
     </ClInclude>
+    <ClInclude Include="src\shaders\shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\res\shaders\basicShader.vs" />
+    <None Include="src\res\shaders\basicShader.fs" />
   </ItemGroup>
 </Project>

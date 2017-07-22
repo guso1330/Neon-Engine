@@ -1,4 +1,5 @@
 #include "app/window.h"
+#include "shaders/shader.h"
 #include <iostream>
 
 using namespace neon;
@@ -6,28 +7,15 @@ using namespace neon;
 const GLint WIDTH = 1280,
 			HEIGHT = 720;
 
-const char *vertexShaderSource = "#version 330 core\n"
-	"layout (location = 0) in vec3 aPos;\n"
-	"void main()\n"
-	"{\n"
-	"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-	"}\0";
-const char *fragmentShaderSource = "#version 330 core\n"
-	"out vec4 FragColor;\n"
-	"void main()\n"
-	"{\n"
-	"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-	"}\n\0";
-
 int main(int argc, char** argv) {
 
 	Window window(WIDTH, HEIGHT, false, "Neon Engine");
 	window.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+	Shader *vShader = new Shader("./res/shaders/basicShader.vs", GL_VERTEX_SHADER);
+	Shader *fShader = new Shader("./res/shaders/basicShader.vs", GL_FRAGMENT_SHADER);
 
-
-	/*
-	// build and compile our shader program
+	/*// build and compile our shader program
 	// ------------------------------------
 	// vertex shader
 	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -109,14 +97,15 @@ int main(int argc, char** argv) {
 	// uncomment this call to draw in wireframe polygons.
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+	// draw our first triangle
+	// glUseProgram(shaderProgram);
+	glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+							//glDrawArrays(GL_TRIANGLES, 0, 6);
+
 	while (!window.closed()) {
 		/* std::cout << window.getWidth() << ", " << window.getHeight() << std::endl; */
 		window.clear();
 
-		// draw our first triangle
-		glUseProgram(shaderProgram);
-		glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-								//glDrawArrays(GL_TRIANGLES, 0, 6);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		// glBindVertexArray(0); // no need to unbind it every time 
 

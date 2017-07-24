@@ -12,48 +12,27 @@ int main(int argc, char** argv) {
 	Window window(WIDTH, HEIGHT, false, "Neon Engine");
 	window.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	Shader *vShader = new Shader("./res/shaders/basicShader.vs", GL_VERTEX_SHADER);
-	Shader *fShader = new Shader("./res/shaders/basicShader.vs", GL_FRAGMENT_SHADER);
+	Shader *vShader = new Shader("src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
+	Shader *fShader = new Shader("src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
 
-	/*// build and compile our shader program
-	// ------------------------------------
-	// vertex shader
-	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-	// check for shader compile errors
-	int success;
-	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	GLuint program = glCreateProgram();
+	glAttachShader(program, vShader->getShaderID());
+	glAttachShader(program, fShader->getShaderID());
+	glLinkProgram(program);
+
+	GLint linkStatus;
+	glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+	if (linkStatus != GL_TRUE) {
+		GLint logLength;
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLength);
+
+		GLchar *linkerLog = new GLchar[logLength + 1];
+		glGetProgramInfoLog(program, logLength + 1, NULL, linkerLog);
+
+		std::cerr << "Program failed to link: " << linkerLog << std::endl;
+		system("PAUSE");
+		return EXIT_FAILURE;
 	}
-	// fragment shader
-	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-	// check for shader compile errors
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-	// link shaders
-	int shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-	// check for linking errors
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-	}
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);*/
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -97,15 +76,14 @@ int main(int argc, char** argv) {
 	// uncomment this call to draw in wireframe polygons.
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	// draw our first triangle
-	// glUseProgram(shaderProgram);
-	glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-							//glDrawArrays(GL_TRIANGLES, 0, 6);
-
 	while (!window.closed()) {
-		/* std::cout << window.getWidth() << ", " << window.getHeight() << std::endl; */
+		std::cout << window.getWidth() << ", " << window.getHeight() << std::endl;
 		window.clear();
 
+		glUseProgram(program);
+		// draw our first triangle
+		glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+								//glDrawArrays(GL_TRIANGLES, 0, 6);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		// glBindVertexArray(0); // no need to unbind it every time 
 

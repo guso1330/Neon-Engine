@@ -17,15 +17,17 @@
     </ClCompile>
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\shaders\shader.cpp" />
+    <ClCompile Include="src\utils\fileUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app\window.h">
       <Filter>src\app</Filter>
     </ClInclude>
     <ClInclude Include="src\shaders\shader.h" />
+    <ClInclude Include="src\utils\fileUtils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\res\shaders\basicShader.vs" />
-    <None Include="src\res\shaders\basicShader.fs" />
+    <None Include="src\res\shaders\basicVShader.glsl" />
+    <None Include="src\res\shaders\basicFShader.glsl" />
   </ItemGroup>
 </Project>

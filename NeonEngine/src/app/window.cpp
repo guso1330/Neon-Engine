@@ -28,10 +28,11 @@ namespace neon {
 		/* Setting meta data for the window properties */
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        #ifdef __APPLE__ // handle mac compatibility
+            std::cout << "Setting MacOS forward compatibility" << std::endl;
+            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        #endif
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		#ifdef __APPLE__ // handle mac compatibility
-			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-		#endif
 		/* glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); */
 
 		/* Create variable to store the window */

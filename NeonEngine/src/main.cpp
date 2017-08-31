@@ -4,16 +4,16 @@
 
 using namespace neon;
 
-const GLint WIDTH = 1280,
-			HEIGHT = 720;
+const GLint WIDTH = 800,
+			HEIGHT = 400;
 
 int main(int argc, char** argv) {
 
 	Window window(WIDTH, HEIGHT, false, "Neon Engine");
 	window.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	Shader *vShader = new Shader("src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
-	Shader *fShader = new Shader("src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
+	Shader *vShader = new Shader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
+	Shader *fShader = new Shader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
 
 	GLuint program = glCreateProgram();
 	glAttachShader(program, vShader->getShaderID());
@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	while (!window.closed()) {
-		std::cout << window.getWidth() << ", " << window.getHeight() << std::endl;
+		// std::cout << window.getWidth() << ", " << window.getHeight() << std::endl;
 		window.clear();
 
 		glUseProgram(program);

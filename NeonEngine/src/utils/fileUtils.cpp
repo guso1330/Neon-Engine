@@ -14,7 +14,6 @@ namespace neon {
 			fseek(file, 0, SEEK_SET);
 			fread(data, 1, length, file);
 			fclose(file);
-
 			std::string result(data);
 			delete[] data;
 			return result;

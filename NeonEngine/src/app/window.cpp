@@ -16,6 +16,7 @@ namespace neon {
 	}
 
 	Window::~Window() {
+		glfwDestroyWindow(m_window);
 		glfwTerminate();
 	}
 
@@ -33,7 +34,6 @@ namespace neon {
             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         #endif
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		/* glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); */
 
 		/* Create variable to store the window */
 		m_window = glfwCreateWindow(m_width, m_height, "Neon Engine", nullptr, nullptr);
@@ -49,8 +49,7 @@ namespace neon {
 		glfwSetWindowSizeCallback(m_window, windowResize);
 
 		/* Setting up glad and initializing it */
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-		{
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 			std::cerr << "Failed to initialize GLAD" << std::endl;
 			return false;
 		}
@@ -77,6 +76,7 @@ namespace neon {
 
 	void Window::clear() const {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glFlush();
 	}
 
 	void Window::setClearColor(float r, float g, float b, float a) {

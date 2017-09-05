@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <iostream>
 
-#include "../utils/fileUtils.h"
+#include "../utils/file_utils/fileUtils.h"
 
 namespace neon {
 

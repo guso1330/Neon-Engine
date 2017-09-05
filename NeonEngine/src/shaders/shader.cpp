@@ -11,7 +11,6 @@ namespace neon {
 	Shader::~Shader() { glDeleteShader(m_shaderID); }
 
 	void Shader::initShader() {
-
 		std::string str_source = read_file(m_filename);
 		m_source = str_source.c_str();
 		if (m_source == NULL) {

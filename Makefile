@@ -31,8 +31,8 @@ all: main
 main: $(SRC)/main.cpp glad.o window.o shader.o fileUtils.o
 	$(CC) $(SRC)/main.cpp glad.o window.o shader.o fileUtils.o $(OPTIONS) $(LDLIBS) -o main
 
-fileUtils.o: $(SRC)/utils/fileUtils.h $(SRC)/utils/fileUtils.cpp
-	$(CC) $(SRC)/utils/fileUtils.cpp -c $(OPTIONS)
+fileUtils.o: $(SRC)/utils/file_utils/fileUtils.h $(SRC)/utils/file_utils/fileUtils.cpp
+	$(CC) $(SRC)/utils/file_utils/fileUtils.cpp -c $(OPTIONS)
 
 shader.o: $(SRC)/shaders/shader.h $(SRC)/shaders/shader.cpp glad.o
 	$(CC) $(SRC)/shaders/shader.cpp -c $(OPTIONS)

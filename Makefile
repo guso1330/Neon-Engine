@@ -1,9 +1,16 @@
-# Include Variables
+#
+# Include/Lib Variables
+#
 LOCAL_INC = /usr/local/include
 LOCAL_LIB = /usr/local/lib
 SRC = ./NeonEngine/src
+SRC_CPP := $(shell find $(SRC) ! -path */tests/* ! -name "main.cpp" -name "*.cpp")
+TEST_CPP := $(wildcard $(SRC)/tests/*.cpp)
+OBJ_FILES := $(patsubst %.cpp, %.o, $(notdir $(SRC_CPP:.cpp=.o)))
 
+#
 # Dependencies Directories
+#
 GLFW = ./Dependencies/glfw
 GLFW_INC = $(GLFW)/include
 GLFW_LIB = $(GLFW)/lib-mingw
@@ -13,7 +20,9 @@ GLAD_INC = $(GLAD)/include
 
 GLM = ./Dependencies/glm
 
+#
 # Build Variables
+#
 CC = g++
 CC_FLAGS = -Wall
 
@@ -27,9 +36,18 @@ OPTIONS= $(CC_FLAGS) $(INCS)
 # The first item in the file is what will be made if you just type
 # make (i.e. with no arguments).
 all: main
+
+# main: $(SRC)/main.cpp glad.o $(OBJ_FILES)
+# 	$(CC) $(SRC)/main.cpp glad.o $(OBJ_FILES) $(OPTIONS) $(LDLIBS) -o $@ $^
+
+# obj/%.o: $(SRC)/%.cpp
+# 	$(CC) $(OPTIONS) -c -o $@ $<
 	
-main: $(SRC)/main.cpp glad.o window.o shader.o fileUtils.o
-	$(CC) $(SRC)/main.cpp glad.o window.o shader.o fileUtils.o $(OPTIONS) $(LDLIBS) -o main
+main: $(SRC)/main.cpp test.o glad.o $(OBJ_FILES)
+	$(CC) $(SRC)/main.cpp glad.o $(OBJ_FILES) $(OPTIONS) $(LDLIBS) -o main
+
+test.o: $(TEST_CPP)
+	$(CC) $(TEST_CPP) -c $(OPTIONS)
 
 fileUtils.o: $(SRC)/utils/file_utils/fileUtils.h $(SRC)/utils/file_utils/fileUtils.cpp
 	$(CC) $(SRC)/utils/file_utils/fileUtils.cpp -c $(OPTIONS)
@@ -48,3 +66,5 @@ clean:
 	rm -f main *.o
 	
 .PHONY: all clean
+
+print-%  : ; @echo $* = $($*)

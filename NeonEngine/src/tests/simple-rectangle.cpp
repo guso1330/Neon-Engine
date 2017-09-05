@@ -7,8 +7,8 @@ const GLint WIDTH = 800,
 			HEIGHT = 400;
 
 int run_simple_rectangle() {
-	Window window(WIDTH, HEIGHT, false, "Simple Rectangle Test");
-	window.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	Window *window = new Window(WIDTH, HEIGHT, false, "Simple Rectangle Test");
+	window->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	Shader *vShader = new Shader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
 	Shader *fShader = new Shader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
@@ -67,10 +67,10 @@ int run_simple_rectangle() {
 	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
 	glEnableVertexAttribArray(loc);
 
-	while (!window.closed()) {
-		window.clear();
+	while (!window->closed()) {
+		window->clear();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		window.update();
+		window->update();
 	}
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);

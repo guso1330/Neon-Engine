@@ -36,7 +36,7 @@ namespace neon {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		/* Create variable to store the window */
-		m_window = glfwCreateWindow(m_width, m_height, "Neon Engine", nullptr, nullptr);
+		m_window = glfwCreateWindow(m_width, m_height, m_title, nullptr, nullptr);
 
 		/* Check if the window has opened */
 		if (m_window == nullptr) {

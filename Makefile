@@ -58,6 +58,15 @@ shader.o: $(SRC)/shaders/shader.h $(SRC)/shaders/shader.cpp glad.o
 window.o: $(SRC)/app/window.h $(SRC)/app/window.cpp glad.o
 	$(CC) $(SRC)/app/window.cpp -c $(OPTIONS)
 
+indexBuffer.o: $(SRC)/graphics/buffers/indexBuffer.h $(SRC)/graphics/buffers/indexBuffer.cpp glad.o
+	$(CC) $(SRC)/graphics/buffers/indexBuffer.cpp -c $(OPTIONS)
+
+vertexArray.o: $(SRC)/graphics/buffers/vertexArray.h $(SRC)/graphics/buffers/vertexArray.cpp glad.o
+	$(CC) $(SRC)/graphics/buffers/vertexArray.cpp -c $(OPTIONS)
+
+vertexBuffer.o: $(SRC)/graphics/buffers/vertexBuffer.h $(SRC)/graphics/buffers/vertexBuffer.cpp glad.o
+	$(CC) $(SRC)/graphics/buffers/vertexBuffer.cpp -c $(OPTIONS)
+
 glad.o: $(GLAD_INC)/glad/glad.h $(SRC)/glad/glad.c
 	$(CC) $(SRC)/glad/glad.c -c $(OPTIONS)
 

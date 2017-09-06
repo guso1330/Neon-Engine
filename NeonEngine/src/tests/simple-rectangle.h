@@ -1,5 +1,8 @@
 #include "../app/window.h"
 #include "../shaders/shader.h"
+#include "../graphics/buffers/vertexBuffer.h"
+#include "../graphics/buffers/indexBuffer.h"
+#include "../graphics/buffers/vertexArray.h"
 
 using namespace neon;
 
@@ -36,45 +39,57 @@ int run_simple_rectangle() {
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
-	float vertices[] = {
+	GLfloat vertices[] = {
 		 0.5f,  0.5f, 0.0f, // top right
 		 0.5f, -0.5f, 0.0f, // bottom right
 		-0.5f, -0.5f, 0.0f, // bottom left
 		-0.5f,  0.5f, 0.0f  // top left
 	};
-	unsigned int indices[] = {  // note that we start from 0!
+	GLushort indices[] = {  // note that we start from 0!
 		0, 1, 3, // first Triangle
 		1, 2, 3  // second Triangle
 	};
 
-	unsigned int VBO, VAO, EBO;
+	VertexArray VAO;
+	VertexBuffer *VBO = new VertexBuffer(vertices, 4*3, 3);
+	IndexBuffer EBO(indices, 6);
+	
+	VAO.addBuffer(VBO, 0);
 
-	// VAO
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	// unsigned int VBO, VAO, EBO;
+	
+	// // VAO
+	// glGenVertexArrays(1, &VAO);
+	// glBindVertexArray(VAO);
 
-	// VBO
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	// // VBO
+	// glGenBuffers(1, &VBO);
+	// glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	// glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	// EBO
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	// // EBO
+	// glGenBuffers(1, &EBO);
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	GLuint loc = glGetAttribLocation(program, "vPosition");
-	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
-	glEnableVertexAttribArray(loc);
+	// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), (void*)0);
+	// glEnableVertexAttribArray(0);
+	// // GLuint loc = glGetAttribLocation(program, "vPosition");
+	// // glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+	// // glEnableVertexAttribArray(loc);
 
 	while (!window->closed()) {
 		window->clear();
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		VAO.bind();
+		EBO.bind();
+		glDrawElements(GL_TRIANGLES, EBO.getCount(), GL_UNSIGNED_SHORT, 0);
+		EBO.unbind();
+		VAO.unbind();
 		window->update();
 	}
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
+	// glDeleteVertexArrays(1, &VAO);
+	// glDeleteBuffers(1, &VBO);
+	// glDeleteBuffers(1, &EBO);
 	glDeleteProgram(program);
 
 	return EXIT_SUCCESS;

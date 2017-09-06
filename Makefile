@@ -5,7 +5,7 @@ LOCAL_INC = /usr/local/include
 LOCAL_LIB = /usr/local/lib
 SRC = ./NeonEngine/src
 SRC_CPP := $(shell find $(SRC) ! -path */tests/* ! -name "main.cpp" -name "*.cpp")
-TEST_CPP := $(wildcard $(SRC)/tests/*.cpp)
+TEST_H := $(wildcard $(SRC)/tests/*.h)
 OBJ_FILES := $(patsubst %.cpp, %.o, $(notdir $(SRC_CPP:.cpp=.o)))
 
 #
@@ -46,8 +46,8 @@ all: main
 main: $(SRC)/main.cpp test.o glad.o $(OBJ_FILES)
 	$(CC) $(SRC)/main.cpp glad.o $(OBJ_FILES) $(OPTIONS) $(LDLIBS) -o main
 
-test.o: $(TEST_CPP)
-	$(CC) $(TEST_CPP) -c $(OPTIONS)
+test.o: $(TEST_H)
+	$(CC) $(TEST_H) -c $(OPTIONS)
 
 fileUtils.o: $(SRC)/utils/file_utils/fileUtils.h $(SRC)/utils/file_utils/fileUtils.cpp
 	$(CC) $(SRC)/utils/file_utils/fileUtils.cpp -c $(OPTIONS)

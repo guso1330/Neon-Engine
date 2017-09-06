@@ -1,4 +1,4 @@
-#include "./tests/simple-rectangle.cpp"
+#include "./tests/simple-rectangle.h"
 #include <iostream>
 
 int main(int argc, char** argv) {

@@ -7,6 +7,7 @@
 ## GUS' Custom ignores ##
 ##					   ##
 main
+*.gch
 *.o
 *.exe
 *.out

@@ -20,6 +20,8 @@ GLAD_INC = $(GLAD)/include
 
 GLM = ./Dependencies/glm
 
+TINYOBJLOADER = ./Dependencies/tinyobjloader
+
 #
 # Build Variables
 #
@@ -29,34 +31,49 @@ CC_FLAGS = -Wall
 GL_OPTIONS = -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo -lglfw3
 LDLIBS = -L/opt/X11/lib $(GL_OPTIONS) -L$(LOCAL_LIB) -L$(GLFW_LIB)
 
-INCS = -I/opt/X11/include -I$(LOCAL_INC) -I$(GLFW_INC) -I$(GLAD_INC) -I$(GLM)
+INCS = -I/opt/X11/include -I$(LOCAL_INC) -I$(GLFW_INC) -I$(GLAD_INC) -I$(GLM) -I$(TINYOBJLOADER)
 
 OPTIONS= $(CC_FLAGS) $(INCS)
 
 # The first item in the file is what will be made if you just type
 # make (i.e. with no arguments).
-all: main
-
 # main: $(SRC)/main.cpp glad.o $(OBJ_FILES)
 # 	$(CC) $(SRC)/main.cpp glad.o $(OBJ_FILES) $(OPTIONS) $(LDLIBS) -o $@ $^
-
 # obj/%.o: $(SRC)/%.cpp
 # 	$(CC) $(OPTIONS) -c -o $@ $<
-	
+all: main
+
 main: $(SRC)/main.cpp test.o glad.o $(OBJ_FILES)
 	$(CC) $(SRC)/main.cpp glad.o $(OBJ_FILES) $(OPTIONS) $(LDLIBS) -o main
 
 test.o: $(TEST_H)
 	$(CC) $(TEST_H) -c $(OPTIONS)
 
+#
+# Utils
+#
 fileUtils.o: $(SRC)/utils/file_utils/fileUtils.h $(SRC)/utils/file_utils/fileUtils.cpp
 	$(CC) $(SRC)/utils/file_utils/fileUtils.cpp -c $(OPTIONS)
 
-shader.o: $(SRC)/shaders/shader.h $(SRC)/shaders/shader.cpp glad.o
-	$(CC) $(SRC)/shaders/shader.cpp -c $(OPTIONS)
+objloader.o: $(SRC)/utils/obj_loader/objloader.h $(SRC)/utils/obj_loader/objloader.cpp $(TINYOBJLOADER)/tiny_obj_loader.h
+	$(CC) $(SRC)/utils/obj_loader/objloader.cpp -c $(OPTIONS)
 
+#
+# App
+#
 window.o: $(SRC)/app/window.h $(SRC)/app/window.cpp glad.o
 	$(CC) $(SRC)/app/window.cpp -c $(OPTIONS)
+
+#
+# Shaders
+#
+shader.o: $(SRC)/shaders/shader.h $(SRC)/shaders/shader.cpp glad.o
+	$(CC) $(SRC)/shaders/shader.cpp -c $(OPTIONS)
+#
+# Graphics
+#
+camera.o: $(SRC)/graphics/cameras/camera.h $(SRC)/graphics/cameras/camera.cpp glad.o
+	$(CC) $(SRC)/graphics/cameras/camera.cpp -c $(OPTIONS)
 
 indexBuffer.o: $(SRC)/graphics/buffers/indexBuffer.h $(SRC)/graphics/buffers/indexBuffer.cpp glad.o
 	$(CC) $(SRC)/graphics/buffers/indexBuffer.cpp -c $(OPTIONS)
@@ -66,7 +83,9 @@ vertexArray.o: $(SRC)/graphics/buffers/vertexArray.h $(SRC)/graphics/buffers/ver
 
 vertexBuffer.o: $(SRC)/graphics/buffers/vertexBuffer.h $(SRC)/graphics/buffers/vertexBuffer.cpp glad.o
 	$(CC) $(SRC)/graphics/buffers/vertexBuffer.cpp -c $(OPTIONS)
-
+#
+# GLAD
+#
 glad.o: $(GLAD_INC)/glad/glad.h $(SRC)/glad/glad.c
 	$(CC) $(SRC)/glad/glad.c -c $(OPTIONS)
 

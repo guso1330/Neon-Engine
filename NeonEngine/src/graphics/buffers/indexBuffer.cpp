@@ -11,6 +11,15 @@ IndexBuffer::IndexBuffer(GLushort* data, GLsizei count)
 	unbind();
 }
 
+IndexBuffer::IndexBuffer(std::vector<GLushort> &data) {
+	// Generate a new buffer
+	m_count = data.size();
+	glGenBuffers(1, &m_ibo);
+	bind();
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.size() * sizeof(GLushort), &data.front(), GL_STATIC_DRAW);
+	unbind();
+}
+
 void IndexBuffer::bind() const {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
 }

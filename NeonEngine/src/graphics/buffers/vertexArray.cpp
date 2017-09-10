@@ -24,8 +24,8 @@ void VertexArray::addBuffer(VertexBuffer *buffer, GLuint index) {
 	// m_buffers.push(buffer);
 	bind();
 	buffer->bind();
-	glVertexAttribPointer(index, buffer->getComponentCount(), GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(index);
+	glVertexAttribPointer(index, buffer->getComponentCount(), GL_FLOAT, GL_FALSE, 0, (void*)0);
 	buffer->unbind();
 	unbind();
 }

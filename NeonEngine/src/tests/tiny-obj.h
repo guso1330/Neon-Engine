@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
@@ -30,7 +31,7 @@ void printVectorUnint(const std::vector<GLuint> &v) {
 	}
 }
 
-int run_simple_rectangle() {
+int run_tiny_obj() {
 	//
 	// OPEN GL - Variables
 	//
@@ -47,13 +48,15 @@ int run_simple_rectangle() {
 	float FOV = 70.0f;
 	float NEAR = 0.1f;
 	float FAR = 1000.0f;
-	Camera camera(vec4(0.0f, 0.0f, -10.0f, 1.0f), FOV, ASPECT_RATIO, NEAR, FAR);
+	Camera camera(vec3(0.0f, 0.0f, 100.0f), FOV, ASPECT_RATIO, NEAR, FAR);
 
 	std::vector<vec3> VERTICES;
 	std::vector<GLuint> INDICES;
 	std::vector<vec2> UVS;
 	std::vector<vec3> NORMALS;
-	load_obj("./NeonEngine/src/res/models/cube.obj", VERTICES, INDICES, UVS, NORMALS);
+
+	tiny_obj_loader_load_obj("./NeonEngine/src/res/models/stairs.obj", VERTICES, INDICES, UVS, NORMALS);
+	
 	std::cout << "VERTICES - size: " << VERTICES.size() << std::endl;
 	printVectorVec3(VERTICES);
 	std::cout << std::endl << std::endl;
@@ -115,6 +118,8 @@ int run_simple_rectangle() {
 		glDrawElements(GL_TRIANGLES, EBO.getCount(), GL_UNSIGNED_INT, 0);
 		EBO.unbind();
 		VAO.unbind();
+
+
 		window->update();
 	}
 	glDeleteProgram(program);

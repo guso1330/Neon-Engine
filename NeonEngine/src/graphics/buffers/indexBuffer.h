@@ -10,8 +10,8 @@ namespace neon {
 			GLuint m_count;
 			GLuint m_ibo;
 		public:
-			IndexBuffer(GLushort* data, GLsizei count);
-			IndexBuffer(std::vector<GLushort> &data);
+			IndexBuffer(GLuint* data, GLsizei count);
+			IndexBuffer(std::vector<GLuint> &data);
 			~IndexBuffer() {}
 			void bind() const;
 			void unbind() const;

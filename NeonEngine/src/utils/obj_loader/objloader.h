@@ -4,6 +4,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <iostream>
+#include <stdio.h>
 #include <vector>
 #include <unordered_set>
 #include <fstream>
@@ -18,7 +19,7 @@ using namespace glm;
 
 namespace neon {
 
-	void tiny_obj_loader_load_obj(string inputfile, vector<vec3> &vertices, vector<GLushort> &indices, vector<vec2> &uvs, vector<vec3> &normals);
+	void tiny_obj_loader_load_obj(string inputfile, vector<vec3> &vertices, vector<GLuint> &indices, vector<vec2> &uvs, vector<vec3> &normals);
 
 	//******************************************************************
 	//                                                                  
@@ -38,7 +39,7 @@ namespace neon {
 	//
 	//	Adapted from: https://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Tutorial_Load_OBJ
 	//******************************************************************
-	void load_obj(const char* filename, vector<vec3> &vertices, vector<GLushort> &indices, vector<vec2> &uvs, vector<vec3> &normals);
+	void load_obj(const char* filename, vector<vec3> &vertices, vector<GLuint> &indices, vector<vec2> &uvs, vector<vec3> &normals);
 
 	//******************************************************************
 	//                                                                  

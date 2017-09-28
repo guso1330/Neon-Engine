@@ -72,6 +72,9 @@ shader.o: $(SRC)/shaders/shader.h $(SRC)/shaders/shader.cpp glad.o
 #
 # Graphics
 #
+mesh.o: $(SRC)/graphics/entities/mesh.h $(SRC)/graphics/entities/mesh.cpp
+	$(CC) $(SRC)/graphics/entities/mesh.cpp -c $(OPTIONS)
+
 camera.o: $(SRC)/graphics/cameras/camera.h $(SRC)/graphics/cameras/camera.cpp glad.o
 	$(CC) $(SRC)/graphics/cameras/camera.cpp -c $(OPTIONS)
 

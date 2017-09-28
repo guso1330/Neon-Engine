@@ -8,6 +8,7 @@
 #include "../graphics/buffers/indexBuffer.h"
 #include "../graphics/buffers/vertexArray.h"
 #include "../graphics/cameras/camera.h"
+#include "../graphics/entities/mesh.h"
 #include "../utils/obj_loader/objloader.h"
 
 using namespace neon;
@@ -34,7 +35,7 @@ int run_tiny_obj() {
 	float FOV = 70.0f;
 	float NEAR = 0.1f;
 	float FAR = 1000.0f;
-	Camera camera(glm::vec3(0, 0, -10.0), FOV, ASPECT_RATIO, NEAR, FAR);
+	Camera camera(glm::vec3(0, 0, -5.0), FOV, ASPECT_RATIO, NEAR, FAR);
 
 	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 view_projection = camera.GetViewProjection();
@@ -42,20 +43,22 @@ int run_tiny_obj() {
 	Window *window = new Window(WIDTH, HEIGHT, false, "Simple Rectangle Test");
 	window->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	std::vector<vec3> VERTICES;
-	std::vector<GLuint> INDICES;
-	std::vector<vec2> UVS;
-	std::vector<vec3> NORMALS;
+	// std::vector<vec3> VERTICES;
+	// std::vector<GLuint> INDICES;
+	// std::vector<vec2> UVS;
+	// std::vector<vec3> NORMALS;
 
-	tiny_obj_loader_load_obj("./NeonEngine/src/res/models/sphere.obj", VERTICES, INDICES, UVS, NORMALS);
+	// tiny_obj_loader_load_obj("./NeonEngine/src/res/models/sphere.obj", VERTICES, INDICES, UVS, NORMALS);
+
+	Mesh obj("./NeonEngine/src/res/models/suzanne.obj");
 	
-	std::cout << "VERTICES - size: " << VERTICES.size() << std::endl;
-	printVectorVec3(VERTICES);
-	std::cout << std::endl << std::endl;
+	// std::cout << "VERTICES - size: " << VERTICES.size() << std::endl;
+	// printVectorVec3(VERTICES);
+	// std::cout << std::endl << std::endl;
 
-	std::cout << "INDICES - size: " << INDICES.size() << std::endl;
-	printVectorUnint(INDICES);
-	std::cout << std::endl << std::endl;
+	// std::cout << "INDICES - size: " << INDICES.size() << std::endl;
+	// printVectorUnint(INDICES);
+	// std::cout << std::endl << std::endl;
 
 	Shader *vShader = new Shader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
 	Shader *fShader = new Shader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
@@ -82,8 +85,8 @@ int run_tiny_obj() {
 	glUseProgram(program);
 
 	VertexArray VAO;
-	VertexBuffer *VBO = new VertexBuffer(VERTICES);
-	IndexBuffer EBO(INDICES);
+	VertexBuffer *VBO = new VertexBuffer(obj.GetVertices());
+	IndexBuffer EBO(obj.GetIndices());
 	VAO.addBuffer(VBO, 0);
 
 	GLuint model_loc = glGetUniformLocation(program, "model");
@@ -96,13 +99,12 @@ int run_tiny_obj() {
 	glEnable (GL_BLEND);
 	glDepthFunc(GL_LEQUAL);
 	glClearDepth(1.0f);
-	// glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
 
 	while (!window->closed()) {
 		window->clear();
-		
 		
 		VAO.bind();
 		EBO.bind();

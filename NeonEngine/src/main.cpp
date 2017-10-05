@@ -1,8 +1,7 @@
-// #include "./tests/simple-rectangle.h"
-#include "./tests/tiny-obj.h"
+// #include "./tests/tiny-obj.cpp"
+#include "./tests/object.cpp"
 #include <iostream>
 
 int main(int argc, char** argv) {
-	// return run_simple_rectangle();
-	return run_tiny_obj();
+	return run_object_test();
 }

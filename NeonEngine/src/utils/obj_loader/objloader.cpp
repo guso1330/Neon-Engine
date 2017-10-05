@@ -6,6 +6,7 @@
 namespace neon {
 
 	void tiny_obj_loader_load_obj(std::string inputfile, vector<vec3> &vertices, vector<GLuint> &indices, vector<vec2> &uvs, vector<vec3> &normals) {
+		printf("\n");
 
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
@@ -26,7 +27,7 @@ namespace neon {
 			exit(1);
 		}
 
-		printf("Num Shapes loaded from %s: %lu\n", inputfile.c_str(), shapes.size());
+		printf("Loaded %s with %lu shapes\n\n", inputfile.c_str(), shapes.size());
 
 		//
 		// VERTICES

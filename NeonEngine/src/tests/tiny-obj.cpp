@@ -35,7 +35,7 @@ int run_tiny_obj() {
 	float FOV = 70.0f;
 	float NEAR = 0.1f;
 	float FAR = 1000.0f;
-	Camera camera(glm::vec3(0, 0, -5.0), FOV, ASPECT_RATIO, NEAR, FAR);
+	Camera camera(glm::vec3(0, 0, -3.5), FOV, ASPECT_RATIO, NEAR, FAR);
 
 	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 view_projection = camera.GetViewProjection();
@@ -43,22 +43,8 @@ int run_tiny_obj() {
 	Window *window = new Window(WIDTH, HEIGHT, false, "Simple Rectangle Test");
 	window->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	// std::vector<vec3> VERTICES;
-	// std::vector<GLuint> INDICES;
-	// std::vector<vec2> UVS;
-	// std::vector<vec3> NORMALS;
-
-	// tiny_obj_loader_load_obj("./NeonEngine/src/res/models/sphere.obj", VERTICES, INDICES, UVS, NORMALS);
-
-	Mesh obj("./NeonEngine/src/res/models/suzanne.obj");
-	
-	// std::cout << "VERTICES - size: " << VERTICES.size() << std::endl;
-	// printVectorVec3(VERTICES);
-	// std::cout << std::endl << std::endl;
-
-	// std::cout << "INDICES - size: " << INDICES.size() << std::endl;
-	// printVectorUnint(INDICES);
-	// std::cout << std::endl << std::endl;
+	Mesh *obj1 = new Mesh("./NeonEngine/src/res/models/only_quad_sphere.obj");
+	Mesh *obj2 = new Mesh("./NeonEngine/src/res/models/cube.obj");
 
 	Shader *vShader = new Shader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
 	Shader *fShader = new Shader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
@@ -84,16 +70,16 @@ int run_tiny_obj() {
 
 	glUseProgram(program);
 
-	VertexArray VAO;
-	VertexBuffer *VBO = new VertexBuffer(obj.GetVertices());
-	IndexBuffer EBO(obj.GetIndices());
-	VAO.addBuffer(VBO, 0);
+	VertexArray Sprite1, Sprite2;
+	IndexBuffer EBO1(obj1->GetIndices());
+	IndexBuffer EBO2(obj2->GetIndices());
+	
+	Sprite1.addBuffer(new VertexBuffer(obj1->GetVertices()), 0);
+	Sprite2.addBuffer(new VertexBuffer(obj2->GetVertices()), 0);
 
 	GLuint model_loc = glGetUniformLocation(program, "model");
 	GLuint view_projection_loc = glGetUniformLocation(program, "view_projection");
-	glUniformMatrix4fv(model_loc, 1, GL_FALSE, &model[0][0]);
 	glUniformMatrix4fv(view_projection_loc, 1, GL_FALSE, &view_projection[0][0]);
-
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable (GL_BLEND);
@@ -102,18 +88,30 @@ int run_tiny_obj() {
 	glEnable(GL_CULL_FACE);
 	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-
 	while (!window->closed()) {
 		window->clear();
 		
-		VAO.bind();
-		EBO.bind();
-		glDrawElements(GL_TRIANGLES, EBO.getCount(), GL_UNSIGNED_INT, 0);
-		EBO.unbind();
-		VAO.unbind();
+		Sprite1.bind();
+		EBO1.bind();
+		glUniformMatrix4fv(model_loc, 1, GL_FALSE, &model[0][0]);
+		glDrawElements(GL_TRIANGLES, EBO1.getCount(), GL_UNSIGNED_INT, 0);
+		EBO1.unbind();
+		Sprite1.unbind();
+
+		Sprite2.bind();
+		EBO2.bind();
+		mat4 model2 = glm::translate(model, glm::vec3(2.0f, 0, 0));
+		glUniformMatrix4fv(model_loc, 1, GL_FALSE, &model2[0][0]);
+		glDrawElements(GL_TRIANGLES, EBO2.getCount(), GL_UNSIGNED_INT, 0);
+		EBO2.unbind();
+		Sprite2.unbind();
 
 		window->update();
 	}
+
+	delete obj1;
+	delete obj2;
+
 	glDeleteProgram(program);
 
 	return EXIT_SUCCESS;

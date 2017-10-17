@@ -12,11 +12,11 @@ namespace neon {
 			Shader(const char* shaderFile, GLenum shaderType);
 			~Shader();
 		private:
-			void initShader();
+			void InitShader();
 		public:
-			inline GLuint getShaderID() { return m_shaderID; }
+			inline GLuint GetShaderID() { return m_shaderID; }
 		private:
-			const char* m_filename;
+			const char *m_filename;
 			GLenum m_type;
 			const GLchar *m_source;
 			GLuint m_shaderID;

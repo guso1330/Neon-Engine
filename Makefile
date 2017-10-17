@@ -4,9 +4,14 @@
 LOCAL_INC = /usr/local/include
 LOCAL_LIB = /usr/local/lib
 SRC = ./NeonEngine/src
-SRC_CPP := $(shell find $(SRC) ! -path */tests/* ! -name "main.cpp" -name "*.cpp")
+SRC_CPP := $(shell find $(SRC) ! -path */tests/* ! -path */debugging/* ! -name "main.cpp" -name "*.cpp")
+# Testing
 TEST_H := $(wildcard $(SRC)/tests/*.cpp)
-TEST_SRC := $(SRC)/tests/object.cpp
+TEST_FILENAME := object_test.cpp
+TEST_SRC := $(SRC)/tests/$(TEST_FILENAME)
+# Debugging
+DEBUG_H := $(SRC)/utils/debugging/debug.h
+DEBUG_SRC := $(wildcard $(SRC)/utils/debugging/*.cpp)
 OBJ_FILES := $(patsubst %.cpp, %.o, $(notdir $(SRC_CPP:.cpp=.o)))
 
 #
@@ -56,6 +61,9 @@ test.o: $(TEST_SRC)
 #
 # Utils
 #
+debug.o: $(DEBUG_H)
+	$(CC) $(DEBUG_SRC) -c $(OPTIONS)
+
 fileUtils.o: $(SRC)/utils/file_utils/fileUtils.h $(SRC)/utils/file_utils/fileUtils.cpp
 	$(CC) $(SRC)/utils/file_utils/fileUtils.cpp -c $(OPTIONS)
 
@@ -76,6 +84,9 @@ shader.o: $(SRC)/shaders/shader.h $(SRC)/shaders/shader.cpp glad.o
 #
 # Graphics
 #
+object.o: $(SRC)/graphics/entities/object.h $(SRC)/graphics/entities/object.cpp glad.o mesh.o
+	$(CC) $(SRC)/graphics/entities/object.cpp -c $(OPTIONS)
+
 mesh.o: $(SRC)/graphics/entities/mesh.h $(SRC)/graphics/entities/mesh.cpp
 	$(CC) $(SRC)/graphics/entities/mesh.cpp -c $(OPTIONS)
 

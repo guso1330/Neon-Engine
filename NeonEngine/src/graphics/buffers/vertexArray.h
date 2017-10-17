@@ -12,8 +12,8 @@ namespace neon {
 		public:
 			VertexArray();
 			~VertexArray();
-			void bind() const;
-			void unbind() const;
-			void addBuffer(VertexBuffer *buffer, GLuint index);
+			void Bind() const;
+			void Unbind() const;
+			void AddBuffer(VertexBuffer *buffer, GLuint index);
 	};
 }

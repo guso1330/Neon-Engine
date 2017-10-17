@@ -6,24 +6,24 @@ IndexBuffer::IndexBuffer(GLuint* data, GLsizei count)
 	: m_count(count) {
 	// Generate a new buffer
 	glGenBuffers(1, &m_ibo);
-	bind();
+	Bind();
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLuint), data, GL_STATIC_DRAW);
-	unbind();
+	Unbind();
 }
 
-IndexBuffer::IndexBuffer(std::vector<GLuint> &data) {
+IndexBuffer::IndexBuffer(const std::vector<GLuint> &data) {
 	// Generate a new buffer
 	m_count = data.size();
 	glGenBuffers(1, &m_ibo);
-	bind();
+	Bind();
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.size() * sizeof(GLuint), &data.front(), GL_STATIC_DRAW);
-	unbind();
+	Unbind();
 }
 
-void IndexBuffer::bind() const {
+void IndexBuffer::Bind() const {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
 }
 
-void IndexBuffer::unbind() const {
+void IndexBuffer::Unbind() const {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

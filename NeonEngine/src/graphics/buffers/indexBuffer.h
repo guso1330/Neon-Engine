@@ -11,10 +11,10 @@ namespace neon {
 			GLuint m_ibo;
 		public:
 			IndexBuffer(GLuint* data, GLsizei count);
-			IndexBuffer(std::vector<GLuint> &data);
+			IndexBuffer(const std::vector<GLuint> &data);
 			~IndexBuffer() {}
-			void bind() const;
-			void unbind() const;
-			inline GLuint getCount() { return m_count; }
+			void Bind() const;
+			void Unbind() const;
+			inline GLuint GetCount() { return m_count; }
 	};
 }

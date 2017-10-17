@@ -41,7 +41,7 @@ int run_tiny_obj() {
 	glm::mat4 view_projection = camera.GetViewProjection();
 
 	Window *window = new Window(WIDTH, HEIGHT, false, "Simple Rectangle Test");
-	window->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	window->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	Mesh *obj1 = new Mesh("./NeonEngine/src/res/models/only_quad_sphere.obj");
 	Mesh *obj2 = new Mesh("./NeonEngine/src/res/models/cube.obj");
@@ -50,8 +50,8 @@ int run_tiny_obj() {
 	Shader *fShader = new Shader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
 
 	GLuint program = glCreateProgram();
-	glAttachShader(program, vShader->getShaderID());
-	glAttachShader(program, fShader->getShaderID());
+	glAttachShader(program, vShader->GetShaderID());
+	glAttachShader(program, fShader->GetShaderID());
 	glLinkProgram(program);
 	
 	GLint linkStatus;
@@ -74,8 +74,8 @@ int run_tiny_obj() {
 	IndexBuffer EBO1(obj1->GetIndices());
 	IndexBuffer EBO2(obj2->GetIndices());
 	
-	Sprite1.addBuffer(new VertexBuffer(obj1->GetVertices()), 0);
-	Sprite2.addBuffer(new VertexBuffer(obj2->GetVertices()), 0);
+	Sprite1.AddBuffer(new VertexBuffer(obj1->GetVertices()), 0);
+	Sprite2.AddBuffer(new VertexBuffer(obj2->GetVertices()), 0);
 
 	GLuint model_loc = glGetUniformLocation(program, "model");
 	GLuint view_projection_loc = glGetUniformLocation(program, "view_projection");
@@ -88,25 +88,25 @@ int run_tiny_obj() {
 	glEnable(GL_CULL_FACE);
 	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-	while (!window->closed()) {
-		window->clear();
+	while (!window->isClosed()) {
+		window->Clear();
 		
-		Sprite1.bind();
-		EBO1.bind();
+		Sprite1.Bind();
+		EBO1.Bind();
 		glUniformMatrix4fv(model_loc, 1, GL_FALSE, &model[0][0]);
-		glDrawElements(GL_TRIANGLES, EBO1.getCount(), GL_UNSIGNED_INT, 0);
-		EBO1.unbind();
-		Sprite1.unbind();
+		glDrawElements(GL_TRIANGLES, EBO1.GetCount(), GL_UNSIGNED_INT, 0);
+		EBO1.Unbind();
+		Sprite1.Unbind();
 
-		Sprite2.bind();
-		EBO2.bind();
+		Sprite2.Bind();
+		EBO2.Bind();
 		mat4 model2 = glm::translate(model, glm::vec3(2.0f, 0, 0));
 		glUniformMatrix4fv(model_loc, 1, GL_FALSE, &model2[0][0]);
-		glDrawElements(GL_TRIANGLES, EBO2.getCount(), GL_UNSIGNED_INT, 0);
-		EBO2.unbind();
-		Sprite2.unbind();
+		glDrawElements(GL_TRIANGLES, EBO2.GetCount(), GL_UNSIGNED_INT, 0);
+		EBO2.Unbind();
+		Sprite2.Unbind();
 
-		window->update();
+		window->Update();
 	}
 
 	delete obj1;

@@ -16,15 +16,15 @@ namespace neon {
 			const char* m_title;
 			GLFWwindow *m_window;
 		private:
-			bool init();
+			bool Init();
 		public:
-			bool closed() const;
-			void clear() const;
-			void update();
-			void setClearColor(float r, float g, float b, float a);
+			bool isClosed() const;
+			void Clear() const;
+			void Update();
+			void SetClearColor(float r, float g, float b, float a);
 
 			/* GETTERS */
-			inline int getWidth() const { return m_width; }
-			inline int getHeight() const { return m_height; }
+			inline int GetWidth() const { return m_width; }
+			inline int GetHeight() const { return m_height; }
 	};
 }

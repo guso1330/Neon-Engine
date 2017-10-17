@@ -12,11 +12,11 @@ namespace neon {
 		public:
 			// Constructors
 			VertexBuffer(GLfloat* data, GLsizei count, GLuint componentCount);
-			VertexBuffer(std::vector<glm::vec3> &data);
+			VertexBuffer(const std::vector<glm::vec3> &data);
 			// Destructor
 			~VertexBuffer() {}
-			void bind() const;
-			void unbind() const;
-			inline GLuint getComponentCount() { return m_componentCount; }
+			void Bind() const;
+			void Unbind() const;
+			inline GLuint GetComponentCount() { return m_componentCount; }
 	};
 }

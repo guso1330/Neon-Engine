@@ -2,14 +2,14 @@
 
 namespace neon {
 
-	void windowResize(GLFWwindow *window, int width, int height);
+	static void windowResize(GLFWwindow *window, int width, int height);
 
 	Window::Window(unsigned int width, unsigned int height, bool fullscreen, const char* title) :
 		m_width(width),
 		m_height(height),
 		m_fullscreen(fullscreen),
 		m_title(title) {
-		if (!init()) {
+		if (!Init()) {
 			std::cerr << "Error: window did not initialize" << std::endl;
 			glfwTerminate();
 		}
@@ -20,7 +20,7 @@ namespace neon {
 		glfwTerminate();
 	}
 
-	bool Window::init() {
+	bool Window::Init() {
 		if (!glfwInit()) {
 			std::cerr << "Failed to initalize GLFW" << std::endl;
 			return false;
@@ -64,26 +64,27 @@ namespace neon {
 		return true;
 	}
 
-	bool Window::closed() const {
+	bool Window::isClosed() const {
 		return glfwWindowShouldClose(m_window) == 1;
 	}
 
-	void Window::update() {
+	void Window::Update() {
 		glfwPollEvents();
 		glfwGetFramebufferSize(m_window, &m_width, &m_height);
 		glfwSwapBuffers(m_window);
 	}
 
-	void Window::clear() const {
+	void Window::Clear() const {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glFlush();
 	}
 
-	void Window::setClearColor(float r, float g, float b, float a) {
+	void Window::SetClearColor(float r, float g, float b, float a) {
 		glClearColor(r, g, b, a);
 	}
 
-	void windowResize(GLFWwindow *window, int width, int height) {
+	// Static function
+	static void windowResize(GLFWwindow *window, int width, int height) {
 		glViewport(0, 0, width, height);
 	}
 

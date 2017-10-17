@@ -12,20 +12,20 @@ VertexArray::~VertexArray() {
 	}
 }
 
-void VertexArray::bind() const {
+void VertexArray::Bind() const {
 	glBindVertexArray(m_vao);
 }
 
-void VertexArray::unbind() const {
+void VertexArray::Unbind() const {
 	glBindVertexArray(0);
 }
 
-void VertexArray::addBuffer(VertexBuffer *buffer, GLuint index) {
+void VertexArray::AddBuffer(VertexBuffer *buffer, GLuint index) {
 	// m_buffers.push(buffer);
-	bind();
-	buffer->bind();
+	Bind();
+	buffer->Bind();
 	glEnableVertexAttribArray(index);
-	glVertexAttribPointer(index, buffer->getComponentCount(), GL_FLOAT, GL_FALSE, 0, (void*)0);
-	buffer->unbind();
-	unbind();
+	glVertexAttribPointer(index, buffer->GetComponentCount(), GL_FLOAT, GL_FALSE, 0, (void*)0);
+	buffer->Unbind();
+	Unbind();
 }

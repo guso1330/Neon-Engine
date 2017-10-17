@@ -1,5 +1,4 @@
-// #include "./tests/tiny-obj.cpp"
-#include "./tests/object.cpp"
+#include "./tests/object_test.cpp"
 #include <iostream>
 
 int main(int argc, char** argv) {

@@ -5,12 +5,12 @@ namespace neon {
 		m_filename(shaderFile),
 		m_type(shaderType)
 	{
-		initShader();
+		InitShader();
 	}
 
 	Shader::~Shader() { glDeleteShader(m_shaderID); }
 
-	void Shader::initShader() {
+	void Shader::InitShader() {
 		std::string str_source = read_file(m_filename);
 		m_source = str_source.c_str();
 		if (m_source == NULL) {

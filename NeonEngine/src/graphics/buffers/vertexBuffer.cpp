@@ -6,24 +6,24 @@ VertexBuffer::VertexBuffer(GLfloat* data, GLsizei count, GLuint componentCount)
 	: m_componentCount(componentCount) {
 	// Generate a new buffer
 	glGenBuffers(1, &m_vbo);
-	bind();
+	Bind();
 	glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLfloat), data, GL_STATIC_DRAW);
-	unbind();
+	Unbind();
 }
 
-VertexBuffer::VertexBuffer(std::vector<glm::vec3> &data)
+VertexBuffer::VertexBuffer(const std::vector<glm::vec3> &data)
 	: m_componentCount(3) {
 	// Generate a new buffer
 	glGenBuffers(1, &m_vbo);
-	bind();
+	Bind();
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec3), &data[0][0], GL_STATIC_DRAW);
-	unbind();
+	Unbind();
 }
 
-void VertexBuffer::bind() const {
+void VertexBuffer::Bind() const {
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 }
 
-void VertexBuffer::unbind() const {
+void VertexBuffer::Unbind() const {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

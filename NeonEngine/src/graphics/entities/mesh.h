@@ -31,10 +31,6 @@ namespace neon {
 			inline std::vector<glm::vec3>& GetNormals() { return m_normals; }
 			inline unsigned int GetNormalsSize() const { return m_normals.size(); }
 
-			// Virtual Functions
-			// virtual void DrawSolid() = 0;
-			// virtual void DrawWireframe() = 0;
-
 		private:
 			std::vector<glm::vec3> m_vertices;
 			std::vector<unsigned int> m_indices;

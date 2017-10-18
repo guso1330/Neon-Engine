@@ -17,14 +17,28 @@
     </ClCompile>
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\shaders\shader.cpp" />
-    <ClCompile Include="src\utils\fileUtils.cpp" />
+    <ClCompile Include="src\utils\file_utils\fileUtils.cpp" />
+    <ClCompile Include="src\graphics\buffers\indexBuffer.cpp" />
+    <ClCompile Include="src\graphics\buffers\vertexArray.cpp" />
+    <ClCompile Include="src\graphics\buffers\vertexBuffer.cpp" />
+    <ClCompile Include="src\graphics\cameras\camera.cpp" />
+    <ClCompile Include="src\graphics\entities\mesh.cpp" />
+    <ClCompile Include="src\utils\obj_loader\objloader.cpp" />
+    <ClCompile Include="src\graphics\entities\model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app\window.h">
       <Filter>src\app</Filter>
     </ClInclude>
     <ClInclude Include="src\shaders\shader.h" />
-    <ClInclude Include="src\utils\fileUtils.h" />
+    <ClInclude Include="src\utils\file_utils\fileUtils.h" />
+    <ClInclude Include="src\graphics\buffers\indexBuffer.h" />
+    <ClInclude Include="src\graphics\buffers\vertexArray.h" />
+    <ClInclude Include="src\graphics\buffers\vertexBuffer.h" />
+    <ClInclude Include="src\graphics\cameras\camera.h" />
+    <ClInclude Include="src\graphics\entities\mesh.h" />
+    <ClInclude Include="src\utils\obj_loader\objloader.h" />
+    <ClInclude Include="src\graphics\entities\model.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\res\shaders\basicVShader.glsl" />

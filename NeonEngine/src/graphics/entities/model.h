@@ -4,10 +4,10 @@
 #include "./mesh.h"
 
 namespace neon {
-	class Object {
+	class Model {
 		public:
-			Object(const char *filename);
-			~Object();
+			Model(const char *filename);
+			~Model();
 
 			inline Mesh* GetMesh() const { return mesh; }
 		private:

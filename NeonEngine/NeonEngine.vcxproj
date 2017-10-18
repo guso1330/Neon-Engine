@@ -89,7 +89,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glfw\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glad\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glad\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\tinyobjloader-1.0.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,7 +104,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glfw\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glad\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glad\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\tinyobjloader-1.0.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,7 +121,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glfw\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glad\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glad\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\tinyobjloader-1.0.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,7 +140,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glfw\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glad\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glad\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\tinyobjloader-1.0.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,15 +152,29 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\glad\glad.c" />
+    <ClCompile Include="src\graphics\buffers\indexBuffer.cpp" />
+    <ClCompile Include="src\graphics\buffers\vertexArray.cpp" />
+    <ClCompile Include="src\graphics\buffers\vertexBuffer.cpp" />
+    <ClCompile Include="src\graphics\cameras\camera.cpp" />
+    <ClCompile Include="src\graphics\entities\mesh.cpp" />
+    <ClCompile Include="src\graphics\entities\model.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\app\window.cpp" />
     <ClCompile Include="src\shaders\shader.cpp" />
-    <ClCompile Include="src\utils\fileUtils.cpp" />
+    <ClCompile Include="src\utils\file_utils\fileUtils.cpp" />
+    <ClCompile Include="src\utils\obj_loader\objloader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app\window.h" />
-    <ClInclude Include="src\utils\fileUtils.h" />
+    <ClInclude Include="src\graphics\buffers\indexBuffer.h" />
+    <ClInclude Include="src\graphics\buffers\vertexArray.h" />
+    <ClInclude Include="src\graphics\buffers\vertexBuffer.h" />
+    <ClInclude Include="src\graphics\cameras\camera.h" />
+    <ClInclude Include="src\graphics\entities\mesh.h" />
+    <ClInclude Include="src\graphics\entities\model.h" />
     <ClInclude Include="src\shaders\shader.h" />
+    <ClInclude Include="src\utils\file_utils\fileUtils.h" />
+    <ClInclude Include="src\utils\obj_loader\objloader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\res\shaders\basicFShader.glsl" />

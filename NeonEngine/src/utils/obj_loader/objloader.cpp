@@ -18,124 +18,55 @@ namespace neon {
 		//
 		// Error Checking
 		// 	- Check if the there was an error and print
-		//  - check if the ret wsa NULL
+		//  - check if the ret was NULL
 		//
 		if (!err.empty()) { // `err` may contain warning message.
 			std::cerr << err << std::endl;
 		}
 		if (!ret) {
-			exit(1);
+			system("PAUSE");
 		}
+		else {
+			printf("Loaded %s with %lu shapes\n\n", inputfile.c_str(), shapes.size());
 
-		printf("Loaded %s with %lu shapes\n\n", inputfile.c_str(), shapes.size());
-
-		//
-		// VERTICES
-		//
-		for (size_t v = 0; v < attrib.vertices.size() / 3; v++) {
-			// printf("  v[%ld] = (%f, %f, %f)\n", static_cast<long>(v),
-			// 		  static_cast<const double>(attrib.vertices[3 * v + 0]),
-			// 		  static_cast<const double>(attrib.vertices[3 * v + 1]),
-			// 		  static_cast<const double>(attrib.vertices[3 * v + 2]));
-			vertices.push_back(vec3(attrib.vertices[3 * v + 0],
-									attrib.vertices[3 * v + 1],
-									attrib.vertices[3 * v + 2]));
-		}
-
-		//
-		// NORMALS
-		//
-		for (size_t v = 0; v < attrib.normals.size() / 3; v++) {
-			// printf("  n[%ld] = (%f, %f, %f)\n", static_cast<long>(v),
-			// 		  static_cast<const double>(attrib.normals[3 * v + 0]),
-			// 		  static_cast<const double>(attrib.normals[3 * v + 1]),
-			// 		  static_cast<const double>(attrib.normals[3 * v + 2]));
-			normals.push_back(vec3(attrib.normals[3*v+0],
-								   attrib.normals[3*v+1],
-								   attrib.normals[3*v+2]));
-		}
-
-		//
-		// UVs
-		//
-		for (size_t v = 0; v < attrib.texcoords.size() / 2; v++) {
-			// printf("  uv[%ld] = (%f, %f)\n", static_cast<long>(v),
-			// 		  static_cast<const double>(attrib.texcoords[2 * v + 0]),
-			// 		  static_cast<const double>(attrib.texcoords[2 * v + 1]));
-			uvs.push_back(vec2(attrib.texcoords[2 * v + 0],
-							   attrib.texcoords[2 * v + 1]));
-		}
-
-		// 
-		// INDICES
-		//
-		// Loop over shapes
-
-		for (size_t s = 0; s < shapes.size(); s++) {
-			// Loop over faces(polygon)
-			// size_t index_offset = 0;
-
-			for(size_t i=0; i < shapes[s].mesh.indices.size(); ++i) {
-				// cout << shapes[s].mesh.indices[i].vertex_index << endl;
-				indices.push_back(shapes[s].mesh.indices[i].vertex_index);
+			//
+			// VERTICES
+			//
+			for (size_t v = 0; v < attrib.vertices.size() / 3; v++) {
+				vertices.push_back(vec3(attrib.vertices[3 * v + 0],
+					attrib.vertices[3 * v + 1],
+					attrib.vertices[3 * v + 2]));
 			}
 
-			// for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
-			// 	int fv = shapes[s].mesh.num_face_vertices[f];
+			//
+			// NORMALS
+			//
+			for (size_t v = 0; v < attrib.normals.size() / 3; v++) {
+				normals.push_back(vec3(attrib.normals[3 * v + 0],
+					attrib.normals[3 * v + 1],
+					attrib.normals[3 * v + 2]));
+			}
 
-			// 	// Loop over vertices in the face.
-			// 	for (size_t v = 0; v < fv; v++) {
-			// 		// access to vertex
-			// 		tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-			// 		indices.push_back(3*idx.vertex_index+0);
-			// 		indices.push_back(3*idx.vertex_index+1);
-			// 		indices.push_back(3*idx.vertex_index+2);
-			// 		// float vx = attrib.vertices[3*idx.vertex_index+0];
-			// 		// float vy = attrib.vertices[3*idx.vertex_index+1];
-			// 		// float vz = attrib.vertices[3*idx.vertex_index+2];
+			//
+			// UVs
+			//
+			for (size_t v = 0; v < attrib.texcoords.size() / 2; v++) {
+				uvs.push_back(vec2(attrib.texcoords[2 * v + 0],
+					attrib.texcoords[2 * v + 1]));
+			}
 
-			// 		// float nx = attrib.normals[3*idx.normal_index+0];
-			// 		// float ny = attrib.normals[3*idx.normal_index+1];
-			// 		// float nz = attrib.normals[3*idx.normal_index+2];
+			// 
+			// INDICES
+			//
+			// Loop over shapes
+			for (size_t s = 0; s < shapes.size(); s++) {
 
-			// 		// float tx = attrib.texcoords[2*idx.texcoord_index+0];
-			// 		// float ty = attrib.texcoords[2*idx.texcoord_index+1];
-			// 	}
-			// 	index_offset += fv;
-			// 	// per-face material
-			// 	shapes[s].mesh.material_ids[f];
-			// }
+				for (size_t i = 0; i < shapes[s].mesh.indices.size(); ++i) {
+					// cout << shapes[s].mesh.indices[i].vertex_index << endl;
+					indices.push_back(shapes[s].mesh.indices[i].vertex_index);
+				}
+			}
 		}
-
-		// for (size_t s = 0; s < shapes.size(); s++) {
-		// 	// Loop over faces(polygon)
-		// 	size_t index_offset = 0;
-		// 	for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
-		// 		int fv = shapes[s].mesh.num_face_vertices[f];
-
-		// 		// Loop over vertices in the face.
-		// 		for (size_t v = 0; v < fv; v++) {
-		// 			// access to vertex
-		// 			tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-		// 			indices.push_back(3*idx.vertex_index+0);
-		// 			indices.push_back(3*idx.vertex_index+1);
-		// 			indices.push_back(3*idx.vertex_index+2);
-		// 			// float vx = attrib.vertices[3*idx.vertex_index+0];
-		// 			// float vy = attrib.vertices[3*idx.vertex_index+1];
-		// 			// float vz = attrib.vertices[3*idx.vertex_index+2];
-
-		// 			// float nx = attrib.normals[3*idx.normal_index+0];
-		// 			// float ny = attrib.normals[3*idx.normal_index+1];
-		// 			// float nz = attrib.normals[3*idx.normal_index+2];
-
-		// 			// float tx = attrib.texcoords[2*idx.texcoord_index+0];
-		// 			// float ty = attrib.texcoords[2*idx.texcoord_index+1];
-		// 		}
-		// 		index_offset += fv;
-		// 		// per-face material
-		// 		shapes[s].mesh.material_ids[f];
-		// 	}
-		// }
 	}
 
 	// split_str - Definition for the split_str function

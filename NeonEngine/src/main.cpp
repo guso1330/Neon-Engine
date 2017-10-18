@@ -26,7 +26,7 @@ int main() {
 	float FOV = 70.0f;
 	float g_NEAR = 0.1f;
 	float g_FAR = 1000.0f;
-	Camera camera(glm::vec3(0, 10.0f, -200.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	Camera camera(glm::vec3(0, 0, -5.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 
 	// glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 view_projection = camera.GetViewProjection();
@@ -63,7 +63,7 @@ int main() {
 #if _WIN32
 	Model obj1("../NeonEngine/src/res/models/suzanne.obj");
 #elif __APPLE__
-	Model obj1("./NeonEngine/src/res/models/r8_gt/r8_gt.obj");
+	Model obj1("./NeonEngine/src/res/models/suzanne.obj");
 #endif
 
 	glm::mat4 model = obj1.GetModelMatrix();

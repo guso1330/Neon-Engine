@@ -14,6 +14,7 @@ namespace neon {
 		~Model();
 
 		inline Mesh* GetMesh() const { return m_mesh; }
+		inline const glm::mat4 GetModelMatrix() const { return m_modelMatrix; }
 
 		// Draw Functions
 		void Draw() const;

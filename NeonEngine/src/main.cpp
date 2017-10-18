@@ -29,11 +29,13 @@ int main() {
 	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 view_projection = camera.GetViewProjection();
 
+
+	/* GLFW is initialized within the window */
 	Window *window = new Window(WIDTH, HEIGHT, false, "Simple Rectangle Test");
 	window->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 #if _WIN32
-	Model obj1("../NeonEngine/src/res/models/only_quad_sphere.obj");
+	Model obj1("../NeonEngine/src/res/models/suzanne.obj");
 #elif __APPLE__
 	Model obj1("./NeonEngine/src/res/models/only_quad_sphere.obj");
 #endif
@@ -84,12 +86,27 @@ int main() {
 	// glEnable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+
+	double start_time = glfwGetTime();
+	double angle = 0;
+
 	while (!window->isClosed()) {
+		double elapsed_time = glfwGetTime() - start_time;
+		double speed = 60.0 * (elapsed_time / (1.0/60.0));
+		angle = angle + speed;
+		if (angle >= 360.0) {
+			angle = 0;
+		}
+		//cout << "angle: " << angle << " elapsed_time: " << elapsed_time << " speed: " << speed << std::endl;
 		window->Clear();
 
+		glm::mat4 rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));
+
+		glUniformMatrix4fv(model_loc, 1, GL_FALSE, &rotation[0][0]);
 		obj1.Draw();
 
 		window->Update();
+		start_time = glfwGetTime();
 	}
 
 	glDeleteProgram(program);

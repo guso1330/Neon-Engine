@@ -6,9 +6,9 @@ LOCAL_LIB = /usr/local/lib
 SRC = ./NeonEngine/src
 SRC_CPP := $(shell find $(SRC) ! -path */tests/* ! -path */debugging/* ! -name "main.cpp" -name "*.cpp")
 # Testing
-TEST_H := $(wildcard $(SRC)/tests/*.cpp)
-TEST_FILENAME := object_test.cpp
-TEST_SRC := $(SRC)/tests/$(TEST_FILENAME)
+# TEST_H := $(wildcard $(SRC)/tests/*.cpp)
+# TEST_FILENAME := object_test.cpp
+# TEST_SRC := $(SRC)/tests/$(TEST_FILENAME)
 # Debugging
 DEBUG_H := $(SRC)/utils/debugging/debug.h
 DEBUG_SRC := $(wildcard $(SRC)/utils/debugging/*.cpp)
@@ -26,7 +26,7 @@ GLAD_INC = $(GLAD)/include
 
 GLM = ./Dependencies/glm
 
-TINYOBJLOADER = ./Dependencies/tinyobjloader
+TINYOBJLOADER = ./Dependencies/tinyobjloader-1.0.6
 
 #
 # Build Variables
@@ -49,14 +49,8 @@ OPTIONS= $(CC_FLAGS) $(INCS)
 # 	$(CC) $(OPTIONS) -c -o $@ $<
 all: main
 
-main: $(SRC)/main.cpp test.o glad.o $(OBJ_FILES)
+main: $(SRC)/main.cpp glad.o $(OBJ_FILES)
 	$(CC) $(SRC)/main.cpp glad.o $(OBJ_FILES) $(OPTIONS) $(LDLIBS) -o main
-
-#
-# NOTE: Add wanted test here
-#
-test.o: $(TEST_SRC)
-	$(CC) $(TEST_SRC) -c $(OPTIONS)
 
 #
 # Utils
@@ -79,6 +73,8 @@ window.o: $(SRC)/app/window.h $(SRC)/app/window.cpp glad.o
 #
 # Shaders
 #
+program.o: $(SRC)/shaders/program.h $(SRC)/shaders/program.cpp glad.o
+	$(CC) $(SRC)/shaders/program.cpp -c $(OPTIONS)
 shader.o: $(SRC)/shaders/shader.h $(SRC)/shaders/shader.cpp glad.o
 	$(CC) $(SRC)/shaders/shader.cpp -c $(OPTIONS)
 #

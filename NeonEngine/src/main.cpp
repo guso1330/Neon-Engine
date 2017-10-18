@@ -1,9 +1,11 @@
 #include <iostream>
 #include <vector>
+#include <stdio.h>
 #include <glm/glm.hpp>
 
 #include "./app/window.h"
 #include "./shaders/shader.h"
+#include "./shaders/program.h"
 #include "./graphics/buffers/vertexBuffer.h"
 #include "./graphics/buffers/indexBuffer.h"
 #include "./graphics/buffers/vertexArray.h"
@@ -41,9 +43,9 @@ int main() {
 #endif
 
 	/***********************************
-	Need to create an application
-	class that has the capability
-	of attaching shaders to it
+		Need to create an application
+		class that has the capability
+		of attaching shaders to it
 	***********************************/
 #if _WIN32
 	Shader *vShader = new Shader("../NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
@@ -53,30 +55,16 @@ int main() {
 	Shader *fShader = new Shader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
 #endif
 
-	GLuint program = glCreateProgram();
-	glAttachShader(program, vShader->GetShaderID());
-	glAttachShader(program, fShader->GetShaderID());
-	glLinkProgram(program);
+	std::vector<Shader*> shaders;
+	shaders.push_back(vShader);
+	shaders.push_back(fShader);
 
-	GLint linkStatus;
-	glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
-	if (linkStatus != GL_TRUE) {
-		GLint logLength;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLength);
-
-		GLchar *linkerLog = new GLchar[logLength + 1];
-		glGetProgramInfoLog(program, logLength + 1, NULL, linkerLog);
-
-		std::cerr << "Program failed to link: " << linkerLog << std::endl;
-		system("PAUSE");
-		return EXIT_FAILURE;
-	}
-	glUseProgram(program);
+	Program program(shaders);
 	/**********************************/
 
-	GLuint model_loc = glGetUniformLocation(program, "model");
+	GLuint model_loc = glGetUniformLocation(program.GetProgramID(), "model");
 	glUniformMatrix4fv(model_loc, 1, GL_FALSE, &model[0][0]);
-	GLuint view_projection_loc = glGetUniformLocation(program, "view_projection");
+	GLuint view_projection_loc = glGetUniformLocation(program.GetProgramID(), "view_projection");
 	glUniformMatrix4fv(view_projection_loc, 1, GL_FALSE, &view_projection[0][0]);
 
 	// glEnable(GL_DEPTH_TEST);
@@ -86,19 +74,21 @@ int main() {
 	// glEnable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-
+	/* timing stuff */
 	double start_time = glfwGetTime();
 	double angle = 0;
 
 	while (!window->isClosed()) {
+		window->Clear();
+
 		double elapsed_time = glfwGetTime() - start_time;
-		double speed = 60.0 * (elapsed_time / (1.0/60.0));
+		double speed = 30.0 * (elapsed_time * 1.0/30.0);
 		angle = angle + speed;
 		if (angle >= 360.0) {
 			angle = 0;
 		}
-		//cout << "angle: " << angle << " elapsed_time: " << elapsed_time << " speed: " << speed << std::endl;
-		window->Clear();
+
+		printf("angle: %16f, elapsed_time: %16f, speed: %16f\n", angle, elapsed_time, speed);
 
 		glm::mat4 rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));
 
@@ -106,10 +96,9 @@ int main() {
 		obj1.Draw();
 
 		window->Update();
+
 		start_time = glfwGetTime();
 	}
-
-	glDeleteProgram(program);
 
 	return EXIT_SUCCESS;
 }

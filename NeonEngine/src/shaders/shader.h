@@ -15,6 +15,7 @@ namespace neon {
 			void InitShader();
 		public:
 			inline GLuint GetShaderID() { return m_shaderID; }
+			inline GLenum GetShaderType() { return m_type; }
 		private:
 			const char *m_filename;
 			GLenum m_type;

@@ -18,13 +18,13 @@ using namespace glm;
 const GLint WIDTH = 1024,
 HEIGHT = 768;
 
-int main(int argc, char** argv) {
+int main() {
 	// Initialize the camera
-	float aspect_ratio = (float)WIDTH / (float)HEIGHT;
-	float fov = 70.0f;
-	float g_near = 0.1f;
-	float g_far = 1000.0f;
-	Camera camera(glm::vec3(0, 0, -3.5), fov, aspect_ratio, g_near, g_far);
+	float ASPECT_RATIO = (float)WIDTH / (float)HEIGHT;
+	float FOV = 70.0f;
+	float g_NEAR = 0.1f;
+	float g_FAR = 1000.0f;
+	Camera camera(glm::vec3(0, 0, -3.5), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 
 	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 view_projection = camera.GetViewProjection();
@@ -34,12 +34,9 @@ int main(int argc, char** argv) {
 
 #if _WIN32
 	Model obj1("../NeonEngine/src/res/models/only_quad_sphere.obj");
-	Model obj2("../NeonEngine/src/res/models/suzanne.obj");
 #elif __APPLE__
 	Model obj1("./NeonEngine/src/res/models/only_quad_sphere.obj");
-	Model obj2("./NeonEngine/src/res/models/suzanne.obj");
 #endif
-//C:\Users\GusO\Documents\Projects\Neon - Engine\NeonEngine\src\res\models
 
 	/***********************************
 	Need to create an application
@@ -53,6 +50,7 @@ int main(int argc, char** argv) {
 	Shader *vShader = new Shader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
 	Shader *fShader = new Shader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
 #endif
+
 	GLuint program = glCreateProgram();
 	glAttachShader(program, vShader->GetShaderID());
 	glAttachShader(program, fShader->GetShaderID());
@@ -74,41 +72,22 @@ int main(int argc, char** argv) {
 	glUseProgram(program);
 	/**********************************/
 
-	VertexArray Sprite1, Sprite2;
-	IndexBuffer EBO1(obj1.GetMesh()->GetIndices());
-	IndexBuffer EBO2(obj2.GetMesh()->GetIndices());
-
-	Sprite1.AddBuffer(new VertexBuffer(obj1.GetMesh()->GetVertices()), 0);
-	Sprite2.AddBuffer(new VertexBuffer(obj2.GetMesh()->GetVertices()), 0);
-
 	GLuint model_loc = glGetUniformLocation(program, "model");
+	glUniformMatrix4fv(model_loc, 1, GL_FALSE, &model[0][0]);
 	GLuint view_projection_loc = glGetUniformLocation(program, "view_projection");
 	glUniformMatrix4fv(view_projection_loc, 1, GL_FALSE, &view_projection[0][0]);
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glDepthFunc(GL_LEQUAL);
-	glClearDepth(1.0f);
-	glEnable(GL_CULL_FACE);
+	// glEnable(GL_DEPTH_TEST);
+	// glEnable (GL_BLEND);
+	// glDepthFunc(GL_LEQUAL);
+	// glClearDepth(1.0f);
+	// glEnable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	while (!window->isClosed()) {
 		window->Clear();
 
-		Sprite1.Bind();
-		EBO1.Bind();
-		glUniformMatrix4fv(model_loc, 1, GL_FALSE, &model[0][0]);
-		glDrawElements(GL_TRIANGLES, EBO1.GetCount(), GL_UNSIGNED_INT, 0);
-		EBO1.Unbind();
-		Sprite1.Unbind();
-
-		Sprite2.Bind();
-		EBO2.Bind();
-		mat4 model2 = glm::translate(model, glm::vec3(2.5f, 0, 0)) * glm::rotate(180.0f, glm::vec3(0, 1, 0));
-		glUniformMatrix4fv(model_loc, 1, GL_FALSE, &model2[0][0]);
-		glDrawElements(GL_TRIANGLES, EBO2.GetCount(), GL_UNSIGNED_INT, 0);
-		EBO2.Unbind();
-		Sprite2.Unbind();
+		obj1.Draw();
 
 		window->Update();
 	}

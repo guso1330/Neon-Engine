@@ -25,6 +25,7 @@
     <ClCompile Include="src\graphics\entities\mesh.cpp" />
     <ClCompile Include="src\utils\obj_loader\objloader.cpp" />
     <ClCompile Include="src\graphics\entities\model.cpp" />
+    <ClCompile Include="src\shaders\program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app\window.h">
@@ -39,6 +40,7 @@
     <ClInclude Include="src\graphics\entities\mesh.h" />
     <ClInclude Include="src\utils\obj_loader\objloader.h" />
     <ClInclude Include="src\graphics\entities\model.h" />
+    <ClInclude Include="src\shaders\program.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\res\shaders\basicVShader.glsl" />

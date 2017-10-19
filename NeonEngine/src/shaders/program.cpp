@@ -28,6 +28,31 @@ namespace neon {
 			std::cerr << "Program failed to link: " << linkerLog << std::endl;
 			system("PAUSE");
 		}
+		Bind();
+	}
+
+	GLint Program::GetUniformLocation(const char* name) {
+		GLint loc = glGetUniformLocation(m_programID, name);
+		if (loc == -1) {
+			std::cerr << "Could not locate the the uniform " << name << std::endl;
+			system("PAUSE");
+		}
+		return loc;
+	}
+
+	void Program::SetUniformMat4(const char* name, const glm::mat4& matrix) {
+		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
+	}
+
+	void Program::SetUniformMat4(GLuint loc, const glm::mat4& matrix) {
+		glUniformMatrix4fv(loc, 1, GL_FALSE, &matrix[0][0]);
+	}
+
+	void Program::Bind() {
 		glUseProgram(m_programID);
+	}
+
+	void Program::Unbind() {
+		glUseProgram(0);
 	}
 }

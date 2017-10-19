@@ -1,9 +1,12 @@
+#pragma once
 /*
 	TODO: Only supports one program currently, should make support >= 1 shader
 */
 
-#include <glad/glad.h>
+#include <iostream>
 #include <vector>
+#include <glad/glad.h>
+#include <glm/glm.hpp>
 #include "./shader.h"
 
 namespace neon {
@@ -16,7 +19,20 @@ namespace neon {
 			// GETTERS
 			const GLuint GetProgramID() const { return m_programID; }
 
-			// TODO: call glUseProgram 
+			// SETTERS
+
+		public:
+			/****************************
+			*	GLSL - Shader attribute *
+			*	getters and setters		*
+			****************************/
+			GLint GetUniformLocation(const char* name);
+
+			// 
+			void Program::SetUniformMat4(const char* name, const glm::mat4& matrix);
+			void Program::SetUniformMat4(GLuint loc, const glm::mat4& matrix);
+
+			// TODO: call glUseProgram
 			void Bind();
 			void Unbind();
 		private:

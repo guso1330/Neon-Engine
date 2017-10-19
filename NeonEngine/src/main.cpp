@@ -55,13 +55,13 @@ int main() {
 	shaders.push_back(vShader);
 	shaders.push_back(fShader);
 
-	Program program(shaders);
+	Program *program = new Program(shaders);
 
 	/***************************
 		Setting up The Models
 	****************************/
 #if _WIN32
-	Model obj1("../NeonEngine/src/res/models/suzanne.obj");
+	Model obj1("../NeonEngine/src/res/models/only_quad_sphere.obj", program);
 #elif __APPLE__
 	Model obj1("./NeonEngine/src/res/models/suzanne.obj");
 #endif
@@ -69,10 +69,7 @@ int main() {
 	glm::mat4 model = obj1.GetModelMatrix();
 	/**********************************/
 
-	GLuint model_loc = glGetUniformLocation(program.GetProgramID(), "model");
-	glUniformMatrix4fv(model_loc, 1, GL_FALSE, &model[0][0]);
-	GLuint view_projection_loc = glGetUniformLocation(program.GetProgramID(), "view_projection");
-	glUniformMatrix4fv(view_projection_loc, 1, GL_FALSE, &view_projection[0][0]);
+	program->SetUniformMat4("view_projection", view_projection);
 
 	// glEnable(GL_DEPTH_TEST);
 	// glEnable (GL_BLEND);
@@ -88,18 +85,18 @@ int main() {
 	while (!window->isClosed()) {
 		window->Clear();
 
-		double elapsed_time = glfwGetTime() - start_time;
-		double speed = 30.0 * (elapsed_time * 1.0/30.0);
+		/*******************************************
+		* TIME BASED MOVEMENT - THIS ISN'T WORKING *
+		*******************************************/
+		/*double elapsed_time = glfwGetTime() - start_time;
+		double speed = 10.0f * (max(elapsed_time, 0.03) * (1/30.0f));
 		angle = angle + speed;
 		if (angle >= 360.0) {
 			angle = 0;
 		}
-
 		printf("angle: %16f, elapsed_time: %16f, speed: %16f\n", angle, elapsed_time, speed);
+		glm::mat4 rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));*/
 
-		glm::mat4 rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));
-
-		glUniformMatrix4fv(model_loc, 1, GL_FALSE, &rotation[0][0]);
 		obj1.Draw();
 
 		window->Update();

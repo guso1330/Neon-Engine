@@ -74,11 +74,11 @@ int main() {
 	GLuint view_projection_loc = glGetUniformLocation(program.GetProgramID(), "view_projection");
 	glUniformMatrix4fv(view_projection_loc, 1, GL_FALSE, &view_projection[0][0]);
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable (GL_BLEND);
-	glDepthFunc(GL_LEQUAL);
-	glClearDepth(1.0f);
-	glEnable(GL_CULL_FACE);
+	// glEnable(GL_DEPTH_TEST);
+	// glEnable (GL_BLEND);
+	// glDepthFunc(GL_LEQUAL);
+	// glClearDepth(1.0f);
+	// glEnable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	/* timing stuff */

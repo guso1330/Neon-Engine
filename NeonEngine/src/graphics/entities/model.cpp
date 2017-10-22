@@ -6,6 +6,7 @@ namespace neon {
 	{
 		m_mesh = new Mesh(filename);
 		m_modelLoc = program->GetUniformLocation("model");
+		m_colorLoc = program->GetUniformLocation("vcolor");
 		Init();
 	}
 
@@ -16,6 +17,7 @@ namespace neon {
 
 	void Model::Init() {
 		m_modelMatrix = glm::mat4(1.0f);
+		m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		m_ibo = new IndexBuffer(m_mesh->GetIndices());
 		m_vao.AddBuffer(new VertexBuffer(m_mesh->GetVertices()), 0);
 	}
@@ -24,6 +26,7 @@ namespace neon {
 		m_vao.Bind();
 		m_ibo->Bind();
 
+		m_program->SetUniform4f(m_colorLoc, m_color);
 		m_program->SetUniformMat4(m_modelLoc, m_modelMatrix);
 		glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, 0);
 		

@@ -1,8 +1,13 @@
 #include "window.h"
 
+// TODO: figure out a way to do better input that can be defined outside of the window class
+
 namespace neon {
 
-	static void windowResize(GLFWwindow *window, int width, int height);
+	static void window_resize_callback(GLFWwindow *window, int width, int height);
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void mouse_cursor_position_callback(GLFWwindow *window, double x_pos, double y_pos);
+	static void mouse_button_callback (GLFWwindow *window, int button, int action, int mods);
 
 	Window::Window(unsigned int width, unsigned int height, bool fullscreen, const char* title) :
 		m_width(width),
@@ -46,7 +51,10 @@ namespace neon {
 
 		/* Set the newly created window to the current context */
 		glfwMakeContextCurrent(m_window);
-		glfwSetWindowSizeCallback(m_window, windowResize);
+		glfwSetWindowSizeCallback(m_window, window_resize_callback);
+		glfwSetKeyCallback(m_window, key_callback);
+		glfwSetCursorPosCallback(m_window, mouse_cursor_position_callback);
+		glfwSetMouseButtonCallback(m_window, mouse_button_callback);
 
 		/* Setting up glad and initializing it */
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -83,9 +91,25 @@ namespace neon {
 		glClearColor(r, g, b, a);
 	}
 
-	// Static function
-	static void windowResize(GLFWwindow *window, int width, int height) {
+	/******************
+	* Static function *
+	******************/
+	static void window_resize_callback(GLFWwindow *window, int width, int height) {
 		glViewport(0, 0, width, height);
 	}
 
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+		// Close the window
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+			glfwSetWindowShouldClose(window, GLFW_TRUE);
+		}
+	}
+
+	static void mouse_cursor_position_callback(GLFWwindow *window, double x_pos, double y_pos) {
+		// std::cout << "x_pos: " << x_pos << ", y_pos: " << y_pos << std::endl;
+	}
+
+	static void mouse_button_callback (GLFWwindow *window, int button, int action, int mods) {
+		// std::cout << "button: " << button << ", action: " << action << ", mods: " << mods << std::endl;
+	}
 }

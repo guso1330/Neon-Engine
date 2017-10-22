@@ -19,16 +19,16 @@ namespace neon {
 			/********************
 			*  Getter functions *
 			********************/
-			inline std::vector<glm::vec3>& GetVertices() { return m_vertices; }
+			inline const std::vector<glm::vec3>& GetVertices() const { return m_vertices; }
 			inline unsigned int GetVerticesSize() const { return m_vertices.size(); }
 
-			inline std::vector<unsigned int>& GetIndices() { return m_indices; }
+			inline const std::vector<unsigned int>& GetIndices() const { return m_indices; }
 			inline unsigned int GetIndicesSize() const { return m_indices.size(); }
 			
-			inline std::vector<glm::vec2>& GetUVs() { return m_uvs; }
+			inline const std::vector<glm::vec2>& GetUVs() const { return m_uvs; }
 			inline unsigned int GetUVsSize() const { return m_uvs.size(); }
 			
-			inline std::vector<glm::vec3>& GetNormals() { return m_normals; }
+			inline const std::vector<glm::vec3>& GetNormals() const { return m_normals; }
 			inline unsigned int GetNormalsSize() const { return m_normals.size(); }
 
 		private:

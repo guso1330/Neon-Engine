@@ -14,7 +14,7 @@ namespace neon {
 			VertexBuffer(GLfloat* data, GLsizei count, GLuint componentCount);
 			VertexBuffer(const std::vector<glm::vec3> &data);
 			// Destructor
-			~VertexBuffer() {}
+			~VertexBuffer() { glDeleteBuffers(1, &m_vbo); }
 			void Bind() const;
 			void Unbind() const;
 			inline GLuint GetComponentCount() { return m_componentCount; }

@@ -12,7 +12,7 @@ namespace neon {
 		public:
 			IndexBuffer(GLuint* data, GLsizei count);
 			IndexBuffer(const std::vector<GLuint> &data);
-			~IndexBuffer() {}
+			~IndexBuffer() { glDeleteBuffers(1, &m_ibo); }
 			void Bind() const;
 			void Unbind() const;
 			inline GLuint GetCount() { return m_count; }

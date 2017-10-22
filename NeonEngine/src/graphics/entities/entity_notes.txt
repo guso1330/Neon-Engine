@@ -1,0 +1,40 @@
+Mesh
+----
+- .obj information
+	- Vertices
+	- Indices
+	- UVs
+	- Normals
+	- Material data
+
+Model
+-----
+- Holds a Mesh
+- Texture
+- Material
+- Animation Rig?
+	- Skeleton
+	- Skinning
+	- Animation Data Set
+- It's own Model Matrix?
+	Should it rely on a game object for manipulation?
+
+Renderable
+----------
+- Vertex Data
+	- Vertices
+	- Normals
+	- UVs
+
+Game Object
+-----------
+- Position
+- Data/Attributes
+- Renderable or Not
+- Classification
+	- Sound
+	- Light
+	- Camera
+	- Controller
+	- Particle System/Effect
+	- Model

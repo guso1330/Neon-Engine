@@ -29,8 +29,9 @@ namespace neon {
 			GLint GetUniformLocation(const char* name);
 
 			// 
-			void Program::SetUniformMat4(const char* name, const glm::mat4& matrix);
-			void Program::SetUniformMat4(GLuint loc, const glm::mat4& matrix);
+			void SetUniformMat4(const char* name, const glm::mat4& matrix);
+			void SetUniformMat4(GLuint loc, const glm::mat4& matrix);
+			void SetUniform4f(GLuint color_loc, const glm::vec4& n_color);
 
 			// TODO: call glUseProgram
 			void Bind();

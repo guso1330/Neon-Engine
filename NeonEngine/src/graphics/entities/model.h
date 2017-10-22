@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
-#include <glm/mat4x4.hpp>
+#include <glm/glm.hpp>
 #include "../buffers/vertexArray.h"
 #include "../buffers/vertexBuffer.h"
 #include "../buffers/indexBuffer.h"
@@ -14,24 +14,32 @@ namespace neon {
 		Model(const char *filename, Program* program);
 		~Model();
 
-		inline Mesh* GetMesh() const { return m_mesh; }
-		inline const glm::mat4 GetModelMatrix() const { return m_modelMatrix; }
+		// GETTERS
+		inline const Mesh* GetMesh() const { return m_mesh; }
+		inline const glm::mat4& GetModelMatrix() const { return m_modelMatrix; }
+		inline void SetModelMatrix(const glm::mat4 &n_modelMatrix) { m_modelMatrix = n_modelMatrix; }
+		inline void SetColor(const glm::vec4 &n_color) { m_color = n_color; }
 
 		// Draw Functions
 		void Draw() const;
+
 	private:
 		void Init();
+	
 	private:
 		VertexArray m_vao;
 		IndexBuffer *m_ibo;
+		Program *m_program;
 
-		/* TODO: Might want to replace this with a require Model
-		instead of a *Model*/
+		/* 
+			TODO: Maybe I shouldn't declare this on the heap...?
+		*/
 		Mesh *m_mesh;
 
 		glm::mat4 m_modelMatrix;
 		GLuint m_modelLoc;
-
-		Program *m_program;
+		GLuint m_colorLoc;
+		
+		glm::vec4 m_color;
 	};
 }

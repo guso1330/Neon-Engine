@@ -17,16 +17,18 @@ OBJ_FILES := $(patsubst %.cpp, %.o, $(notdir $(SRC_CPP:.cpp=.o)))
 #
 # Dependencies Directories
 #
-GLFW = ./Dependencies/glfw
-GLFW_INC = $(GLFW)/include
-GLFW_LIB = $(GLFW)/lib-mingw
+GLFW := ./Dependencies/glfw
+GLFW_INC := $(GLFW)/include
+GLFW_LIB := $(GLFW)/lib-mingw
 
-GLAD = ./Dependencies/glad
-GLAD_INC = $(GLAD)/include
+GLAD := ./Dependencies/glad
+GLAD_INC := $(GLAD)/include
 
-GLM = ./Dependencies/glm
+GLM := ./Dependencies/glm
 
 TINYOBJLOADER = ./Dependencies/tinyobjloader-1.0.6
+
+STB_IMAGE = ./Dependencies/stb_image
 
 #
 # Build Variables

@@ -7,6 +7,7 @@
 #include "../buffers/indexBuffer.h"
 #include "./mesh.h"
 #include "../../shaders/program.h"
+#include "../../shaders/texture.h"
 
 namespace neon {
 	class Model {
@@ -17,8 +18,11 @@ namespace neon {
 		// GETTERS
 		inline const Mesh* GetMesh() const { return m_mesh; }
 		inline const glm::mat4& GetModelMatrix() const { return m_modelMatrix; }
+
+		// SETTERS
 		inline void SetModelMatrix(const glm::mat4 &n_modelMatrix) { m_modelMatrix = n_modelMatrix; }
 		inline void SetColor(const glm::vec4 &n_color) { m_color = n_color; }
+		inline void SetTexture(const char* filename);
 
 		// Draw Functions
 		void Draw() const;
@@ -35,10 +39,12 @@ namespace neon {
 			TODO: Maybe I shouldn't declare this on the heap...?
 		*/
 		Mesh *m_mesh;
+		Texture *m_texture;
 
 		glm::mat4 m_modelMatrix;
 		GLuint m_modelLoc;
 		GLuint m_colorLoc;
+		GLuint m_texLoc;
 		
 		glm::vec4 m_color;
 	};

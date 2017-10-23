@@ -26,9 +26,9 @@ GLAD_INC := $(GLAD)/include
 
 GLM := ./Dependencies/glm
 
-TINYOBJLOADER = ./Dependencies/tinyobjloader-1.0.6
+TINYOBJLOADER := ./Dependencies/tinyobjloader-1.0.6
 
-STB_IMAGE = ./Dependencies/stb_image
+STB_IMAGE := ./Dependencies/stb_image
 
 #
 # Build Variables
@@ -39,7 +39,7 @@ CC_FLAGS = -Wall
 GL_OPTIONS = -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo -lglfw3
 LDLIBS = -L/opt/X11/lib $(GL_OPTIONS) -L$(LOCAL_LIB) -L$(GLFW_LIB)
 
-INCS = -I/opt/X11/include -I$(LOCAL_INC) -I$(GLFW_INC) -I$(GLAD_INC) -I$(GLM) -I$(TINYOBJLOADER)
+INCS = -I/opt/X11/include -I$(LOCAL_INC) -I$(GLFW_INC) -I$(GLAD_INC) -I$(GLM) -I$(TINYOBJLOADER) -I$(STB_IMAGE)
 
 OPTIONS= $(CC_FLAGS) $(INCS)
 
@@ -75,6 +75,8 @@ window.o: $(SRC)/app/window.h $(SRC)/app/window.cpp glad.o
 #
 # Shaders
 #
+texture.o: $(SRC)/shaders/texture.h $(SRC)/shaders/texture.cpp glad.o
+	$(CC) $(SRC)/shaders/texture.cpp -c $(OPTIONS)
 program.o: $(SRC)/shaders/program.h $(SRC)/shaders/program.cpp glad.o
 	$(CC) $(SRC)/shaders/program.cpp -c $(OPTIONS)
 shader.o: $(SRC)/shaders/shader.h $(SRC)/shaders/shader.cpp glad.o

@@ -22,6 +22,10 @@ namespace neon {
 		m_vao.AddBuffer(new VertexBuffer(m_mesh->GetVertices()), 0);
 	}
 
+	void Model::SetTexture(const char* filename) {
+		
+	}
+
 	void Model::Draw() const {
 		m_vao.Bind();
 		m_ibo->Bind();

@@ -81,16 +81,19 @@ int main() {
 	}
 	Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
 #endif
+
+	// cout << "PLANE UV's" << std::endl;
+	// debug::print_vector_vec2(plane.GetMesh()->GetUVs());
 	
 	/**********************************/
 	program->SetUniformMat4("view_projection", view_projection);
 
 	glEnable(GL_DEPTH_TEST);
-	glEnable (GL_BLEND);
 	glDepthFunc(GL_LEQUAL);
 	glClearDepth(1.0f);
+	glEnable (GL_BLEND);
 	glEnable(GL_CULL_FACE);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	/* timing stuff */
 	double start_time = glfwGetTime();
@@ -111,12 +114,16 @@ int main() {
 			angle = 0;
 		}
 
+		//
 		// Draw the plane
+		//
 		glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -0.5f, 0)) * glm::rotate(0.0f, glm::vec3(1, 0, 0)) * glm::scale(glm::vec3(10.0f, 0, 10.0f));
 		plane.SetModelMatrix(plane_model_matrix);
 		plane.Draw();
 
+		//
 		// Draw the cubes
+		//
 		rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));
 		models[0]->SetModelMatrix(rotation);
 		models[0]->Draw();

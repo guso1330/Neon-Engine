@@ -5,11 +5,20 @@
 
 namespace neon { 
 	namespace debug {
-		void print_vector_vec3(const std::vector<vec3> &v) {
+		void print_vector_vec3(const std::vector<glm::vec3> &v) {
 			std::cout << "PRINTING A VECTOR OF VEC3" << std::endl;
 			std::cout << "-------------------------" << std::endl;
 			for(int i=0; i<v.size(); ++i) {
 				std::cout << "Vertex " << i << ": " << v[i].x << ", " << v[i].y << ", " << v[i].z << std::endl;
+			}
+			std::cout << std::endl;
+		}
+
+		void print_vector_vec2(const std::vector<glm::vec2> &v) {
+			std::cout << "PRINTING A VECTOR OF VEC2" << std::endl;
+			std::cout << "-------------------------" << std::endl;
+			for(int i=0; i<v.size(); ++i) {
+				std::cout << "Vertex " << i << ": " << v[i].x << ", " << v[i].y << std::endl;
 			}
 			std::cout << std::endl;
 		}

@@ -7,7 +7,6 @@
 #include "../buffers/indexBuffer.h"
 #include "./mesh.h"
 #include "../../shaders/program.h"
-#include "../../shaders/texture.h"
 
 namespace neon {
 	class Model {
@@ -39,7 +38,6 @@ namespace neon {
 			TODO: Maybe I shouldn't declare this on the heap...?
 		*/
 		Mesh *m_mesh;
-		Texture *m_texture;
 
 		glm::mat4 m_modelMatrix;
 		GLuint m_modelLoc;

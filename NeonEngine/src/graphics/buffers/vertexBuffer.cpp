@@ -20,6 +20,15 @@ VertexBuffer::VertexBuffer(const std::vector<glm::vec3> &data)
 	Unbind();
 }
 
+VertexBuffer::VertexBuffer(const std::vector<glm::vec2> &data)
+	: m_componentCount(2) {
+	// Generate a new buffer
+	glGenBuffers(1, &m_vbo);
+	Bind();
+	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec2), &data[0][0], GL_STATIC_DRAW);
+	Unbind();
+}
+
 void VertexBuffer::Bind() const {
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 }

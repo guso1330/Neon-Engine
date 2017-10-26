@@ -48,8 +48,12 @@ namespace neon {
 		glUniformMatrix4fv(loc, 1, GL_FALSE, &matrix[0][0]);
 	}
 
-	void Program::SetUniform4f(GLuint color_loc, const glm::vec4& n_color) {
-		glUniform4f(color_loc, n_color.x, n_color.y, n_color.z, n_color.w);
+	void Program::SetUniform4f(GLuint loc, const glm::vec4& v4) {
+		glUniform4f(loc, v4.x, v4.y, v4.z, v4.w);
+	}
+
+	void Program::SetUniform1i(const char* name, GLfloat v0) {
+		glUniform1i(GetUniformLocation(name), v0);
 	}
 
 	void Program::Bind() {

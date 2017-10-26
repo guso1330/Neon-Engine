@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
 #include <vector>
 
 namespace neon {
@@ -13,6 +14,7 @@ namespace neon {
 			// Constructors
 			VertexBuffer(GLfloat* data, GLsizei count, GLuint componentCount);
 			VertexBuffer(const std::vector<glm::vec3> &data);
+			VertexBuffer(const std::vector<glm::vec2> &data);
 			// Destructor
 			~VertexBuffer() { glDeleteBuffers(1, &m_vbo); }
 			void Bind() const;

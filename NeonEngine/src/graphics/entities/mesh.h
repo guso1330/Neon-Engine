@@ -31,10 +31,14 @@ namespace neon {
 			inline const std::vector<glm::vec3>& GetNormals() const { return m_normals; }
 			inline unsigned int GetNormalsSize() const { return m_normals.size(); }
 
+			inline const std::vector<Index>& GetIndexObj() const { return m_indexObj; }
+			inline unsigned int GetIndexObjSize() const { return m_indexObj.size(); }
+
 		private:
 			std::vector<glm::vec3> m_vertices;
 			std::vector<unsigned int> m_indices;
 			std::vector<glm::vec2> m_uvs;
 			std::vector<glm::vec3> m_normals;
+			std::vector<Index> m_indexObj;
 	};
 }

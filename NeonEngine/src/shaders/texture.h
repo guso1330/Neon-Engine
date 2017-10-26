@@ -12,6 +12,8 @@ class Texture {
 		~Texture();
 
 		void Bind(unsigned int unit);
+		void Unbind(unsigned int unit);
+
 	public:
 		// GETTERS	
 		inline const GLuint& GetID() const { return m_texID; }

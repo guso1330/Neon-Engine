@@ -5,8 +5,7 @@
 
 namespace neon {
 
-	void tiny_obj_loader_load_obj(std::string inputfile, vector<vec3> &vertices, vector<GLuint> &indices, vector<vec2> &uvs, vector<vec3> &normals) {
-		printf("\n");
+	void tiny_obj_loader_load_obj(std::string inputfile, vector<vec3> &vertices, vector<unsigned int> &indices, vector<vec2> &uvs, vector<vec3> &normals, vector<Index> &Index_Obj) {
 
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
@@ -21,13 +20,14 @@ namespace neon {
 		//  - check if the ret was NULL
 		//
 		if (!err.empty()) { // `err` may contain warning message.
+			printf("\n");
 			std::cerr << err << std::endl;
 		}
 		if (!ret) {
 			system("PAUSE");
 		}
 		else {
-			printf("Loaded %s with %lu shapes\n\n", inputfile.c_str(), shapes.size());
+			printf("Loaded %s with %lu shapes\n", inputfile.c_str(), shapes.size());
 
 			//
 			// VERTICES
@@ -60,10 +60,13 @@ namespace neon {
 			//
 			// Loop over shapes
 			for (size_t s = 0; s < shapes.size(); s++) {
-
 				for (size_t i = 0; i < shapes[s].mesh.indices.size(); ++i) {
-					// cout << shapes[s].mesh.indices[i].vertex_index << endl;
-					indices.push_back(shapes[s].mesh.indices[i].vertex_index);
+					Index temp_index;
+					temp_index.vertex_index = shapes[s].mesh.indices[i].vertex_index;
+					temp_index.uv_index = shapes[s].mesh.indices[i].texcoord_index;
+					temp_index.normal_index = shapes[s].mesh.indices[i].normal_index;
+					indices.push_back(temp_index.vertex_index);
+					Index_Obj.push_back(temp_index);
 				}
 			}
 		}

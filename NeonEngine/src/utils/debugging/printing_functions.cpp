@@ -9,7 +9,7 @@ namespace neon {
 			std::cout << "PRINTING A VECTOR OF VEC3" << std::endl;
 			std::cout << "-------------------------" << std::endl;
 			for(int i=0; i<v.size(); ++i) {
-				std::cout << "Vertex " << i << ": " << v[i].x << ", " << v[i].y << ", " << v[i].z << std::endl;
+				std::cout << i << ": " << v[i].x << ", " << v[i].y << ", " << v[i].z << std::endl;
 			}
 			std::cout << std::endl;
 		}
@@ -18,7 +18,7 @@ namespace neon {
 			std::cout << "PRINTING A VECTOR OF VEC2" << std::endl;
 			std::cout << "-------------------------" << std::endl;
 			for(int i=0; i<v.size(); ++i) {
-				std::cout << "Vertex " << i << ": " << v[i].x << ", " << v[i].y << std::endl;
+				std::cout << i << ": " << v[i].x << ", " << v[i].y << std::endl;
 			}
 			std::cout << std::endl;
 		}
@@ -27,7 +27,7 @@ namespace neon {
 			std::cout << "PRINTING A VECTOR OF UNSIGNED INT" << std::endl;
 			std::cout << "---------------------------------" << std::endl;
 			for(int i=0; i<v.size(); i += 3) {
-				std::cout << "Index " << i << ": " << v[i] << ", " << v[i+1] << ", " << v[i+2] << std::endl;
+				std::cout << i/3 << ": " << v[i] << ", " << v[i+1] << ", " << v[i+2] << std::endl;
 			}
 			std::cout << std::endl;
 		}

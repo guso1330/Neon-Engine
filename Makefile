@@ -34,7 +34,7 @@ STB_IMAGE := ./Dependencies/stb_image
 # Build Variables
 #
 CC = g++
-CC_FLAGS = -Wall
+CC_FLAGS = -Wall -std=c++11
 
 GL_OPTIONS = -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo -lglfw3
 LDLIBS = -L/opt/X11/lib $(GL_OPTIONS) -L$(LOCAL_LIB) -L$(GLFW_LIB)
@@ -50,6 +50,9 @@ OPTIONS= $(CC_FLAGS) $(INCS)
 # obj/%.o: $(SRC)/%.cpp
 # 	$(CC) $(OPTIONS) -c -o $@ $<
 all: main
+
+debug: $(SRC)/main.cpp glad.o $(OBJ_FILES)
+	$(CC) $(SRC)/main.cpp glad.o $(OBJ_FILES) $(OPTIONS) $(LDLIBS) -g -o main
 
 main: $(SRC)/main.cpp glad.o $(OBJ_FILES)
 	$(CC) $(SRC)/main.cpp glad.o $(OBJ_FILES) $(OPTIONS) $(LDLIBS) -o main

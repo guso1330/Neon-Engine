@@ -2,10 +2,14 @@
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
+#include <ctime>
+
+using namespace std;
 
 namespace neon {
 
 	void tiny_obj_loader_load_obj(std::string inputfile, vector<vec3> &vertices, vector<unsigned int> &indices, vector<vec2> &uvs, vector<vec3> &normals, vector<Index> &Index_Obj) {
+		clock_t begin = clock();
 
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
@@ -55,6 +59,8 @@ namespace neon {
 					attrib.texcoords[2 * v + 1]));
 			}
 
+			// std::cout << "sizes of model loader: " << vertices.size() << " " << normals.size() << " " << uvs.size() << std::endl;
+
 			// 
 			// INDICES
 			//
@@ -62,14 +68,28 @@ namespace neon {
 			for (size_t s = 0; s < shapes.size(); s++) {
 				for (size_t i = 0; i < shapes[s].mesh.indices.size(); ++i) {
 					Index temp_index;
-					temp_index.vertex_index = shapes[s].mesh.indices[i].vertex_index;
-					temp_index.uv_index = shapes[s].mesh.indices[i].texcoord_index;
-					temp_index.normal_index = shapes[s].mesh.indices[i].normal_index;
+					temp_index.has_vi = temp_index.has_ui = temp_index.has_ni = false;
+					if(vertices.size() != 0) {
+						temp_index.vertex_index = shapes[s].mesh.indices[i].vertex_index;
+						temp_index.has_vi = true;
+					}
+					if(uvs.size() != 0) {
+						temp_index.uv_index = shapes[s].mesh.indices[i].texcoord_index;
+						temp_index.has_ui = true;
+					}
+					if(normals.size() != 0) {
+						temp_index.normal_index = shapes[s].mesh.indices[i].normal_index;
+						temp_index.has_ni = true;
+					}
 					indices.push_back(temp_index.vertex_index);
 					Index_Obj.push_back(temp_index);
 				}
 			}
 		}
+
+		clock_t end = clock();
+		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+		printf("Time of tiny_obj_loader_load_obj: %lf\n\n", elapsed_secs);
 	}
 
 	// split_str - Definition for the split_str function

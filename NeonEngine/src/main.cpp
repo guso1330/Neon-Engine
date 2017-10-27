@@ -25,7 +25,7 @@ const GLint WIDTH = 1024,
 
 int main() {
 	srand (time(NULL));
-	float rand_color_r, rand_color_g, rand_color_b;
+	// float rand_color_r, rand_color_g, rand_color_b;
 
 	//
 	// Initialize the camera
@@ -34,9 +34,9 @@ int main() {
 	float FOV = 70.0f;
 	float g_NEAR = 0.1f;
 	float g_FAR = 1000.0f;
-	// Camera camera(glm::vec3(0, 300.0f, -300.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
-	Camera camera(glm::vec3(0, 75.0f, -75.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
-	// Camera camera(glm::vec3(0, 2.0f, -3.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	// Camera camera(glm::vec3(0, 400.0f, -400.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	// Camera camera(glm::vec3(0, 50.0f, -40.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	Camera camera(glm::vec3(0, 750.0f, -750.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 	camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glm::mat4 view_projection = camera.GetViewProjection();
@@ -77,10 +77,23 @@ int main() {
 	// *WARNING: SEG FAULT WHEN USING THE PLASMACANNON
 	// Model obj1("./NeonEngine/src/res/models/Plasmacannon/plasma_cannon.obj", program);
 	// obj1.SetTexture("./NeonEngine/src/res/models/Plasmacannon/plasmacannon_weapon_diffuse.bmp");
-	// Model obj1("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program);
-	// obj1.SetTexture("./NeonEngine/src/res/textures/checker.png");
-	Model obj1("./NeonEngine/src/res/models/pepsi/Pepsi_Can.obj", program);
-	obj1.SetTexture("./NeonEngine/src/res/models/pepsi/pepsi_simple.jpg");
+	// Model obj1("./NeonEngine/src/res/models/bench/bench.obj", program);
+	// obj1.SetTexture("./NeonEngine/src/res/models/bench/animal-texture_082.jpg");
+
+	Model obj1("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program);
+	obj1.SetTexture("./NeonEngine/src/res/textures/cartoon_wall_texture.jpg");
+
+	Model obj2("./NeonEngine/src/res/models/cube_no_normals.obj", program);
+	obj1.SetTexture("./NeonEngine/src/res/textures/cartoon_wall_texture.jpg");
+
+	// Model obj1("./NeonEngine/src/res/models/only_quad_sphere.obj", program);
+	// obj1.SetColor(glm::vec4(1.0f, 0, 0, 1.0f));
+	// Model obj1("./NeonEngine/src/res/models/pepsi/Pepsi_Can.obj", program);
+	// obj1.SetTexture("./NeonEngine/src/res/models/pepsi/pepsi_simple.jpg");
+	// Model obj1("./NeonEngine/src/res/models/pokeball.obj", program);
+	// obj1.SetTexture("./NeonEngine/src/res/textures/checkered_colored.jpg");
+
+
 	// for(int i=0; i < 10; ++i) {
 	// 	models.push_back(new Model("./NeonEngine/src/res/models/cube.obj", program));
 	// 	rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
@@ -139,7 +152,7 @@ int main() {
 		//
 		// Draw the plane
 		//
-		glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -0.5f, 0)) * glm::rotate(0.0f, glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(10.0f, 0, 10.0f));
+		glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::rotate(0.0f, glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(10.0f, 0, 10.0f));
 		plane.SetModelMatrix(plane_model_matrix);
 		plane.Draw();
 

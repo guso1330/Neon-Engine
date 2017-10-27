@@ -27,6 +27,10 @@ namespace neon {
 		unsigned int uv_index;
 		unsigned int normal_index;
 
+		bool has_vi;
+		bool has_ui;
+		bool has_ni;
+
 		bool operator == (const Index& rhs) const
 		{
 			return (vertex_index == rhs.vertex_index) && 
@@ -34,11 +38,11 @@ namespace neon {
 				   (normal_index == rhs.normal_index); 
 		}
 
-		// // WARNING: requires C++ 11 for std::tie
-		// bool operator < (const Index& ind) const
-		// {
-		// 	return std::tie(vertex_index, uv_index, normal_index) < std::tie(ind.vertex_index, ind.uv_index, ind.normal_index);
-		// }
+		// WARNING: requires C++ 11 for std::tie
+		bool operator < (const Index& ind) const
+		{
+			return std::tie(vertex_index, uv_index, normal_index) < std::tie(ind.vertex_index, ind.uv_index, ind.normal_index);
+		}
 	};
 
 	void tiny_obj_loader_load_obj(string inputfile, vector<vec3> &vertices, vector<unsigned int> &indices, vector<vec2> &uvs, vector<vec3> &normals, vector<Index> &Index_Obj);
@@ -77,3 +81,26 @@ namespace neon {
 	//******************************************************************
 	void split_str(const string &s, char* delim, vector<string> &v);
 }
+
+/********************************************************************************************/
+/* From https://stackoverflow.com/questions/19195183/how-to-properly-hash-the-custom-struct */
+/********************************************************************************************/
+template <class T>
+inline void hash_combine(std::size_t & s, const T & v)
+{
+	std::hash<T> h;
+	s^= h(v) + 0x9e3779b9 + (s<< 6) + (s>> 2);
+}
+
+template<>
+struct hash<neon::Index>
+{
+	std::size_t operator()(neon::Index const& i) const 
+	{
+		std::size_t res = 0;
+		hash_combine(res,i.vertex_index);
+		hash_combine(res,i.uv_index);
+		hash_combine(res,i.normal_index);
+	 	return res;
+	}
+};

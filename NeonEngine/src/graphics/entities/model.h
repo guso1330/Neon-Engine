@@ -10,6 +10,8 @@
 #include "../../shaders/program.h"
 #include "../../shaders/texture.h"
 
+#include <unordered_set>
+#include <set>
 #include <stddef.h>
 
 namespace neon {
@@ -18,14 +20,20 @@ namespace neon {
 		glm::vec3 pos;
 		glm::vec2 uv;
 		glm::vec3 normal;
-		
+
 		bool operator == (const Vertex& rhs) const
 		{
 			return (pos == rhs.pos) && 
 				   (uv == rhs.uv) && 
 				   (normal == rhs.normal); 
 		}
+
+		bool operator < (const Vertex& rhs) const
+		{
+			return (glm::all(glm::lessThan(pos, rhs.pos)) || (pos == rhs.pos && (glm::all(glm::lessThan(uv, rhs.uv))|| (uv == rhs.uv && glm::all(glm::lessThan(normal, rhs.normal))))));
+		}
 	};
+
 
 	class Model {
 	public:

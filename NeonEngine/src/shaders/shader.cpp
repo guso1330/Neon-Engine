@@ -29,14 +29,16 @@ namespace neon {
 		glGetShaderiv(m_shaderID, GL_COMPILE_STATUS, &compiled);
 		// Get compile errors and log them
 		if (!compiled) {
-			std::cerr << m_filename << " failed to compile: " << std::endl;
+			std::cerr << "\n" << m_filename << " failed to compile: " << std::endl;
+			
 			GLint logSize;
-			glGetShaderiv(m_shaderID, GL_INFO_LOG_LENGTH, &logSize);
 
-			char* logMsg = new char[logSize];
-			glGetShaderInfoLog(m_shaderID, logSize, NULL, logMsg);
+			glGetShaderiv(m_shaderID, GL_INFO_LOG_LENGTH, &logSize);
+			char* logMsg = (char*)alloca(logSize * sizeof(char));
+			glGetShaderInfoLog(m_shaderID, logSize, &logSize, logMsg);
 			std::cerr << logMsg << std::endl;
-			delete[] logMsg;
+			
+			glDeleteShader(m_shaderID);
 			system("PAUSE");
 			exit(EXIT_FAILURE);
 		}

@@ -25,7 +25,7 @@ const GLint WIDTH = 1024,
 
 int main() {
 	srand (time(NULL));
-	// float rand_color_r, rand_color_g, rand_color_b;
+	float rand_color_r, rand_color_g, rand_color_b;
 
 	//
 	// Initialize the camera
@@ -34,9 +34,10 @@ int main() {
 	float FOV = 70.0f;
 	float g_NEAR = 0.1f;
 	float g_FAR = 1000.0f;
+	Camera camera(glm::vec3(0, 50.0f, -40.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	// Camera camera(glm::vec3(0, 100.0f, -100.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 	// Camera camera(glm::vec3(0, 400.0f, -400.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
-	// Camera camera(glm::vec3(0, 50.0f, -40.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
-	Camera camera(glm::vec3(0, 750.0f, -750.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	// Camera camera(glm::vec3(0, 750.0f, -750.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 	camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glm::mat4 view_projection = camera.GetViewProjection();
@@ -74,17 +75,14 @@ int main() {
 	Model obj1("../NeonEngine/src/res/models/only_quad_sphere.obj", program);
 #elif __APPLE__
 
-	// *WARNING: SEG FAULT WHEN USING THE PLASMACANNON
-	// Model obj1("./NeonEngine/src/res/models/Plasmacannon/plasma_cannon.obj", program);
-	// obj1.SetTexture("./NeonEngine/src/res/models/Plasmacannon/plasmacannon_weapon_diffuse.bmp");
-	// Model obj1("./NeonEngine/src/res/models/bench/bench.obj", program);
-	// obj1.SetTexture("./NeonEngine/src/res/models/bench/animal-texture_082.jpg");
+	Model obj1("./NeonEngine/src/res/models/Plasmacannon/plasma_cannon.obj", program);
+	obj1.SetTexture("./NeonEngine/src/res/models/Plasmacannon/plasmacannon_weapon_diffuse.bmp");
 
-	Model obj1("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program);
-	obj1.SetTexture("./NeonEngine/src/res/textures/cartoon_wall_texture.jpg");
+	// Model obj1("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program);
+	// obj1.SetTexture("./NeonEngine/src/res/textures/cartoon_wall_texture.jpg");
 
-	Model obj2("./NeonEngine/src/res/models/cube_no_normals.obj", program);
-	obj1.SetTexture("./NeonEngine/src/res/textures/cartoon_wall_texture.jpg");
+	// Model obj1("./NeonEngine/src/res/models/cube_no_normals.obj", program);
+	// obj1.SetTexture("./NeonEngine/src/res/textures/cartoon_wall_texture.jpg");
 
 	// Model obj1("./NeonEngine/src/res/models/only_quad_sphere.obj", program);
 	// obj1.SetColor(glm::vec4(1.0f, 0, 0, 1.0f));
@@ -95,15 +93,25 @@ int main() {
 
 
 	// for(int i=0; i < 10; ++i) {
-	// 	models.push_back(new Model("./NeonEngine/src/res/models/cube.obj", program));
+	// 	models.push_back(new Model("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program));
 	// 	rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
 	// 	rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
 	// 	rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
 	// 	models[i]->SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
-	// 	models[i]->SetTexture("./NeonEngine/src/res/textures/checkered_colored.jpg");
+	// 	models[i]->SetTexture("./NeonEngine/src/res/textures/checker.png");
 	// }
-	Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
-	plane.SetTexture("./NeonEngine/src/res/textures/checkered_colored.jpg");
+
+	// Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
+	// plane.SetTexture("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
+	
+	Model bench("./NeonEngine/src/res/models/bench/bench.obj", program);
+	bench.SetTexture("./NeonEngine/src/res/models/bench/animal-texture_082.jpg");
+
+	Model ah_25b("./NeonEngine/src/res/models/ah-24b/AN-24PB.obj", program);
+	ah_25b.SetTexture("./NeonEngine/src/res/models/ah-24b/body.jpg");
+
+	Model AKM("./NeonEngine/src/res/models/AKM/AKM.obj", program);
+	AKM.SetTexture("./NeonEngine/src/res/models/AKM/AKMS_Diff.tga");
 #endif
 
 	// DEBUG
@@ -152,17 +160,41 @@ int main() {
 		//
 		// Draw the plane
 		//
-		glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::rotate(0.0f, glm::vec3(0, 0, 1)) * glm::scale(glm::vec3(10.0f, 0, 10.0f));
-		plane.SetModelMatrix(plane_model_matrix);
-		plane.Draw();
+		// glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(10.0f, 0, 10.0f));
+		// plane.SetModelMatrix(plane_model_matrix);
+		// plane.Draw();
+
+		//
+		// Draw the bench
+		//
+		rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));
+		glm::mat4 bench_model_matrix = model * rotation * glm::scale(glm::vec3(0.01f, 0.01f, 0.01f));
+		bench.SetModelMatrix(bench_model_matrix);
+		bench.Draw();
+
+		//
+		// Draw the r8_ah_25b
+		//
+		rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));
+		glm::mat4 ah_25b_model_matrix = model * rotation * glm::scale(glm::vec3(1.5f, 1.51f, 1.51f));
+		ah_25b.SetModelMatrix(ah_25b_model_matrix);
+		ah_25b.Draw();
+
+		// Draw the AKM
+		rotation = model * glm::rotate((-1)*(float)angle, glm::vec3(0, 1, 0));
+		glm::mat4 akm_model_matrix = model * rotation * glm::scale(glm::vec3(0.2f, 0.2f, 0.2f));
+		AKM.SetModelMatrix(akm_model_matrix);
+		AKM.Draw();
 
 		//
 		// Draw the cubes
 		//
+		// glm::vec3 square_pos = glm::vec3(0, 0.5f, -20.0f);
+		// rotation = model * glm::translate(square_pos) * glm::rotate((float)angle, glm::vec3(0, 1, 0));
 		// models[0]->SetModelMatrix(rotation);
 		// models[0]->Draw();
 		// for(int i=1; i<models.size()-1; ++i) {
-		// 	rotation = model * glm::translate(glm::vec3(0, 0.5f, 3.0*i)) * glm::rotate((float)angle, glm::vec3(0, 1, 0));
+		// 	rotation = model * glm::translate(square_pos + glm::vec3(0, 0.5f, 10.0*i)) * glm::rotate((float)angle, glm::vec3(0, 1, 0));
 		// 	models[i]->SetModelMatrix(rotation);
 		// 	models[i]->Draw();
 		// }

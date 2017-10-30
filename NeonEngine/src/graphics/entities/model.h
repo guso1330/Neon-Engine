@@ -12,7 +12,9 @@
 
 #include <unordered_set>
 #include <set>
-#include <stddef.h>
+#include <tuple>
+#include <utility>
+#include <iterator>
 
 namespace neon {
 
@@ -21,16 +23,38 @@ namespace neon {
 		glm::vec2 uv;
 		glm::vec3 normal;
 
+		bool vecLessThan(const glm::vec3& lhs, const glm::vec3& rhs) const {
+			return glm::all(glm::lessThan(lhs, rhs));
+		}
+		bool vecLessThan(const glm::vec2& lhs, const glm::vec2& rhs) const {
+			return glm::all(glm::lessThan(lhs, rhs));
+		}
+
 		bool operator == (const Vertex& rhs) const
 		{
-			return (pos == rhs.pos) && 
-				   (uv == rhs.uv) && 
-				   (normal == rhs.normal); 
+			return (glm::all(glm::equal(pos, rhs.pos)) && 
+					glm::all(glm::equal(uv, rhs.uv))   && 
+					glm::all(glm::equal(normal, rhs.normal))); 
 		}
 
 		bool operator < (const Vertex& rhs) const
 		{
-			return (glm::all(glm::lessThan(pos, rhs.pos)) || (pos == rhs.pos && (glm::all(glm::lessThan(uv, rhs.uv))|| (uv == rhs.uv && glm::all(glm::lessThan(normal, rhs.normal))))));
+			// return vecLessThan(pos, rhs.pos) ||
+			// 	   (!vecLessThan(pos, rhs.pos) && vecLessThan(uv, rhs.uv)) ||
+			// 	   (!(vecLessThan(uv, rhs.uv)) && vecLessThan(normal, rhs.normal));
+			// std::cout << ((std::tie(pos.x, pos.y, pos.z) < std::tie(rhs.pos.x, rhs.pos.y, rhs.pos.z)) ||
+			// 				   (!(std::tie(pos.x, pos.y, pos.z) < std::tie(rhs.pos.x, rhs.pos.y, rhs.pos.z)) && std::tie(uv.x, uv.y) < std::tie(rhs.uv.x, rhs.uv.y)) ||
+			// 				   (!(std::tie(uv.x, uv.y) < std::tie(rhs.uv.x, rhs.uv.y)) && std::tie(normal.x, normal.y, normal.z) < std::tie(rhs.normal.x, rhs.normal.y, rhs.normal.z))) << std::endl;
+
+			return (std::tie(pos.x, pos.y, pos.z) < std::tie(rhs.pos.x, rhs.pos.y, rhs.pos.z)) ||
+				   (!(std::tie(pos.x, pos.y, pos.z) < std::tie(rhs.pos.x, rhs.pos.y, rhs.pos.z)) && std::tie(uv.x, uv.y) < std::tie(rhs.uv.x, rhs.uv.y)) ||
+				   (!(std::tie(uv.x, uv.y) < std::tie(rhs.uv.x, rhs.uv.y)) && std::tie(normal.x, normal.y, normal.z) < std::tie(rhs.normal.x, rhs.normal.y, rhs.normal.z));
+
+			// return a.field1 < b.field1 || (
+			// 	!(b.field1 < a.field1) && a.field2 < b.field2
+			// );
+			// return (glm::all(glm::lessThan(pos, rhs.pos)) || (pos == rhs.pos && (glm::all(glm::lessThan(uv, rhs.uv))|| (uv == rhs.uv && glm::all(glm::lessThan(normal, rhs.normal))))));
+
 		}
 	};
 

@@ -31,17 +31,20 @@ namespace neon {
 		bool has_ui;
 		bool has_ni;
 
+		unsigned int index;
+
 		bool operator == (const Index& rhs) const
 		{
 			return (vertex_index == rhs.vertex_index) && 
 				   (uv_index == rhs.uv_index) && 
-				   (normal_index == rhs.normal_index); 
+				   (normal_index == rhs.normal_index);
 		}
 
 		// WARNING: requires C++ 11 for std::tie
 		bool operator < (const Index& ind) const
 		{
-			return std::tie(vertex_index, uv_index, normal_index) < std::tie(ind.vertex_index, ind.uv_index, ind.normal_index);
+			return std::tie(vertex_index, uv_index, normal_index, index) < std::tie(ind.vertex_index, ind.uv_index, ind.normal_index, ind.index);
+			// return index < ind.index;
 		}
 	};
 

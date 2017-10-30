@@ -31,7 +31,7 @@ namespace neon {
 			system("PAUSE");
 		}
 		else {
-			printf("Loaded %s with %lu shapes\n", inputfile.c_str(), shapes.size());
+			printf("\nLoaded %s with %lu shapes\n", inputfile.c_str(), shapes.size());
 
 			//
 			// VERTICES
@@ -65,6 +65,7 @@ namespace neon {
 			// INDICES
 			//
 			// Loop over shapes
+			// TODO: handle negative indices
 			for (size_t s = 0; s < shapes.size(); s++) {
 				for (size_t i = 0; i < shapes[s].mesh.indices.size(); ++i) {
 					Index temp_index;

@@ -1,10 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <algorithm>
 #include <time.h>
-
-#include <glm/glm.hpp>
 
 #include "./app/window.h"
 #include "./shaders/shader.h"
@@ -17,8 +14,9 @@
 #include "./utils/obj_loader/objloader.h"
 #include "./utils/debugging/printing_functions.cpp"
 
+#include <glm/glm.hpp>
+
 using namespace neon;
-using namespace glm;
 
 const GLint WIDTH = 1024,
 			HEIGHT = 768;
@@ -59,8 +57,8 @@ int main() {
 		of attaching shaders to it
 	*************************************/
 #if _WIN32
-	Shader *vShader = new Shader("../NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
-	Shader *fShader = new Shader("../NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
+	Shader *vShader = new Shader("../NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
+	Shader *fShader = new Shader("../NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER);
 #elif __APPLE__
 	Shader *vShader = new Shader("./NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
 	Shader *fShader = new Shader("./NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER);
@@ -76,7 +74,16 @@ int main() {
 		Setting up The Models
 	****************************/
 #if _WIN32
-	Model obj1("../NeonEngine/src/res/models/only_quad_sphere.obj", program);
+	//Model obj1("../NeonEngine/src/res/models/only_quad_sphere.obj", program);
+	
+	/*Model cube("../NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program);
+	cube.SetTexture("../NeonEngine/src/res/textures/checker.png");
+
+	Model plane("../NeonEngine/src/res/models/plane_5unit.obj", program);
+	plane.SetTexture("../NeonEngine/src/res/textures/cartoon_floor_texture.jpg");*/
+
+	Model bench("../NeonEngine/src/res/models/bench/bench.obj", program);
+	bench.SetTexture("../NeonEngine/src/res/models/bench/animal-texture_082.jpg");
 #elif __APPLE__
 
 	// Model obj1("./NeonEngine/src/res/models/Plasmacannon/plasma_cannon.obj", program);
@@ -154,7 +161,7 @@ int main() {
 		* TIME BASED MOVEMENT - THIS ISN'T WORKING *
 		*******************************************/
 		elapsed_time = glfwGetTime() - start_time;
-		speed = 10.0f * (std::max(elapsed_time, 0.03) * (1/30.0f));
+		speed = 10.0f * (max(elapsed_time, 0.03) * (1/30.0f));
 		angle = angle + speed;
 		if (angle >= 360.0) {
 			angle = 0;
@@ -167,17 +174,17 @@ int main() {
 		//
 		// Draw the plane
 		//
-		glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
+		/*glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
 		plane.SetModelMatrix(plane_model_matrix);
-		plane.Draw();
+		plane.Draw();*/
 
 		//
 		// Draw the bench
 		//
-		// rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));
-		// glm::mat4 bench_model_matrix = model * rotation * glm::scale(glm::vec3(0.01f, 0.01f, 0.01f));
-		// bench.SetModelMatrix(bench_model_matrix);
-		// bench.Draw();
+		rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));
+		glm::mat4 bench_model_matrix = model * rotation * glm::scale(glm::vec3(0.01f, 0.01f, 0.01f));
+		bench.SetModelMatrix(bench_model_matrix);
+		bench.Draw();
 
 		//
 		// Draw the r8_ah_25b
@@ -196,16 +203,16 @@ int main() {
 		//
 		// Draw the cubes
 		//
-		glm::vec3 square_pos = glm::vec3(245.0f, 0.5f, 245.0f);
-		rotation = model * glm::translate(square_pos) * glm::rotate((float)angle, glm::vec3(0, 1, 0));
+		//glm::vec3 square_pos = glm::vec3(245.0f, 0.5f, 245.0f);
+		//rotation = model * glm::translate(square_pos) * glm::rotate((float)angle, glm::vec3(0, 1, 0));
 		
-		cube.SetModelMatrix(rotation);
+		//cube.SetModelMatrix(rotation);
 		// rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
 		// rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
 		// rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
 		// cube.SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
-		cube.Draw();
-		for(int i=1; i<CUBE_COL-1; ++i) {
+		//cube.Draw();
+		/*for(int i=1; i<CUBE_COL-1; ++i) {
 			for(int j=0; j < CUBE_COL; ++j) {
 				rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
 				rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
@@ -215,7 +222,7 @@ int main() {
 				cube.SetModelMatrix(rotation);
 				cube.Draw();
 			}
-		}
+		}*/
 
 		window->Update();
 

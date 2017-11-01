@@ -200,17 +200,17 @@ int main() {
 		rotation = model * glm::translate(square_pos) * glm::rotate((float)angle, glm::vec3(0, 1, 0));
 		
 		cube.SetModelMatrix(rotation);
-		rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
-		rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
-		rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
-		cube.SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
+		// rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
+		// rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
+		// rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
+		// cube.SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
 		cube.Draw();
 		for(int i=1; i<CUBE_COL-1; ++i) {
 			for(int j=0; j < CUBE_COL; ++j) {
-			rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
-			rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
-			rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
-			cube.SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
+				rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
+				rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
+				rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
+				cube.SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
 				rotation = model * glm::translate(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j)) * glm::rotate((float)angle, glm::vec3(0, 1, 0));
 				cube.SetModelMatrix(rotation);
 				cube.Draw();

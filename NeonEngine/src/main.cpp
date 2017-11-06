@@ -24,7 +24,6 @@ const GLint WIDTH = 1024,
 			HEIGHT = 768;
 
 short int CUBE_COL = 50, CUBE_ROW = 50;
-
 short int CUBE_COUNT = CUBE_COL * CUBE_ROW;
 
 int main() {
@@ -79,46 +78,14 @@ int main() {
 	Model obj1("../NeonEngine/src/res/models/only_quad_sphere.obj", program);
 #elif __APPLE__
 
-	// Model obj1("./NeonEngine/src/res/models/Plasmacannon/plasma_cannon.obj", program);
-	// obj1.SetTexture("./NeonEngine/src/res/models/Plasmacannon/plasmacannon_weapon_diffuse.bmp");
 
-	// Model obj1("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program);
-	// obj1.SetTexture("./NeonEngine/src/res/textures/cartoon_wall_texture.jpg");
-
-	// Model obj1("./NeonEngine/src/res/models/cube_no_normals.obj", program);
-	// obj1.SetTexture("./NeonEngine/src/res/textures/cartoon_wall_texture.jpg");
-
-	// Model obj1("./NeonEngine/src/res/models/only_quad_sphere.obj", program);
-	// obj1.SetColor(glm::vec4(1.0f, 0, 0, 1.0f));
-	// Model obj1("./NeonEngine/src/res/models/pepsi/Pepsi_Can.obj", program);
-	// obj1.SetTexture("./NeonEngine/src/res/models/pepsi/pepsi_simple.jpg");
-	// Model obj1("./NeonEngine/src/res/models/pokeball.obj", program);
-	// obj1.SetTexture("./NeonEngine/src/res/textures/checkered_colored.jpg");
-
-
-	// for(int i=0; i < CUBE_COUNT; ++i) {
-	// 	models.push_back(new Model("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program));
-	// 	rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
-	// 	rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
-	// 	rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
-	// 	models[i]->SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
-	// 	models[i]->SetTexture("./NeonEngine/src/res/textures/checker.png");
-	// }
 
 	Model cube("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program);
 	cube.SetTexture("./NeonEngine/src/res/textures/checker.png");
 
 	Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
 	plane.SetTexture("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
-	
-	// Model bench("./NeonEngine/src/res/models/bench/bench.obj", program);
-	// bench.SetTexture("./NeonEngine/src/res/models/bench/animal-texture_082.jpg");
 
-	// Model ah_25b("./NeonEngine/src/res/models/ah-24b/AN-24PB.obj", program);
-	// ah_25b.SetTexture("./NeonEngine/src/res/models/ah-24b/body.jpg");
-
-	// Model AKM("./NeonEngine/src/res/models/AKM/AKM.obj", program);
-	// AKM.SetTexture("./NeonEngine/src/res/models/AKM/AKMS_Diff.tga");
 #endif
 
 	// DEBUG
@@ -156,13 +123,9 @@ int main() {
 		elapsed_time = glfwGetTime() - start_time;
 		speed = 10.0f * (std::max(elapsed_time, 0.03) * (1/30.0f));
 		angle = angle + speed;
-		if (angle >= 360.0) {
+		if (angle > 360.0) {
 			angle = 0;
 		}
-
-		// rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));
-		// obj1.SetModelMatrix(rotation);
-		// obj1.Draw();
 
 		//
 		// Draw the plane
@@ -174,37 +137,17 @@ int main() {
 		//
 		// Draw the bench
 		//
-		// rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));
-		// glm::mat4 bench_model_matrix = model * rotation * glm::scale(glm::vec3(0.01f, 0.01f, 0.01f));
-		// bench.SetModelMatrix(bench_model_matrix);
-		// bench.Draw();
 
-		//
-		// Draw the r8_ah_25b
-		//
-		// rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));
-		// glm::mat4 ah_25b_model_matrix = model * rotation * glm::scale(glm::vec3(1.5f, 1.51f, 1.51f));
-		// ah_25b.SetModelMatrix(ah_25b_model_matrix);
-		// ah_25b.Draw();
-
-		// Draw the AKM
-		// rotation = model * glm::rotate((-1)*(float)angle, glm::vec3(0, 1, 0));
-		// glm::mat4 akm_model_matrix = model * rotation * glm::scale(glm::vec3(0.2f, 0.2f, 0.2f));
-		// AKM.SetModelMatrix(akm_model_matrix);
-		// AKM.Draw();
 
 		//
 		// Draw the cubes
 		//
 		glm::vec3 square_pos = glm::vec3(245.0f, 0.5f, 245.0f);
-		rotation = model * glm::translate(square_pos) * glm::rotate((float)angle, glm::vec3(0, 1, 0));
 		
+		rotation = model * glm::translate(square_pos) * glm::rotate((float)angle, glm::vec3(0, 1, 0));
 		cube.SetModelMatrix(rotation);
-		// rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
-		// rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
-		// rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
-		// cube.SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
 		cube.Draw();
+		
 		for(int i=1; i<CUBE_COL-1; ++i) {
 			for(int j=0; j < CUBE_COL; ++j) {
 				rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
@@ -222,8 +165,5 @@ int main() {
 		start_time = glfwGetTime();
 	}
 
-	for(int i=0; i<models.size(); ++i) {
-		delete models[i];
-	}
 	return EXIT_SUCCESS;
 }

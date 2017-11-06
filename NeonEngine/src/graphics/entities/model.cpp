@@ -8,6 +8,9 @@ namespace neon {
 		m_modelLoc = program->GetUniformLocation("model");
 		m_colorLoc = program->GetUniformLocation("vcolor");
 		m_texture = nullptr;
+		m_modelMatrix = glm::mat4(1.0f);
+		m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
 		Init();
 	}
 
@@ -16,28 +19,13 @@ namespace neon {
 	}
 
 	void Model::Init() {
-		m_modelMatrix = glm::mat4(1.0f);
-		m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-
+		// Build the VertexData
 		clock_t begin = std::clock();
-
 		BuildVertexData();
-		
 		clock_t end = std::clock();
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 		printf("Time of BuildVertexData: %lf\n\n", elapsed_secs);
-
-		// PRINT DATA FROM BUILD VERTEX DATA
-		// printf("VertexData\n");
-		// for(std::vector<Vertex>::iterator it=m_vertexData.begin(); it != m_vertexData.end(); ++it) {
-		// 	printf("%-16s, %-16s, %-16s\n", glm::to_string((*it).pos).c_str(), glm::to_string((*it).uv).c_str(), glm::to_string((*it).normal).c_str());
-		// }
-		
-		// printf("Indices\n");
-		// for(std::vector<unsigned int>::iterator it=m_indices.begin(); it != m_indices.end(); ++it) {
-		// 	printf("%d\n", (*it));
-		// }
 		
 		glGenVertexArrays(1, &m_vao);
 		glGenBuffers(1, &m_vbo);
@@ -52,8 +40,8 @@ namespace neon {
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)NULL);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(3 * sizeof(float)));
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, pos)));
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, uv)));
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		

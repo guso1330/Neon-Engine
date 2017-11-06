@@ -93,6 +93,9 @@ model.o: $(SRC)/graphics/entities/model.h $(SRC)/graphics/entities/model.cpp gla
 mesh.o: $(SRC)/graphics/entities/mesh.h $(SRC)/graphics/entities/mesh.cpp
 	$(CC) $(SRC)/graphics/entities/mesh.cpp -c $(OPTIONS)
 
+renderable3d.o: $(SRC)/graphics/entities/renderable3d.h $(SRC)/graphics/entities/renderable3d.cpp
+	$(CC) $(SRC)/graphics/entities/renderable3d.cpp -c $(OPTIONS)
+
 camera.o: $(SRC)/graphics/cameras/camera.h $(SRC)/graphics/cameras/camera.cpp glad.o
 	$(CC) $(SRC)/graphics/cameras/camera.cpp -c $(OPTIONS)
 

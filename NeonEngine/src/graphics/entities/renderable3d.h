@@ -4,18 +4,23 @@
 *	Description: This is a 3d renderable class that implements
 *				 virtual classes for rendering various 3d classes
 *				 such as primitives, models, and other 3d meshes 
-*/
+*******************************************************************/
 
 #pragma once
 
+#include "../buffers/vertexArray.h"
+#include "../buffers/vertexBuffer.h"
+#include "../buffers/indexBuffer.h"
+#include "../../shaders/program.h"
+#include "../../shaders/texture.h"
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include <unordered_set>
 #include <set>
-#include <tuple>
-#include <utility>
-#include <iterator>
+#include <ctime>
 
 namespace neon {
 
@@ -41,16 +46,42 @@ namespace neon {
 
 	class Renderable3d {
 
+		public:
+			Renderable3d(Program* program);
+
+			void Draw() const;
+
+			// Getters
+			const std::vector<Vertex> &GetVertexData() const { return m_vertexData; }
+			const glm::mat4 &GetModelMatrix() const { return m_modelMatrix; }
+			const glm::vec3 &GetPosition() const { return m_position; }
+			
+			// SETTERS
+			inline void SetModelMatrix(const glm::mat4 &n_modelMatrix) { m_modelMatrix = n_modelMatrix; }
+			inline void SetColor(const glm::vec4 &n_color) { m_color = n_color; }
+			void SetPosition(const glm::vec3 &n_pos);
+			void SetTexture(const char* filename);
+			void SetTexture(Texture& n_texture);
+
 		protected:
+			virtual ~Renderable3d() {}
+			virtual void BuildVertexData() = 0;
+			void SendVertexData();
+
+		protected:
+			GLuint m_vao, m_vbo;
+			IndexBuffer *m_ibo;
+
+			Program *m_program;
+			Texture *m_texture;
+
+			glm::vec3 m_position;
+			glm::mat4 m_modelMatrix;
+			GLuint m_modelLoc;
+			GLuint m_colorLoc;
+			glm::vec4 m_color;
+
 			std::vector<Vertex> m_vertexData;
 			std::vector<unsigned int> m_indices;
-
-		protected:
-			Renderable3d() {}
-			virtual void BuildVertexData() = 0;
-
-		public:
-			virtual ~Renderable3d() = 0;
-
 	};
 }

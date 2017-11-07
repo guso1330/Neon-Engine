@@ -23,7 +23,9 @@ using namespace glm;
 const GLint WIDTH = 1024,
 			HEIGHT = 768;
 
-short int CUBE_COL = 50, CUBE_ROW = 50;
+short int CUBE_COL = 50,
+		  CUBE_ROW = 50;
+
 short int CUBE_COUNT = CUBE_COL * CUBE_ROW;
 
 int main() {
@@ -37,17 +39,15 @@ int main() {
 	float FOV = 70.0f;
 	float g_NEAR = 0.1f;
 	float g_FAR = 1000.0f;
-	// Camera camera(glm::vec3(0, 50.0f, -40.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+
 	Camera camera(glm::vec3(0, 250.0f, -400.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
-	// Camera camera(glm::vec3(0, 400.0f, -400.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
-	// Camera camera(glm::vec3(0, 750.0f, -750.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 	camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glm::mat4 view_projection = camera.GetViewProjection();
 	glm::mat4 rotation = glm::mat4(1.0f), model = glm::mat4(1.0f);
 
 	/* GLFW is initialized within the window */
-	Window *window = new Window(WIDTH, HEIGHT, false, "Simple Rectangle Test");
+	Window *window = new Window(WIDTH, HEIGHT, false, "Neon Engine");
 	window->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	/************************************
@@ -71,6 +71,8 @@ int main() {
 	std::vector<Model*> models;
 	Program *program = new Program(shaders);
 
+	program->SetUniformMat4("view_projection", view_projection);
+	
 	/***************************
 		Setting up The Models
 	****************************/
@@ -78,28 +80,35 @@ int main() {
 	Model obj1("../NeonEngine/src/res/models/only_quad_sphere.obj", program);
 #elif __APPLE__
 
-
-
-	Model cube("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program);
-	cube.SetTexture("./NeonEngine/src/res/textures/checker.png");
+	// Model cube("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program);
+	// cube.SetTexture("./NeonEngine/src/res/textures/checker.png");
+	std::vector<Model*> cubes;
 
 	Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
 	plane.SetTexture("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
 
 #endif
-
-	// DEBUG
-	// cout << "CUBE & PLANE UV's" << std::endl;
-	// debug::print_vector_vec2(plane.GetMesh()->GetUVs());
-	// debug::print_vector_uint(plane.GetMesh()->GetIndices());
-	// debug::print_vector_vec2(models[0]->GetMesh()->GetUVs());
-	// debug::print_vector_vec3(obj1.GetMesh()->GetVertices());
-	// debug::print_vector_vec3(obj1.GetMesh()->GetNormals());
-	// debug::print_vector_uint(obj1.GetMesh()->GetIndices());
-	// debug::print_vector_vec2(obj1.GetMesh()->GetUVs());
-	
 	/**********************************/
-	program->SetUniformMat4("view_projection", view_projection);
+	
+	Texture checker("./NeonEngine/src/res/textures/checker.png");
+
+	// Build Cubes
+	for(int i=0; i < CUBE_COUNT; ++i) {
+		cubes.push_back(new Model("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program));
+	}
+
+	// Set cube rotation, color, and position
+	glm::vec3 square_pos = glm::vec3(245.0f, 0.5f, 245.0f);
+	for(int i=0; i<CUBE_COL; ++i) {
+		for(int j=0; j < CUBE_COL; ++j) {
+			rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
+			rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
+			rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
+			cubes[i * CUBE_ROW + j]->SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
+			cubes[i * CUBE_ROW + j]->SetPosition(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j));
+			cubes[i * CUBE_ROW + j]->SetTexture(checker);
+		}
+	}
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -107,7 +116,7 @@ int main() {
 	glEnable (GL_BLEND);
 	glEnable(GL_CULL_FACE);
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+	
 	/* timing stuff */
 	double angle, elapsed_time, speed;
 	angle=elapsed_time=speed=0;
@@ -115,7 +124,7 @@ int main() {
 
 	while (!window->isClosed()) {
 		window->Clear();
-		debug::calcFPS(window->GetGLFWwindow(), 1.0, "Current FPS: ");
+		debug::calcFPS(window->GetGLFWwindow(), 1.0, "Neon Engine - Current FPS: ");
 
 		/*******************************************
 		* TIME BASED MOVEMENT - THIS ISN'T WORKING *
@@ -127,6 +136,8 @@ int main() {
 			angle = 0;
 		}
 
+		// rotation = model * glm::rotate((float)angle, glm::vec3(0, 1, 0));
+		
 		//
 		// Draw the plane
 		//
@@ -135,34 +146,24 @@ int main() {
 		plane.Draw();
 
 		//
-		// Draw the bench
-		//
-
-
-		//
 		// Draw the cubes
 		//
-		glm::vec3 square_pos = glm::vec3(245.0f, 0.5f, 245.0f);
-		
-		rotation = model * glm::translate(square_pos) * glm::rotate((float)angle, glm::vec3(0, 1, 0));
-		cube.SetModelMatrix(rotation);
-		cube.Draw();
-		
-		for(int i=1; i<CUBE_COL-1; ++i) {
-			for(int j=0; j < CUBE_COL; ++j) {
-				rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
-				rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
-				rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
-				cube.SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
-				rotation = model * glm::translate(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j)) * glm::rotate((float)angle, glm::vec3(0, 1, 0));
-				cube.SetModelMatrix(rotation);
-				cube.Draw();
-			}
+		for(int i=0; i < cubes.size(); ++i) {
+			rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
+			rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
+			rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
+			// cubes[i]->SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
+			cubes[i]->SetModelMatrix(glm::translate(cubes[i]->GetPosition()) * glm::rotate((float)angle, glm::vec3(0, 1, 0)));
+			cubes[i]->Draw();
 		}
 
 		window->Update();
 
 		start_time = glfwGetTime();
+	}
+
+	for(int i=0; i < cubes.size(); ++i) {
+		delete cubes[i];
 	}
 
 	return EXIT_SUCCESS;

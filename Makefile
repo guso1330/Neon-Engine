@@ -84,6 +84,7 @@ program.o: $(SRC)/shaders/program.h $(SRC)/shaders/program.cpp glad.o
 	$(CC) $(SRC)/shaders/program.cpp -c $(OPTIONS)
 shader.o: $(SRC)/shaders/shader.h $(SRC)/shaders/shader.cpp glad.o
 	$(CC) $(SRC)/shaders/shader.cpp -c $(OPTIONS)
+
 #
 # Graphics
 #
@@ -92,6 +93,9 @@ model.o: $(SRC)/graphics/entities/model.h $(SRC)/graphics/entities/model.cpp gla
 
 mesh.o: $(SRC)/graphics/entities/mesh.h $(SRC)/graphics/entities/mesh.cpp
 	$(CC) $(SRC)/graphics/entities/mesh.cpp -c $(OPTIONS)
+
+forwardRenderer.o: $(SRC)/graphics/renderers/forwardRenderer.h $(SRC)/graphics/renderers/forwardRenderer.cpp
+	$(CC) $(SRC)/graphics/renderers/forwardRenderer.cpp -c $(OPTIONS)
 
 renderable3d.o: $(SRC)/graphics/entities/renderable3d.h $(SRC)/graphics/entities/renderable3d.cpp
 	$(CC) $(SRC)/graphics/entities/renderable3d.cpp -c $(OPTIONS)

@@ -90,7 +90,7 @@ int main() {
 #endif
 	/**********************************/
 	
-	Texture checker("./NeonEngine/src/res/textures/checker.png");
+	Texture tex("./NeonEngine/src/res/textures/checker.png");
 
 	// Build Cubes
 	for(int i=0; i < CUBE_COUNT; ++i) {
@@ -106,7 +106,7 @@ int main() {
 			rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
 			cubes[i * CUBE_ROW + j]->SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
 			cubes[i * CUBE_ROW + j]->SetPosition(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j));
-			cubes[i * CUBE_ROW + j]->SetTexture(checker);
+			cubes[i * CUBE_ROW + j]->SetTexture(tex);
 		}
 	}
 
@@ -149,10 +149,6 @@ int main() {
 		// Draw the cubes
 		//
 		for(int i=0; i < cubes.size(); ++i) {
-			rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
-			rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
-			rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
-			// cubes[i]->SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
 			cubes[i]->SetModelMatrix(glm::translate(cubes[i]->GetPosition()) * glm::rotate((float)angle, glm::vec3(0, 1, 0)));
 			cubes[i]->Draw();
 		}

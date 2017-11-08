@@ -1,11 +1,3 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <algorithm>
-#include <time.h>
-
-#include <glm/glm.hpp>
-
 #include "./app/window.h"
 #include "./shaders/shader.h"
 #include "./shaders/program.h"
@@ -16,6 +8,14 @@
 #include "./graphics/entities/model.h"
 #include "./utils/obj_loader/objloader.h"
 #include "./utils/debugging/printing_functions.cpp"
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <time.h>
+
+#include <glm/glm.hpp>
 
 using namespace neon;
 using namespace glm;
@@ -58,8 +58,8 @@ int main() {
 		of attaching shaders to it
 	*************************************/
 #if _WIN32
-	Shader *vShader = new Shader("../NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
-	Shader *fShader = new Shader("../NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
+	Shader *vShader = new Shader("../NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
+	Shader *fShader = new Shader("../NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER);
 #elif __APPLE__
 	Shader *vShader = new Shader("./NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
 	Shader *fShader = new Shader("./NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER);
@@ -77,7 +77,10 @@ int main() {
 		Setting up The Models
 	****************************/
 #if _WIN32
-	Model obj1("../NeonEngine/src/res/models/only_quad_sphere.obj", program);
+	std::vector<Model*> cubes;
+
+	Model plane("../NeonEngine/src/res/models/plane_5unit.obj", program);
+	plane.SetTexture("../NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
 #elif __APPLE__
 
 	// Model cube("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program);
@@ -90,13 +93,20 @@ int main() {
 #endif
 	/**********************************/
 	
+#if _WIN32
+	Texture tex("../NeonEngine/src/res/textures/checker.png");
+#elif __APPLE__
 	Texture tex("./NeonEngine/src/res/textures/checker.png");
+#endif
 
 	// Build Cubes
 	for(int i=0; i < CUBE_COUNT; ++i) {
+#if _WIN32
+		cubes.push_back(new Model("../NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program));
+#elif __APPLE__
 		cubes.push_back(new Model("./NeonEngine/src/res/models/cube_5unit_allfaceuvs.obj", program));
-	}
-
+#endif
+}
 	// Set cube rotation, color, and position
 	glm::vec3 square_pos = glm::vec3(245.0f, 0.5f, 245.0f);
 	for(int i=0; i<CUBE_COL; ++i) {

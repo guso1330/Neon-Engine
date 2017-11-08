@@ -158,6 +158,7 @@
     <ClCompile Include="src\graphics\cameras\camera.cpp" />
     <ClCompile Include="src\graphics\entities\mesh.cpp" />
     <ClCompile Include="src\graphics\entities\model.cpp" />
+    <ClCompile Include="src\graphics\entities\renderable3d.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\app\window.cpp" />
     <ClCompile Include="src\shaders\program.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="src\graphics\cameras\camera.h" />
     <ClInclude Include="src\graphics\entities\mesh.h" />
     <ClInclude Include="src\graphics\entities\model.h" />
+    <ClInclude Include="src\graphics\entities\renderable3d.h" />
     <ClInclude Include="src\shaders\program.h" />
     <ClInclude Include="src\shaders\shader.h" />
     <ClInclude Include="src\shaders\texture.h" />

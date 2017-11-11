@@ -79,7 +79,8 @@ int main() {
 		Setting up The Models
 	****************************/
 #if _WIN32
-	std::vector<Model*> cubes;
+	std::vector<GameObject*> cubes;
+	Model cube("../NeonEngine/src/res/models/cube_5unit.obj", program);
 
 	Model plane("../NeonEngine/src/res/models/plane_5unit.obj", program);
 	plane.SetTexture("../NeonEngine/src/res/textures/cartoon_floor_texture.jpg");

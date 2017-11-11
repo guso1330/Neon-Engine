@@ -6,6 +6,8 @@ namespace neon {
 	{
 		m_mesh = new Mesh(filename);
 		BuildVertexData();
+		// TODO: need a method or something to run this
+		//		 function only if you want to draw yourself
 		SendVertexData();
 	}
 

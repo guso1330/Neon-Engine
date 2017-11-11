@@ -61,12 +61,14 @@ namespace neon {
 			inline void SetModelMatrix(const glm::mat4 &n_modelMatrix) { m_modelMatrix = n_modelMatrix; }
 			inline void SetColor(const glm::vec4 &n_color) { m_color = n_color; }
 			void SetPosition(const glm::vec3 &n_pos);
+			void SetScale(const glm::vec3 &n_scale);
+			void SetRotation(const glm::vec3 &n_rotation);
 			void SetTexture(const char* filename); // Generate a new texture
 			void SetTexture(Texture& n_texture); // Pass in a texture that already exists
 
 		protected:
 			virtual ~Renderable3d() {}
-			virtual void BuildVertexData() = 0;
+			// virtual void BuildVertexData() = 0;
 			void SendVertexData();
 
 		protected:
@@ -77,6 +79,9 @@ namespace neon {
 			Texture *m_texture;
 
 			glm::vec3 m_position;
+			glm::vec3 m_scale;
+			glm::vec3 m_rotation;
+
 			glm::mat4 m_modelMatrix;
 			GLuint m_modelLoc;
 			GLuint m_colorLoc;

@@ -88,6 +88,9 @@ shader.o: $(SRC)/shaders/shader.h $(SRC)/shaders/shader.cpp glad.o
 #
 # Graphics
 #
+gameobject.o: $(SRC)/graphics/entities/gameobject.h $(SRC)/graphics/entities/gameobject.cpp glad.o model.o mesh.o
+	$(CC) $(SRC)/graphics/entities/gameobject.cpp -c $(OPTIONS)
+
 model.o: $(SRC)/graphics/entities/model.h $(SRC)/graphics/entities/model.cpp glad.o mesh.o
 	$(CC) $(SRC)/graphics/entities/model.cpp -c $(OPTIONS)
 

@@ -9,18 +9,19 @@ namespace neon {
 		glDeleteBuffers(1, &m_vbo);
 	}
 	void ForwardRenderer::Init() {
+
 		glGenVertexArrays(1, &m_vao);
 		glGenBuffers(1, &m_vbo);
 
-		// glBindVertexArray(m_vao);
-		// glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-		// glBufferData(GL_ARRAY_BUFFER, RENDERER_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW);
+		glBindVertexArray(m_vao);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+		glBufferData(GL_ARRAY_BUFFER, RENDERER_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW);
 
-		// glEnableVertexAttribArray(SHADER_VERTEX_INDEX);
-		// glEnableVertexAttribArray(SHADER_COLOR_INDEX);
-		// glVertexAttribPointer(SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)0);
-		// glVertexAttribPointer(SHADER_COLOR_INDEX, 4, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)(3 * sizeof(GLfloat)));
-		// glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glEnableVertexAttribArray(SHADER_VERTEX_INDEX);
+		glEnableVertexAttribArray(SHADER_TEX_INDEX);
+		glVertexAttribPointer(SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)0);
+		glVertexAttribPointer(SHADER_TEX_INDEX, 2, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)(3 * sizeof(GLfloat)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	void ForwardRenderer::Begin() {
 

@@ -51,6 +51,7 @@ namespace neon {
 			Renderable3d(Program* program);
 
 			void Draw() const;
+			void Draw(glm::mat4 tranform) const;
 
 			// Getters
 			const std::vector<Vertex> &GetVertexData() const { return m_vertexData; }

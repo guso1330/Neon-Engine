@@ -56,6 +56,10 @@ namespace neon {
 		glfwSetCursorPosCallback(m_window, mouse_cursor_position_callback);
 		glfwSetMouseButtonCallback(m_window, mouse_button_callback);
 
+		// WARNING
+		// Eliminate the frame cap
+		glfwSwapInterval(0.0);
+
 		/* Setting up glad and initializing it */
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 			std::cerr << "Failed to initialize GLAD" << std::endl;

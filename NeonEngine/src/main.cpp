@@ -30,6 +30,7 @@ short int CUBE_COL = 50,
 short int CUBE_COUNT = CUBE_COL * CUBE_ROW;
 
 int main() {
+
 	srand (time(NULL));
 	float rand_color_r, rand_color_g, rand_color_b;
 
@@ -42,7 +43,6 @@ int main() {
 	float g_FAR = 1000.0f;
 
 	Camera camera(glm::vec3(0, 250.0f, -400.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
-	// Camera camera(glm::vec3(0, 25.0f, -50.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 	camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glm::mat4 view_projection = camera.GetViewProjection();
@@ -98,7 +98,7 @@ int main() {
 #if _WIN32
 	Texture tex("../NeonEngine/src/res/textures/checker.png");
 #elif __APPLE__
-	Texture tex("./NeonEngine/src/res/textures/checker.png");
+	Texture tex("./NeonEngine/src/res/textures/checkered_colored.jpg");
 #endif
 	cube.SetTexture(tex);
 
@@ -119,6 +119,7 @@ int main() {
 			rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
 			rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
 			// cubes[i * CUBE_ROW + j]->SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
+			// cubes[i * CUBE_ROW + j]->SetScale(glm::vec3(0.05));
 			cubes[i * CUBE_ROW + j]->SetPosition(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j));
 		}
 	}
@@ -134,6 +135,8 @@ int main() {
 	double angle, elapsed_time, speed;
 	angle=elapsed_time=speed=0;
 	double start_time = glfwGetTime();
+
+	std::cout << "\nNumber of Cubes drawn: " << cubes.size() << std::endl;
 
 	while (!window->isClosed()) {
 		window->Clear();
@@ -160,7 +163,7 @@ int main() {
 		// Draw the cubes
 		//
 		for(int i=0; i < cubes.size(); ++i) {
-			cubes[i]->SetRotation((float)angle, glm::vec3(0, 1, 0));
+			cubes[i]->SetRotation((float)angle, glm::vec3(0, 1, 0)); 
 			cubes[i]->Draw();
 		}
 

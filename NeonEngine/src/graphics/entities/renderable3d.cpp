@@ -48,6 +48,7 @@ namespace neon {
 
 		glBindVertexArray(0);
 
+		// TODO: should I be deleting this data?
 		m_vertexData.clear();
 		m_indices.clear();
 	}
@@ -63,6 +64,27 @@ namespace neon {
 
 		m_program->SetUniform4f(m_colorLoc, m_color);
 		m_program->SetUniformMat4(m_modelLoc, m_modelMatrix);
+
+		glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL);
+
+		if(m_texture != nullptr)
+			m_texture->Unbind(0);
+
+		m_ibo->Unbind();
+		glBindVertexArray(0);
+	}
+
+	void Renderable3d::Draw(glm::mat4 transform) const {
+		glBindVertexArray(m_vao);
+		m_ibo->Bind();
+
+		if(m_texture != nullptr) {
+			m_texture->Bind(0);
+			m_program->SetUniform1i("tex", 0);
+		}
+
+		m_program->SetUniform4f(m_colorLoc, m_color);
+		m_program->SetUniformMat4(m_modelLoc, transform);
 
 		glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL);
 

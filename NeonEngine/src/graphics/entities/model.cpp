@@ -1,14 +1,18 @@
 #include "model.h"
 
 namespace neon {
-	Model::Model(const char *filename, Program* program) : 
+	Model::Model(const char *filename, Program* program, bool shouldSendData) : 
 		Renderable3d(program)
 	{
 		m_mesh = new Mesh(filename);
 		BuildVertexData();
+
 		// TODO: need a method or something to run this
 		// 		 function only if you want to draw yourself
-		SendVertexData();
+		isDataSent = shouldSendData;
+		if(shouldSendData) {
+			SendVertexData();
+		}
 	}
 
 	Model::~Model() {}

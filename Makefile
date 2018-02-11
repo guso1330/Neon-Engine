@@ -91,6 +91,9 @@ shader.o: $(SRC)/shaders/shader.h $(SRC)/shaders/shader.cpp glad.o
 gameobject.o: $(SRC)/graphics/entities/gameobject.h $(SRC)/graphics/entities/gameobject.cpp glad.o model.o mesh.o
 	$(CC) $(SRC)/graphics/entities/gameobject.cpp -c $(OPTIONS)
 
+renderableCollection.o: $(SRC)/graphics/entities/renderableCollection.h $(SRC)/graphics/entities/renderableCollection.cpp glad.o model.o mesh.o
+	$(CC) $(SRC)/graphics/entities/renderableCollection.cpp -c $(OPTIONS)
+
 model.o: $(SRC)/graphics/entities/model.h $(SRC)/graphics/entities/model.cpp glad.o mesh.o
 	$(CC) $(SRC)/graphics/entities/model.cpp -c $(OPTIONS)
 
@@ -102,6 +105,9 @@ forwardRenderer.o: $(SRC)/graphics/renderers/forwardRenderer.h $(SRC)/graphics/r
 
 renderable3d.o: $(SRC)/graphics/entities/renderable3d.h $(SRC)/graphics/entities/renderable3d.cpp
 	$(CC) $(SRC)/graphics/entities/renderable3d.cpp -c $(OPTIONS)
+
+transform.o: $(SRC)/graphics/entities/transform.h $(SRC)/graphics/entities/transform.cpp
+	$(CC) $(SRC)/graphics/entities/transform.cpp -c $(OPTIONS)
 
 camera.o: $(SRC)/graphics/cameras/camera.h $(SRC)/graphics/cameras/camera.cpp glad.o
 	$(CC) $(SRC)/graphics/cameras/camera.cpp -c $(OPTIONS)

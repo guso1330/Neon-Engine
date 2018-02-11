@@ -2,7 +2,6 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-#include <glm/ext.hpp>
 
 #include "../../shaders/texture.h"
 #include "./mesh.h"
@@ -12,7 +11,7 @@ namespace neon {
 
 	class Model : public Renderable3d {
 	public:
-		Model(const char *filename, Program* program);
+		Model(const char *filename, Program* program, bool shouldSendData = true);
 		~Model();
 
 		// GETTERS

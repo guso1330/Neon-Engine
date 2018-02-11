@@ -85,7 +85,6 @@ int main() {
 	Model plane("../NeonEngine/src/res/models/plane_5unit.obj", program);
 	plane.SetTexture("../NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
 #elif __APPLE__
-
 	std::vector<GameObject*> cubes;
 	Model cube("./NeonEngine/src/res/models/cube_5unit.obj", program);
 
@@ -104,11 +103,7 @@ int main() {
 
 	// Build Cubes
 	for(int i=0; i < CUBE_COUNT; ++i) {
-		#if _WIN32
-			cubes.push_back(new GameObject(&cube));
-		#elif __APPLE__
-			cubes.push_back(new GameObject(&cube));
-		#endif
+		cubes.push_back(new GameObject(&cube));
 	}
 
 	// Set cube rotation, color, and position
@@ -119,7 +114,6 @@ int main() {
 			rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
 			rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
 			// cubes[i * CUBE_ROW + j]->SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
-			// cubes[i * CUBE_ROW + j]->SetScale(glm::vec3(0.05));
 			cubes[i * CUBE_ROW + j]->SetPosition(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j));
 		}
 	}
@@ -156,7 +150,7 @@ int main() {
 		// Draw the plane
 		//
 		glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
-		plane.SetModelMatrix(plane_model_matrix);
+		plane.GetTransform().SetModelMatrix(plane_model_matrix);
 		plane.Draw();
 
 		//

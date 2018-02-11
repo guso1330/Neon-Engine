@@ -29,6 +29,8 @@ VertexBuffer::VertexBuffer(const std::vector<glm::vec2> &data)
 	Unbind();
 }
 
+// VertexBuffer(const std::vector<Transform> &data) {}
+
 void VertexBuffer::Bind() const {
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 }

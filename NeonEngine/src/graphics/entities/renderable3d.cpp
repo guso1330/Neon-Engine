@@ -6,23 +6,17 @@ namespace neon {
 	{
 		m_modelLoc = program->GetUniformLocation("model");
 		m_colorLoc = program->GetUniformLocation("vcolor");
-		m_modelMatrix = glm::mat4(1.0f);
+
 		m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		m_texture = nullptr;
+
+		// Set the flags
+		isDataSent = false;
 	}
 
-	void Renderable3d::SetTexture(const char* filename) {
-		m_texture = new Texture(filename);
-	}
+	void Renderable3d::SetTexture(const char* filename) { m_texture = new Texture(filename); }
 
-	void Renderable3d::SetTexture(Texture& n_texture) {
-		m_texture = &n_texture;
-	}
-
-	void Renderable3d::SetPosition(const glm::vec3 &n_pos) {
-		m_position = n_pos;
-		m_modelMatrix = glm::translate(m_modelMatrix, m_position);
-	}
+	void Renderable3d::SetTexture(Texture& n_texture) { m_texture = &n_texture; }
 
 	void Renderable3d::SendVertexData() {
 		
@@ -49,49 +43,53 @@ namespace neon {
 		glBindVertexArray(0);
 
 		// TODO: should I be deleting this data?
-		m_vertexData.clear();
-		m_indices.clear();
+		// m_vertexData.clear();
+		// m_indices.clear();
 	}
 
 	void Renderable3d::Draw() const {
-		glBindVertexArray(m_vao);
-		m_ibo->Bind();
+		if(isDataSent) {
+			glBindVertexArray(m_vao);
+			m_ibo->Bind();
 
-		if(m_texture != nullptr) {
-			m_texture->Bind(0);
-			m_program->SetUniform1i("tex", 0);
+			if(m_texture != nullptr) {
+				m_texture->Bind(0);
+				m_program->SetUniform1i("tex", 0);
+			}
+
+			m_program->SetUniform4f(m_colorLoc, m_color);
+			m_program->SetUniformMat4(m_modelLoc, m_transform.GetModelMatrix());
+
+			glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL);
+
+			if(m_texture != nullptr)
+				m_texture->Unbind(0);
+
+			m_ibo->Unbind();
+			glBindVertexArray(0);
 		}
-
-		m_program->SetUniform4f(m_colorLoc, m_color);
-		m_program->SetUniformMat4(m_modelLoc, m_modelMatrix);
-
-		glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL);
-
-		if(m_texture != nullptr)
-			m_texture->Unbind(0);
-
-		m_ibo->Unbind();
-		glBindVertexArray(0);
 	}
 
 	void Renderable3d::Draw(glm::mat4 transform) const {
-		glBindVertexArray(m_vao);
-		m_ibo->Bind();
+		if(isDataSent) {
+			glBindVertexArray(m_vao);
+			m_ibo->Bind();
 
-		if(m_texture != nullptr) {
-			m_texture->Bind(0);
-			m_program->SetUniform1i("tex", 0);
-		}
+			if(m_texture != nullptr) {
+				m_texture->Bind(0);
+				m_program->SetUniform1i("tex", 0);
+			}
 
-		m_program->SetUniform4f(m_colorLoc, m_color);
-		m_program->SetUniformMat4(m_modelLoc, transform);
+			m_program->SetUniform4f(m_colorLoc, m_color);
+			m_program->SetUniformMat4(m_modelLoc, transform);
 
-		glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL);
+			glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL);
 
-		if(m_texture != nullptr)
-			m_texture->Unbind(0);
+			if(m_texture != nullptr)
+				m_texture->Unbind(0);
 
-		m_ibo->Unbind();
-		glBindVertexArray(0);
+			m_ibo->Unbind();
+			glBindVertexArray(0);
+		}	
 	}
 }

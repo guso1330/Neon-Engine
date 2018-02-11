@@ -1,7 +1,10 @@
 #pragma once
 
+#include "../entities/transform.h"
+
 #include <glad/glad.h>
 #include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
 #include <vector>
 
 namespace neon {
@@ -9,12 +12,17 @@ namespace neon {
 		private:
 			GLuint m_componentCount;
 			GLuint m_vbo;
+
 		public:
 			// Constructors
 			VertexBuffer(GLfloat* data, GLsizei count, GLuint componentCount);
 			VertexBuffer(const std::vector<glm::vec3> &data);
+			VertexBuffer(const std::vector<glm::vec2> &data);
+			// TODO: make a transform VertexBuffer
+			// VertexBuffer(const std::vector<Transform> &data);
+
 			// Destructor
-			~VertexBuffer() {}
+			~VertexBuffer() { glDeleteBuffers(1, &m_vbo); }
 			void Bind() const;
 			void Unbind() const;
 			inline GLuint GetComponentCount() { return m_componentCount; }

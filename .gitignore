@@ -11,6 +11,7 @@ main
 *.o
 *.exe
 *.out
+*r8_gt.obj
 
 # User-specific files
 *.suo

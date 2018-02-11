@@ -12,7 +12,7 @@ namespace neon {
 		private:
 			int m_width, m_height;
 			bool m_fullscreen;
-			bool m_Closed;
+			// bool m_Closed;
 			const char* m_title;
 			GLFWwindow *m_window;
 		private:
@@ -26,5 +26,6 @@ namespace neon {
 			/* GETTERS */
 			inline int GetWidth() const { return m_width; }
 			inline int GetHeight() const { return m_height; }
+			inline GLFWwindow* const GetGLFWwindow() const { return m_window; }
 	};
 }

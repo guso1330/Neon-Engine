@@ -10,6 +10,8 @@ VertexArray::~VertexArray() {
 	for(int i=0; i < m_buffers.size(); ++i) {
 		delete m_buffers[i];
 	}
+
+	glDeleteVertexArrays(1, &m_vao);
 }
 
 void VertexArray::Bind() const {
@@ -25,6 +27,7 @@ void VertexArray::AddBuffer(VertexBuffer *buffer, GLuint index) {
 	Bind();
 	buffer->Bind();
 	glEnableVertexAttribArray(index);
+	// TODO: this only works with one sprite, because of the stride and pointer
 	glVertexAttribPointer(index, buffer->GetComponentCount(), GL_FLOAT, GL_FALSE, 0, (void*)0);
 	buffer->Unbind();
 	Unbind();

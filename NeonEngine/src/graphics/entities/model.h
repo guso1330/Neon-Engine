@@ -1,30 +1,29 @@
 #pragma once
 
 #include <glad/glad.h>
-#include <glm/mat4x4.hpp>
-#include "../buffers/vertexArray.h"
-#include "../buffers/vertexBuffer.h"
-#include "../buffers/indexBuffer.h"
+#include <glm/glm.hpp>
+
+#include "../../shaders/texture.h"
 #include "./mesh.h"
+#include "./renderable3d.h"
 
 namespace neon {
-	class Model {
-		public:
-			Model(const char *filename);
-			~Model();
 
-			inline Mesh* GetMesh() const { return m_mesh; }
+	class Model : public Renderable3d {
+	public:
+		Model(const char *filename, Program* program, bool shouldSendData = true);
+		~Model();
 
-			// Draw Functions
-			void Draw() const;
-		private:
-			void Init();
-		private:
-			/* TODO: Might want to replace this with a require Model
-			   instead of a *Model*/
-			Mesh *m_mesh;
-			glm::mat4 m_modelMatrix;
-			VertexArray m_vao;
-			IndexBuffer *m_ibo;
+		// GETTERS
+		inline const Mesh* GetMesh() const { return m_mesh; }
+
+	private:
+		void BuildVertexData();
+
+	private:
+		/* 
+			TODO: Maybe I shouldn't declare this on the heap...?
+		*/
+		Mesh *m_mesh;
 	};
 }

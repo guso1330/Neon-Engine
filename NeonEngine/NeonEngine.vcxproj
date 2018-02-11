@@ -89,11 +89,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glfw\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glad\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glad\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\tinyobjloader-1.0.6;$(SolutionDir)Dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -104,11 +104,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glfw\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glad\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glad\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\tinyobjloader-1.0.6;$(SolutionDir)Dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -121,13 +121,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glfw\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glad\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glad\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\tinyobjloader-1.0.6;$(SolutionDir)Dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -140,31 +140,57 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glfw\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glad\include;C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glad\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\tinyobjloader-1.0.6;$(SolutionDir)Dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\GusO\Documents\Projects\Neon-Engine\Dependencies\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\glad\glad.c" />
+    <ClCompile Include="src\graphics\buffers\indexBuffer.cpp" />
+    <ClCompile Include="src\graphics\buffers\vertexArray.cpp" />
+    <ClCompile Include="src\graphics\buffers\vertexBuffer.cpp" />
+    <ClCompile Include="src\graphics\cameras\camera.cpp" />
+    <ClCompile Include="src\graphics\entities\gameobject.cpp" />
+    <ClCompile Include="src\graphics\entities\mesh.cpp" />
+    <ClCompile Include="src\graphics\entities\model.cpp" />
+    <ClCompile Include="src\graphics\entities\renderable3d.cpp" />
+    <ClCompile Include="src\graphics\renderers\forwardRenderer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\app\window.cpp" />
+    <ClCompile Include="src\shaders\program.cpp" />
     <ClCompile Include="src\shaders\shader.cpp" />
-    <ClCompile Include="src\utils\fileUtils.cpp" />
+    <ClCompile Include="src\shaders\texture.cpp" />
+    <ClCompile Include="src\utils\file_utils\fileUtils.cpp" />
+    <ClCompile Include="src\utils\obj_loader\objloader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app\window.h" />
-    <ClInclude Include="src\utils\fileUtils.h" />
+    <ClInclude Include="src\graphics\buffers\indexBuffer.h" />
+    <ClInclude Include="src\graphics\buffers\vertexArray.h" />
+    <ClInclude Include="src\graphics\buffers\vertexBuffer.h" />
+    <ClInclude Include="src\graphics\cameras\camera.h" />
+    <ClInclude Include="src\graphics\entities\gameobject.h" />
+    <ClInclude Include="src\graphics\entities\mesh.h" />
+    <ClInclude Include="src\graphics\entities\model.h" />
+    <ClInclude Include="src\graphics\entities\renderable3d.h" />
+    <ClInclude Include="src\graphics\renderers\forwardRenderer.h" />
+    <ClInclude Include="src\shaders\program.h" />
     <ClInclude Include="src\shaders\shader.h" />
+    <ClInclude Include="src\shaders\texture.h" />
+    <ClInclude Include="src\utils\file_utils\fileUtils.h" />
+    <ClInclude Include="src\utils\obj_loader\objloader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\res\shaders\basicFShader.glsl" />
     <None Include="src\res\shaders\basicVShader.glsl" />
+    <None Include="src\res\shaders\textureFShader.glsl" />
+    <None Include="src\res\shaders\textureVShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

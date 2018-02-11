@@ -6,9 +6,9 @@ LOCAL_LIB = /usr/local/lib
 SRC = ./NeonEngine/src
 SRC_CPP := $(shell find $(SRC) ! -path */tests/* ! -path */debugging/* ! -name "main.cpp" -name "*.cpp")
 # Testing
-TEST_H := $(wildcard $(SRC)/tests/*.cpp)
-TEST_FILENAME := object_test.cpp
-TEST_SRC := $(SRC)/tests/$(TEST_FILENAME)
+# TEST_H := $(wildcard $(SRC)/tests/*.cpp)
+# TEST_FILENAME := object_test.cpp
+# TEST_SRC := $(SRC)/tests/$(TEST_FILENAME)
 # Debugging
 DEBUG_H := $(SRC)/utils/debugging/debug.h
 DEBUG_SRC := $(wildcard $(SRC)/utils/debugging/*.cpp)
@@ -17,27 +17,29 @@ OBJ_FILES := $(patsubst %.cpp, %.o, $(notdir $(SRC_CPP:.cpp=.o)))
 #
 # Dependencies Directories
 #
-GLFW = ./Dependencies/glfw
-GLFW_INC = $(GLFW)/include
-GLFW_LIB = $(GLFW)/lib-mingw
+GLFW := ./Dependencies/glfw
+GLFW_INC := $(GLFW)/include
+GLFW_LIB := $(GLFW)/lib-mingw
 
-GLAD = ./Dependencies/glad
-GLAD_INC = $(GLAD)/include
+GLAD := ./Dependencies/glad
+GLAD_INC := $(GLAD)/include
 
-GLM = ./Dependencies/glm
+GLM := ./Dependencies/glm
 
-TINYOBJLOADER = ./Dependencies/tinyobjloader
+TINYOBJLOADER := ./Dependencies/tinyobjloader-1.0.6
+
+STB_IMAGE := ./Dependencies/stb_image
 
 #
 # Build Variables
 #
 CC = g++
-CC_FLAGS = -Wall
+CC_FLAGS = -Wall -std=c++11
 
 GL_OPTIONS = -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo -lglfw3
 LDLIBS = -L/opt/X11/lib $(GL_OPTIONS) -L$(LOCAL_LIB) -L$(GLFW_LIB)
 
-INCS = -I/opt/X11/include -I$(LOCAL_INC) -I$(GLFW_INC) -I$(GLAD_INC) -I$(GLM) -I$(TINYOBJLOADER)
+INCS = -I/opt/X11/include -I$(LOCAL_INC) -I$(GLFW_INC) -I$(GLAD_INC) -I$(GLM) -I$(TINYOBJLOADER) -I$(STB_IMAGE)
 
 OPTIONS= $(CC_FLAGS) $(INCS)
 
@@ -49,14 +51,11 @@ OPTIONS= $(CC_FLAGS) $(INCS)
 # 	$(CC) $(OPTIONS) -c -o $@ $<
 all: main
 
-main: $(SRC)/main.cpp test.o glad.o $(OBJ_FILES)
-	$(CC) $(SRC)/main.cpp glad.o $(OBJ_FILES) $(OPTIONS) $(LDLIBS) -o main
+debug: $(SRC)/main.cpp glad.o $(OBJ_FILES)
+	$(CC) $(SRC)/main.cpp glad.o $(OBJ_FILES) $(OPTIONS) $(LDLIBS) -g -o main
 
-#
-# NOTE: Add wanted test here
-#
-test.o: $(TEST_SRC)
-	$(CC) $(TEST_SRC) -c $(OPTIONS)
+main: $(SRC)/main.cpp glad.o $(OBJ_FILES)
+	$(CC) $(SRC)/main.cpp glad.o $(OBJ_FILES) $(OPTIONS) $(LDLIBS) -o main
 
 #
 # Utils
@@ -79,16 +78,36 @@ window.o: $(SRC)/app/window.h $(SRC)/app/window.cpp glad.o
 #
 # Shaders
 #
+texture.o: $(SRC)/shaders/texture.h $(SRC)/shaders/texture.cpp glad.o
+	$(CC) $(SRC)/shaders/texture.cpp -c $(OPTIONS)
+program.o: $(SRC)/shaders/program.h $(SRC)/shaders/program.cpp glad.o
+	$(CC) $(SRC)/shaders/program.cpp -c $(OPTIONS)
 shader.o: $(SRC)/shaders/shader.h $(SRC)/shaders/shader.cpp glad.o
 	$(CC) $(SRC)/shaders/shader.cpp -c $(OPTIONS)
+
 #
 # Graphics
 #
+gameobject.o: $(SRC)/graphics/entities/gameobject.h $(SRC)/graphics/entities/gameobject.cpp glad.o model.o mesh.o
+	$(CC) $(SRC)/graphics/entities/gameobject.cpp -c $(OPTIONS)
+
+renderableCollection.o: $(SRC)/graphics/entities/renderableCollection.h $(SRC)/graphics/entities/renderableCollection.cpp glad.o model.o mesh.o
+	$(CC) $(SRC)/graphics/entities/renderableCollection.cpp -c $(OPTIONS)
+
 model.o: $(SRC)/graphics/entities/model.h $(SRC)/graphics/entities/model.cpp glad.o mesh.o
 	$(CC) $(SRC)/graphics/entities/model.cpp -c $(OPTIONS)
 
 mesh.o: $(SRC)/graphics/entities/mesh.h $(SRC)/graphics/entities/mesh.cpp
 	$(CC) $(SRC)/graphics/entities/mesh.cpp -c $(OPTIONS)
+
+forwardRenderer.o: $(SRC)/graphics/renderers/forwardRenderer.h $(SRC)/graphics/renderers/forwardRenderer.cpp
+	$(CC) $(SRC)/graphics/renderers/forwardRenderer.cpp -c $(OPTIONS)
+
+renderable3d.o: $(SRC)/graphics/entities/renderable3d.h $(SRC)/graphics/entities/renderable3d.cpp
+	$(CC) $(SRC)/graphics/entities/renderable3d.cpp -c $(OPTIONS)
+
+transform.o: $(SRC)/graphics/entities/transform.h $(SRC)/graphics/entities/transform.cpp
+	$(CC) $(SRC)/graphics/entities/transform.cpp -c $(OPTIONS)
 
 camera.o: $(SRC)/graphics/cameras/camera.h $(SRC)/graphics/cameras/camera.cpp glad.o
 	$(CC) $(SRC)/graphics/cameras/camera.cpp -c $(OPTIONS)

@@ -5,6 +5,7 @@ namespace neon {
 		FILE* file = fopen(filepath, "rt");
 		if(file == nullptr) {
 			std::cout << filepath << " not found" << std::endl;
+			system("PAUSE");
 			exit(0);
 		} else {
 			fseek(file, 0, SEEK_END);

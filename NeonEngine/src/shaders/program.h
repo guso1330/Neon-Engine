@@ -3,11 +3,13 @@
 	TODO: Only supports one program currently, should make support >= 1 shader
 */
 
+#include "../engine/GL_Error.h"
+#include "./shader.h"
+
 #include <iostream>
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-#include "./shader.h"
 
 namespace neon {
 	class Program {

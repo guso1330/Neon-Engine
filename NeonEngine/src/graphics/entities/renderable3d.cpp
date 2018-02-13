@@ -20,27 +20,27 @@ namespace neon {
 
 	void Renderable3d::SendVertexData() {
 		
-		glGenVertexArrays(1, &m_vao);
-		glGenBuffers(1, &m_vbo);
+		GL_Call(glGenVertexArrays(1, &m_vao));
+		GL_Call(glGenBuffers(1, &m_vbo));
 
-		glBindVertexArray(m_vao);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-		glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(Vertex), &(*(m_vertexData.begin())), GL_STATIC_DRAW);
+		GL_Call(glBindVertexArray(m_vao));
+		GL_Call(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
+		GL_Call(glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(Vertex), &(*(m_vertexData.begin())), GL_STATIC_DRAW));
 
 		printf("Size of m_vertexData: %lu bytes\n", m_vertexData.size() * sizeof(Vertex));
 		printf("Size of m_indicies: %lu bytes\n", m_indices.size() * sizeof(unsigned int));
 
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
+		GL_Call(glEnableVertexAttribArray(0));
+		GL_Call(glEnableVertexAttribArray(1));
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, pos)));
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, uv)));
+		GL_Call(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, pos))));
+		GL_Call(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, uv))));
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		GL_Call(glBindBuffer(GL_ARRAY_BUFFER, 0));
 		
 		m_ibo = new IndexBuffer(m_indices);
 
-		glBindVertexArray(0);
+		GL_Call(glBindVertexArray(0));
 
 		// TODO: should I be deleting this data?
 		// m_vertexData.clear();
@@ -49,7 +49,7 @@ namespace neon {
 
 	void Renderable3d::Draw() const {
 		if(isDataSent) {
-			glBindVertexArray(m_vao);
+			GL_Call(glBindVertexArray(m_vao));
 			m_ibo->Bind();
 
 			if(m_texture != nullptr) {
@@ -60,19 +60,19 @@ namespace neon {
 			m_program->SetUniform4f(m_colorLoc, m_color);
 			m_program->SetUniformMat4(m_modelLoc, m_transform.GetModelMatrix());
 
-			glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL);
+			GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
 
 			if(m_texture != nullptr)
 				m_texture->Unbind(0);
 
 			m_ibo->Unbind();
-			glBindVertexArray(0);
+			GL_Call(glBindVertexArray(0));
 		}
 	}
 
 	void Renderable3d::Draw(glm::mat4 transform) const {
 		if(isDataSent) {
-			glBindVertexArray(m_vao);
+			GL_Call(glBindVertexArray(m_vao));
 			m_ibo->Bind();
 
 			if(m_texture != nullptr) {
@@ -83,13 +83,13 @@ namespace neon {
 			m_program->SetUniform4f(m_colorLoc, m_color);
 			m_program->SetUniformMat4(m_modelLoc, transform);
 
-			glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL);
+			GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
 
 			if(m_texture != nullptr)
 				m_texture->Unbind(0);
 
 			m_ibo->Unbind();
-			glBindVertexArray(0);
+			GL_Call(glBindVertexArray(0));
 		}	
 	}
 }

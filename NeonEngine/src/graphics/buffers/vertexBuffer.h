@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../entities/transform.h"
+#include "../../engine/GL_Error.h"
 
 #include <glad/glad.h>
 #include <glm/vec3.hpp>

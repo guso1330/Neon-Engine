@@ -9,6 +9,7 @@
 main
 *.gch
 *.o
+*.a
 *.exe
 *.out
 *r8_gt.obj

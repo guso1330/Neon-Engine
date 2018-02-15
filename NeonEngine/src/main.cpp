@@ -8,7 +8,7 @@
 #include "./graphics/entities/model.h"
 #include "./graphics/entities/gameobject.h"
 #include "./utils/obj_loader/objloader.h"
-#include "./utils/debugging/printing_functions.cpp"
+#include "./utils/debugging/debug.h"
 
 #include <iostream>
 #include <vector>

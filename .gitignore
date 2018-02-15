@@ -13,6 +13,12 @@ main
 *.out
 *r8_gt.obj
 
+# Cmake exclude files
+CMakeCache.txt
+Makefile
+./CMakeFiles
+cmake_install.cmake
+
 # User-specific files
 *.suo
 *.user

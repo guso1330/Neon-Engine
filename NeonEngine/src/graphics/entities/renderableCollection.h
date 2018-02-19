@@ -1,9 +1,11 @@
 #pragma once
 
-#include "./model.h"
+#include "./renderable3d.h"
+#include "../../shaders/program.h"
 
 #include <glad/glad.h>
 #include <vector>
+#include <iostream>
 
 /*
 	Class that utilizes instanced rendering
@@ -12,7 +14,7 @@ namespace neon {
 
 	class RenderableCollection {
 		public:
-			RenderableCollection(Model *model, std::vector<Transform> &transforms);
+			RenderableCollection(Renderable3d *renderable, std::vector<Transform> &transforms, Program *program);
 			// void Submit();
 			void Flush();
 
@@ -20,11 +22,13 @@ namespace neon {
 			void init();
 
 		private:
-			Model *m_model;
+			Program *m_program;
+			
+			Renderable3d *m_renderable;
 
 			std::vector<glm::mat4> m_transforms;
 			glm::mat4 m_modelMatrix;
-			GLuint m_vao, m_vbo, m_ibo, m_posvbo;
+			GLuint m_vao, m_vbo;
 	};
 
 }

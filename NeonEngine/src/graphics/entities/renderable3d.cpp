@@ -4,8 +4,10 @@ namespace neon {
 	Renderable3d::Renderable3d(Program* program) :
 		m_program(program)
 	{
-		m_modelLoc = program->GetUniformLocation("model");
-		m_colorLoc = program->GetUniformLocation("vcolor");
+		m_program->Bind();
+		m_modelLoc = m_program->GetUniformLocation("model");
+		m_colorLoc = m_program->GetUniformLocation("vcolor");
+		m_program->Unbind();
 
 		m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		m_texture = nullptr;
@@ -47,49 +49,55 @@ namespace neon {
 		// m_indices.clear();
 	}
 
+	void Renderable3d::SetUpDraw(const glm::mat4 &transform) const {
+		m_ibo->Bind();
+		if(m_texture != nullptr) {
+			m_texture->Bind(0);
+			m_program->SetUniform1i("tex", 0);
+		}
+
+		m_program->SetUniform4f(m_colorLoc, m_color);
+		m_program->SetUniformMat4(m_modelLoc, m_transform.GetModelMatrix());
+	}
+
+	void Renderable3d::UnSetDraw() const {
+		if(m_texture != nullptr)
+			m_texture->Unbind(0);
+		m_ibo->Unbind();
+	}	
+
 	void Renderable3d::Draw() const {
+
 		if(isDataSent) {
+			m_program->Bind();
+			
 			GL_Call(glBindVertexArray(m_vao));
-			m_ibo->Bind();
-
-			if(m_texture != nullptr) {
-				m_texture->Bind(0);
-				m_program->SetUniform1i("tex", 0);
-			}
-
-			m_program->SetUniform4f(m_colorLoc, m_color);
-			m_program->SetUniformMat4(m_modelLoc, m_transform.GetModelMatrix());
+			this->SetUpDraw(m_transform.GetModelMatrix());
 
 			GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
 
-			if(m_texture != nullptr)
-				m_texture->Unbind(0);
-
-			m_ibo->Unbind();
+			this->UnSetDraw();
 			GL_Call(glBindVertexArray(0));
+
+			m_program->Unbind();
 		}
+
 	}
 
 	void Renderable3d::Draw(glm::mat4 transform) const {
+
 		if(isDataSent) {
+			m_program->Bind();
 			GL_Call(glBindVertexArray(m_vao));
-			m_ibo->Bind();
 
-			if(m_texture != nullptr) {
-				m_texture->Bind(0);
-				m_program->SetUniform1i("tex", 0);
-			}
-
-			m_program->SetUniform4f(m_colorLoc, m_color);
-			m_program->SetUniformMat4(m_modelLoc, transform);
-
+			this->SetUpDraw(transform);
+			
 			GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
 
-			if(m_texture != nullptr)
-				m_texture->Unbind(0);
+			this->UnSetDraw();
 
-			m_ibo->Unbind();
 			GL_Call(glBindVertexArray(0));
-		}	
+			m_program->Unbind();
+		}
 	}
 }

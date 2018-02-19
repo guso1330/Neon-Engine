@@ -7,6 +7,8 @@
 #include "./graphics/cameras/camera.h"
 #include "./graphics/entities/model.h"
 #include "./graphics/entities/gameobject.h"
+#include "./graphics/entities/renderableCollection.h"
+#include "./graphics/entities/transform.h"
 #include "./utils/obj_loader/objloader.h"
 #include "./utils/debugging/debug.h"
 
@@ -65,48 +67,57 @@ int main() {
 #elif __APPLE__
 	Shader *vShader = new Shader("./NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
 	Shader *fShader = new Shader("./NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER);
+	Shader *instancedVShader = new Shader("./NeonEngine/src/res/shaders/instancedVShader.glsl", GL_VERTEX_SHADER);
+	Shader *instancedFShader = new Shader("./NeonEngine/src/res/shaders/instancedFShader.glsl", GL_FRAGMENT_SHADER);
 #endif
 
-	std::vector<Shader*> shaders;
+	std::vector<Shader*> shaders, instancedShaders;
 	shaders.push_back(vShader);
 	shaders.push_back(fShader);
-	std::vector<Model*> models;
-	Program *program = new Program(shaders);
+	instancedShaders.push_back(instancedVShader);
+	instancedShaders.push_back(instancedFShader);
 
+	Program *instancedProgram = new Program(instancedShaders),
+			*program = new Program(shaders);
+
+	instancedProgram->Bind();
+	instancedProgram->SetUniformMat4("view_projection", view_projection);
+	instancedProgram->Unbind();
+	program->Bind();
 	program->SetUniformMat4("view_projection", view_projection);
+	program->Unbind();
 	
 	/***************************
 		Setting up The Models
 	****************************/
-#if _WIN32
-	std::vector<GameObject*> cubes;
-	Model cube("../NeonEngine/src/res/models/cube_5unit.obj", program);
-
-	Model plane("../NeonEngine/src/res/models/plane_5unit.obj", program);
-	plane.SetTexture("../NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
-#elif __APPLE__
-	std::vector<GameObject*> cubes;
-	Model cube("./NeonEngine/src/res/models/cube_5unit.obj", program);
-
-	Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
-	plane.SetTexture("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
-
-#endif
+	#if _WIN32
+		std::vector<GameObject*> cubes;
+		Model cube("../NeonEngine/src/res/models/cube_5unit.obj", program);
+		Model plane("../NeonEngine/src/res/models/plane_5unit.obj", program);
+	#elif __APPLE__
+		Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
+		Model cube("./NeonEngine/src/res/models/cube_5unit.obj", instancedProgram);
+	#endif
 	/**********************************/
 	
-#if _WIN32
-	Texture tex("../NeonEngine/src/res/textures/checker.png");
-#elif __APPLE__
-	Texture tex("./NeonEngine/src/res/textures/checkered_colored.jpg");
-#endif
-	cube.SetTexture(tex);
+	/***************************
+		Setting up The Textures
+	****************************/
+	#if _WIN32
+		Texture cube_tex("../NeonEngine/src/res/textures/checker.png"),
+				plane_tex("../NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
+	#elif __APPLE__
+		Texture cube_tex("./NeonEngine/src/res/textures/checkered_colored.jpg"),
+				plane_tex("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
+	#endif
+	/**********************************/
+			
+	plane.SetTexture(plane_tex);
+	cube.SetTexture(cube_tex);
 
-	// Build Cubes
-	for(int i=0; i < CUBE_COUNT; ++i) {
-		cubes.push_back(new GameObject(&cube));
-	}
+	std::vector<Transform> transforms(CUBE_COL * CUBE_ROW);
 
-	// Set cube rotation, color, and position
+	// Set transform rotation and position
 	glm::vec3 square_pos = glm::vec3(245.0f, 0.5f, 245.0f);
 	for(int i=0; i<CUBE_COL; ++i) {
 		for(int j=0; j < CUBE_COL; ++j) {
@@ -114,9 +125,11 @@ int main() {
 			rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
 			rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
 			// cubes[i * CUBE_ROW + j]->SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
-			cubes[i * CUBE_ROW + j]->SetPosition(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j));
+			transforms[i * CUBE_ROW + j].SetPosition(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j));
 		}
 	}
+
+	RenderableCollection instanced_cubes(&cube, transforms, instancedProgram);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -130,9 +143,8 @@ int main() {
 	angle=elapsed_time=speed=0;
 	double start_time = glfwGetTime();
 
-	std::cout << "\nNumber of Cubes drawn: " << cubes.size() << std::endl;
-
 	while (!window->isClosed()) {
+
 		window->Clear();
 		debug::calcFPS(window->GetGLFWwindow(), 1.0, "Neon Engine - Current FPS: ");
 
@@ -147,27 +159,23 @@ int main() {
 		}
 		
 		//
+		// Draw the cubes
+		//
+		instanced_cubes.Flush();
+
+		//
 		// Draw the plane
 		//
 		glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
+		program->Bind();
 		plane.GetTransform().SetModelMatrix(plane_model_matrix);
+		program->Unbind();
 		plane.Draw();
 
-		//
-		// Draw the cubes
-		//
-		for(int i=0; i < cubes.size(); ++i) {
-			cubes[i]->SetRotation((float)angle, glm::vec3(0, 1, 0)); 
-			cubes[i]->Draw();
-		}
 
 		window->Update();
 
 		start_time = glfwGetTime();
-	}
-
-	for(int i=0; i < cubes.size(); ++i) {
-		delete cubes[i];
 	}
 
 	return EXIT_SUCCESS;

@@ -55,32 +55,35 @@ namespace neon {
 			void Draw(glm::mat4 tranform) const;
 
 			// Getters
-			const std::vector<Vertex> &GetVertexData() const { return m_vertexData; }
-			const std::vector<unsigned int> &GetIndexData() const { return m_indices; }
-			Transform &GetTransform() { return m_transform; }
+			inline const std::vector<Vertex> 		&GetVertexData() const { return m_vertexData; }
+			inline const std::vector<unsigned int>  &GetIndexData() const { return m_indices; }
+			inline Transform 						&GetTransform() { return m_transform; }
+			inline const GLuint						&GetVao() const { return m_vao; }
 			
 			// SETTERS
 			inline void SetColor(const glm::vec4 &n_color) { m_color = n_color; }
-			void SetTexture(const char* filename); // Generate a new texture
-			void SetTexture(Texture& n_texture); // Pass in a texture that already exists
+			void 		SetTexture(const char* filename); // Generate a new texture
+			void 		SetTexture(Texture& n_texture); // Pass in a texture that already exists
+			void 		SetUpDraw(const glm::mat4 &transform) const;
+			void 		UnSetDraw() const;
 
 		protected:
 			virtual ~Renderable3d() {}
-			void SendVertexData();
+			void 	SendVertexData();
 
 		protected:
 			// GL id's for self drawing
-			GLuint m_vao, m_vbo;
+			GLuint 		m_vao, m_vbo;
 			IndexBuffer *m_ibo;
-			GLuint m_modelLoc;
-			GLuint m_colorLoc;
-			glm::vec4 m_color;
+			GLuint 		m_modelLoc;
+			GLuint 		m_colorLoc;
+			glm::vec4 	m_color;
 
-			Program *m_program;
-			Texture *m_texture;
+			Program   *m_program;
+			Texture   *m_texture;
 			Transform m_transform;
 
-			std::vector<Vertex> m_vertexData;
+			std::vector<Vertex> 	  m_vertexData;
 			std::vector<unsigned int> m_indices;
 
 		protected: 

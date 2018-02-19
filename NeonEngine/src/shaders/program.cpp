@@ -7,7 +7,10 @@ namespace neon {
 		Init();
 	}
 
-	Program::~Program() { GL_Call(glDeleteProgram(m_programID)); }
+	Program::~Program() { 
+		Unbind();
+		GL_Call(glDeleteProgram(m_programID));
+	}
 
 	void Program::Init() {
 		m_programID = glCreateProgram();
@@ -28,7 +31,6 @@ namespace neon {
 			std::cerr << "Program failed to link: " << linkerLog << std::endl;
 			system("PAUSE");
 		}
-		Bind();
 	}
 
 	GLint Program::GetUniformLocation(const char* name) {

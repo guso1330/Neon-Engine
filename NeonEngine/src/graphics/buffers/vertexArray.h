@@ -1,21 +1,26 @@
 #pragma once
 
 #include "../../engine/GL_Error.h"
+#include "./vertexBuffer.h"
+#include "./vertexBufferLayout.h"
 
 #include <glad/glad.h>
-#include "./vertexBuffer.h"
 #include <vector>
 
 namespace neon {
 	class VertexArray {
-		private:
-			GLuint m_vao;
-			std::vector<VertexBuffer*> m_buffers;
 		public:
 			VertexArray();
 			~VertexArray();
+
+			// Getters
+			const unsigned int &GetVao() const { return m_vao; }
+
 			void Bind() const;
 			void Unbind() const;
-			void AddBuffer(VertexBuffer *buffer, GLuint index);
+			void AddBuffer(const VertexBuffer *buffer, const VertexBufferLayout& layout);
+		private:
+			unsigned int m_vao;
+			std::vector<VertexBuffer*> m_buffers;
 	};
 }

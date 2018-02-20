@@ -61,15 +61,15 @@ int main() {
 		class that has the capability
 		of attaching shaders to it
 	*************************************/
-#if _WIN32
-	Shader *vShader = new Shader("../NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
-	Shader *fShader = new Shader("../NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER);
-#elif __APPLE__
-	Shader *vShader = new Shader("./NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
-	Shader *fShader = new Shader("./NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER);
-	Shader *instancedVShader = new Shader("./NeonEngine/src/res/shaders/instancedVShader.glsl", GL_VERTEX_SHADER);
-	Shader *instancedFShader = new Shader("./NeonEngine/src/res/shaders/instancedFShader.glsl", GL_FRAGMENT_SHADER);
-#endif
+	#if _WIN32
+		Shader *vShader = new Shader("../NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
+		Shader *fShader = new Shader("../NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER);
+	#elif __APPLE__
+		Shader *vShader = new Shader("./NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
+		Shader *fShader = new Shader("./NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER);
+		Shader *instancedVShader = new Shader("./NeonEngine/src/res/shaders/instancedVShader.glsl", GL_VERTEX_SHADER);
+		Shader *instancedFShader = new Shader("./NeonEngine/src/res/shaders/instancedFShader.glsl", GL_FRAGMENT_SHADER);
+	#endif
 
 	std::vector<Shader*> shaders, instancedShaders;
 	shaders.push_back(vShader);
@@ -92,11 +92,11 @@ int main() {
 	****************************/
 	#if _WIN32
 		std::vector<GameObject*> cubes;
-		Model cube("../NeonEngine/src/res/models/cube_5unit.obj", program);
+		Model cube_model("../NeonEngine/src/res/models/cube_5unit.obj", program);
 		Model plane("../NeonEngine/src/res/models/plane_5unit.obj", program);
 	#elif __APPLE__
 		Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
-		Model cube("./NeonEngine/src/res/models/cube_5unit.obj", instancedProgram);
+		Model cube_model("./NeonEngine/src/res/models/cube_5unit.obj", instancedProgram);
 	#endif
 	/**********************************/
 	
@@ -111,9 +111,12 @@ int main() {
 				plane_tex("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
 	#endif
 	/**********************************/
-			
+
 	plane.SetTexture(plane_tex);
-	cube.SetTexture(cube_tex);
+	cube_model.SetTexture(cube_tex);
+
+	// Set the game object
+	GameObject cube(&cube_model);
 
 	std::vector<Transform> transforms(CUBE_COL * CUBE_ROW);
 
@@ -129,7 +132,7 @@ int main() {
 		}
 	}
 
-	RenderableCollection instanced_cubes(&cube, transforms, instancedProgram);
+	RenderableCollection instanced_cubes(&cube_model, transforms, instancedProgram);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -159,11 +162,6 @@ int main() {
 		}
 		
 		//
-		// Draw the cubes
-		//
-		instanced_cubes.Flush();
-
-		//
 		// Draw the plane
 		//
 		glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
@@ -172,6 +170,11 @@ int main() {
 		program->Unbind();
 		plane.Draw();
 
+		//
+		// Draw the cubes
+		//
+		cube.SetRotation((float)angle, glm::vec3(0, 1, 0));
+		instanced_cubes.Flush();
 
 		window->Update();
 

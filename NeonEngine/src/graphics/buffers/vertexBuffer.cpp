@@ -8,7 +8,6 @@ VertexBuffer::VertexBuffer(GLfloat* data, GLsizei count, GLuint componentCount)
 	GL_Call(glGenBuffers(1, &m_vbo));
 	Bind();
 	GL_Call(glBufferData(GL_ARRAY_BUFFER, count * sizeof(GLfloat), data, GL_STATIC_DRAW));
-	Unbind();
 }
 
 VertexBuffer::VertexBuffer(const std::vector<glm::vec3> &data)
@@ -17,7 +16,6 @@ VertexBuffer::VertexBuffer(const std::vector<glm::vec3> &data)
 	GL_Call(glGenBuffers(1, &m_vbo));
 	Bind();
 	GL_Call(glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec3), &data[0][0], GL_STATIC_DRAW));
-	Unbind();
 }
 
 VertexBuffer::VertexBuffer(const std::vector<glm::vec2> &data)
@@ -26,7 +24,12 @@ VertexBuffer::VertexBuffer(const std::vector<glm::vec2> &data)
 	GL_Call(glGenBuffers(1, &m_vbo));
 	Bind();
 	GL_Call(glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec2), &data[0][0], GL_STATIC_DRAW));
-	Unbind();
+}
+
+VertexBuffer::VertexBuffer(const std::vector<Vertex> &data) {
+	GL_Call(glGenBuffers(1, &m_vbo));
+	Bind();
+	GL_Call(glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(Vertex), &(*(data.begin())), GL_STATIC_DRAW));
 }
 
 // VertexBuffer(const std::vector<Transform> &data) {}

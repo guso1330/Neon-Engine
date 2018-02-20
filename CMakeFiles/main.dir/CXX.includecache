@@ -25,6 +25,8 @@ signal.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/buffers/./vertexBuffer.h
 ../entities/transform.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/buffers/entities/transform.h
+../entities/vertex.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/buffers/entities/vertex.h
 ../../engine/GL_Error.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/engine/GL_Error.h
 glad/glad.h
@@ -32,6 +34,16 @@ glad/glad.h
 glm/vec3.hpp
 -
 glm/vec2.hpp
+-
+vector
+-
+
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/buffers/./vertexBufferLayout.h
+../../engine/GL_Error.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/engine/GL_Error.h
+../entities/vertex.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/buffers/entities/vertex.h
+glad/glad.h
 -
 vector
 -
@@ -49,16 +61,20 @@ vector
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/buffers/vertexArray.h
 ../../engine/GL_Error.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./engine/GL_Error.h
-glad/glad.h
--
 ./vertexBuffer.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/buffers/./vertexBuffer.h
+./vertexBufferLayout.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/buffers/./vertexBufferLayout.h
+glad/glad.h
+-
 vector
 -
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/buffers/vertexBuffer.h
 ../entities/transform.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/entities/transform.h
+../entities/vertex.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/entities/vertex.h
 ../../engine/GL_Error.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./engine/GL_Error.h
 glad/glad.h
@@ -74,6 +90,20 @@ vector
 glm/glm.hpp
 -
 glm/gtx/transform.hpp
+-
+
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/entities/././vertex.h
+glm/glm.hpp
+-
+glm/ext.hpp
+-
+unordered_set
+-
+tuple
+-
+set
+-
+ctime
 -
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/entities/./mesh.h
@@ -97,6 +127,8 @@ glm/glm.hpp
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/entities/././renderable3d.h
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/entities/./renderable3d.h
+./vertex.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/entities/././vertex.h
 ../buffers/vertexArray.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/entities/buffers/vertexArray.h
 ../buffers/vertexBuffer.h
@@ -116,14 +148,6 @@ glm/glm.hpp
 glm/ext.hpp
 -
 vector
--
-unordered_set
--
-tuple
--
-set
--
-ctime
 -
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/entities/./transform.h
@@ -168,6 +192,20 @@ glm/glm.hpp
 glm/ext.hpp
 -
 
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./graphics/entities/vertex.h
+glm/glm.hpp
+-
+glm/ext.hpp
+-
+unordered_set
+-
+tuple
+-
+set
+-
+ctime
+-
+
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./shaders/./shader.h
 ../engine/GL_Error.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./shaders/engine/GL_Error.h
@@ -190,6 +228,8 @@ vector
 glad/glad.h
 -
 glm/glm.hpp
+-
+unordered_map
 -
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/./shaders/shader.h
@@ -281,6 +321,8 @@ signal.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/././vertexBuffer.h
 ../entities/transform.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/./entities/transform.h
+../entities/vertex.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/./entities/vertex.h
 ../../engine/GL_Error.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/engine/GL_Error.h
 glad/glad.h
@@ -288,6 +330,16 @@ glad/glad.h
 glm/vec3.hpp
 -
 glm/vec2.hpp
+-
+vector
+-
+
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/././vertexBufferLayout.h
+../../engine/GL_Error.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/engine/GL_Error.h
+../entities/vertex.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/./entities/vertex.h
+glad/glad.h
 -
 vector
 -
@@ -305,16 +357,20 @@ vector
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/./vertexArray.h
 ../../engine/GL_Error.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/engine/GL_Error.h
-glad/glad.h
--
 ./vertexBuffer.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/././vertexBuffer.h
+./vertexBufferLayout.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/././vertexBufferLayout.h
+glad/glad.h
+-
 vector
 -
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/./vertexBuffer.h
 ../entities/transform.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/entities/transform.h
+../entities/vertex.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/entities/vertex.h
 ../../engine/GL_Error.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/engine/GL_Error.h
 glad/glad.h
@@ -322,6 +378,16 @@ glad/glad.h
 glm/vec3.hpp
 -
 glm/vec2.hpp
+-
+vector
+-
+
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/./vertexBufferLayout.h
+../../engine/GL_Error.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/engine/GL_Error.h
+../entities/vertex.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/entities/vertex.h
+glad/glad.h
 -
 vector
 -
@@ -347,10 +413,12 @@ vector
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/vertexArray.h
 ../../engine/GL_Error.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/engine/GL_Error.h
-glad/glad.h
--
 ./vertexBuffer.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/./vertexBuffer.h
+./vertexBufferLayout.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/./vertexBufferLayout.h
+glad/glad.h
+-
 vector
 -
 
@@ -361,6 +429,8 @@ vector
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/vertexBuffer.h
 ../entities/transform.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/transform.h
+../entities/vertex.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/vertex.h
 ../../engine/GL_Error.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/engine/GL_Error.h
 glad/glad.h
@@ -382,6 +452,20 @@ glm/gtx/transform.hpp
 ./camera.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/cameras/./camera.h
 
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/././././vertex.h
+glm/glm.hpp
+-
+glm/ext.hpp
+-
+unordered_set
+-
+tuple
+-
+set
+-
+ctime
+-
+
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/./././mesh.h
 vector
 -
@@ -391,6 +475,8 @@ glm/glm.hpp
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/./utils/obj_loader/objloader.h
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/./././renderable3d.h
+./vertex.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/././././vertex.h
 ../buffers/vertexArray.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/././buffers/vertexArray.h
 ../buffers/vertexBuffer.h
@@ -411,14 +497,6 @@ glm/ext.hpp
 -
 vector
 -
-unordered_set
--
-tuple
--
-set
--
-ctime
--
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/././model.h
 glad/glad.h
@@ -438,6 +516,20 @@ glm/glm.hpp
 glm/ext.hpp
 -
 
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/././vertex.h
+glm/glm.hpp
+-
+glm/ext.hpp
+-
+unordered_set
+-
+tuple
+-
+set
+-
+ctime
+-
+
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/./gameobject.h
 ./model.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/././model.h
@@ -453,6 +545,8 @@ glm/glm.hpp
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/utils/obj_loader/objloader.h
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/./renderable3d.h
+./vertex.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/././vertex.h
 ../buffers/vertexArray.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/buffers/vertexArray.h
 ../buffers/vertexBuffer.h
@@ -473,6 +567,18 @@ glm/ext.hpp
 -
 vector
 -
+
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/./transform.h
+glm/glm.hpp
+-
+glm/ext.hpp
+-
+
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/./vertex.h
+glm/glm.hpp
+-
+glm/ext.hpp
+-
 unordered_set
 -
 tuple
@@ -480,12 +586,6 @@ tuple
 set
 -
 ctime
--
-
-/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/./transform.h
-glm/glm.hpp
--
-glm/ext.hpp
 -
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/gameobject.cpp
@@ -517,6 +617,8 @@ renderable3d.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/renderable3d.h
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/renderable3d.h
+./vertex.h
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/./vertex.h
 ../buffers/vertexArray.h
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/buffers/vertexArray.h
 ../buffers/vertexBuffer.h
@@ -536,14 +638,6 @@ glm/glm.hpp
 glm/ext.hpp
 -
 vector
--
-unordered_set
--
-tuple
--
-set
--
-ctime
 -
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/renderableCollection.cpp
@@ -570,6 +664,20 @@ iostream
 glm/glm.hpp
 -
 glm/ext.hpp
+-
+
+/Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/entities/vertex.h
+glm/glm.hpp
+-
+glm/ext.hpp
+-
+unordered_set
+-
+tuple
+-
+set
+-
+ctime
 -
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/graphics/renderers/forwardRenderer.cpp
@@ -645,6 +753,8 @@ glad/glad.h
 -
 glm/glm.hpp
 -
+unordered_map
+-
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/shaders/./shader.h
 ../engine/GL_Error.h
@@ -672,6 +782,8 @@ vector
 glad/glad.h
 -
 glm/glm.hpp
+-
+unordered_map
 -
 
 /Users/aroberd/Documents/Neon-Engine/NeonEngine/src/shaders/shader.cpp

@@ -34,11 +34,16 @@ namespace neon {
 	}
 
 	GLint Program::GetUniformLocation(const char* name) {
+		if(m_uniformlocationCache.find(name) != m_uniformlocationCache.end())
+			return m_uniformlocationCache[name];
+
 		GLint loc = glGetUniformLocation(m_programID, name);
 		if (loc == -1) {
 			std::cerr << "Could not locate the the uniform " << name << std::endl;
 			system("PAUSE");
 		}
+
+		m_uniformlocationCache[name] = loc;
 		return loc;
 	}
 

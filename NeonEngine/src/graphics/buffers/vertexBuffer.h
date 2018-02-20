@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../entities/transform.h"
+#include "../entities/vertex.h"
 #include "../../engine/GL_Error.h"
 
 #include <glad/glad.h>
@@ -11,6 +12,8 @@
 namespace neon {
 	class VertexBuffer {
 		private:
+			// TODO: Can you remove the component count? It's not necessary with
+			//		 bufferLayout class
 			GLuint m_componentCount;
 			GLuint m_vbo;
 
@@ -19,6 +22,8 @@ namespace neon {
 			VertexBuffer(GLfloat* data, GLsizei count, GLuint componentCount);
 			VertexBuffer(const std::vector<glm::vec3> &data);
 			VertexBuffer(const std::vector<glm::vec2> &data);
+			VertexBuffer(const std::vector<Vertex> &data);
+
 			// TODO: make a transform VertexBuffer
 			// VertexBuffer(const std::vector<Transform> &data);
 

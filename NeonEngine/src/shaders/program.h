@@ -10,6 +10,7 @@
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <unordered_map>
 
 namespace neon {
 	class Program {
@@ -44,5 +45,7 @@ namespace neon {
 		private:
 			std::vector<Shader*> m_shaders;
 			GLuint m_programID;
+
+			std::unordered_map<const char*, int> m_uniformlocationCache;
 	};
 }

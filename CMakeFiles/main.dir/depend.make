@@ -13,6 +13,7 @@ CMakeFiles/main.dir/NeonEngine/src/graphics/buffers/indexBuffer.cpp.o: Dependenc
 CMakeFiles/main.dir/NeonEngine/src/graphics/buffers/indexBuffer.cpp.o: Dependencies/glad/include/glad/glad.h
 
 CMakeFiles/main.dir/NeonEngine/src/graphics/buffers/vertexArray.cpp.o: NeonEngine/src/graphics/buffers/././vertexBuffer.h
+CMakeFiles/main.dir/NeonEngine/src/graphics/buffers/vertexArray.cpp.o: NeonEngine/src/graphics/buffers/././vertexBufferLayout.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/buffers/vertexArray.cpp.o: NeonEngine/src/graphics/buffers/./vertexArray.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/buffers/vertexArray.cpp.o: NeonEngine/src/graphics/buffers/vertexArray.cpp
 CMakeFiles/main.dir/NeonEngine/src/graphics/buffers/vertexArray.cpp.o: Dependencies/glad/include/KHR/khrplatform.h
@@ -150,6 +151,7 @@ CMakeFiles/main.dir/NeonEngine/src/graphics/cameras/camera.cpp.o: Dependencies/g
 CMakeFiles/main.dir/NeonEngine/src/graphics/cameras/camera.cpp.o: Dependencies/glm/glm/vec4.hpp
 CMakeFiles/main.dir/NeonEngine/src/graphics/cameras/camera.cpp.o: Dependencies/glm/glm/vector_relational.hpp
 
+CMakeFiles/main.dir/NeonEngine/src/graphics/entities/gameobject.cpp.o: NeonEngine/src/graphics/entities/././././vertex.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/gameobject.cpp.o: NeonEngine/src/graphics/entities/./././mesh.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/gameobject.cpp.o: NeonEngine/src/graphics/entities/./././renderable3d.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/gameobject.cpp.o: NeonEngine/src/graphics/entities/././model.h
@@ -511,6 +513,7 @@ CMakeFiles/main.dir/NeonEngine/src/graphics/entities/mesh.cpp.o: Dependencies/gl
 
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/model.cpp.o: NeonEngine/src/engine/GL_Error.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/model.cpp.o: NeonEngine/src/graphics/entities/././transform.h
+CMakeFiles/main.dir/NeonEngine/src/graphics/entities/model.cpp.o: NeonEngine/src/graphics/entities/././vertex.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/model.cpp.o: NeonEngine/src/graphics/entities/./mesh.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/model.cpp.o: NeonEngine/src/graphics/entities/./renderable3d.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/model.cpp.o: NeonEngine/src/graphics/entities/model.cpp
@@ -761,13 +764,16 @@ CMakeFiles/main.dir/NeonEngine/src/graphics/entities/model.cpp.o: Dependencies/g
 
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/engine/GL_Error.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/graphics/buffers/./vertexBuffer.h
+CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/graphics/buffers/./vertexBufferLayout.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/graphics/buffers/indexBuffer.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/graphics/buffers/vertexArray.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/graphics/buffers/vertexBuffer.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/graphics/entities/./transform.h
+CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/graphics/entities/./vertex.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/graphics/entities/renderable3d.cpp
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/graphics/entities/renderable3d.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/graphics/entities/transform.h
+CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/graphics/entities/vertex.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/shaders/./shader.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/shaders/program.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: NeonEngine/src/shaders/texture.h
@@ -1031,6 +1037,7 @@ CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderable3d.cpp.o: Depende
 
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderableCollection.cpp.o: NeonEngine/src/engine/GL_Error.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderableCollection.cpp.o: NeonEngine/src/graphics/entities/././transform.h
+CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderableCollection.cpp.o: NeonEngine/src/graphics/entities/././vertex.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderableCollection.cpp.o: NeonEngine/src/graphics/entities/./renderable3d.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderableCollection.cpp.o: NeonEngine/src/graphics/entities/renderableCollection.cpp
 CMakeFiles/main.dir/NeonEngine/src/graphics/entities/renderableCollection.cpp.o: NeonEngine/src/graphics/entities/renderableCollection.h
@@ -1554,12 +1561,15 @@ CMakeFiles/main.dir/NeonEngine/src/graphics/entities/transform.cpp.o: Dependenci
 
 CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/engine/GL_Error.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/graphics/buffers/./vertexBuffer.h
+CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/graphics/buffers/./vertexBufferLayout.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/graphics/buffers/indexBuffer.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/graphics/buffers/vertexArray.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/graphics/buffers/vertexBuffer.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/graphics/entities/./transform.h
+CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/graphics/entities/./vertex.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/graphics/entities/renderable3d.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/graphics/entities/transform.h
+CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/graphics/entities/vertex.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/graphics/renderers/forwardRenderer.cpp
 CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/graphics/renderers/forwardRenderer.h
 CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: NeonEngine/src/shaders/./shader.h
@@ -1826,10 +1836,12 @@ CMakeFiles/main.dir/NeonEngine/src/graphics/renderers/forwardRenderer.cpp.o: Dep
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./app/window.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./engine/GL_Error.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/buffers/./vertexBuffer.h
+CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/buffers/./vertexBufferLayout.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/buffers/indexBuffer.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/buffers/vertexArray.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/buffers/vertexBuffer.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/cameras/camera.h
+CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/entities/././vertex.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/entities/./mesh.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/entities/./model.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/entities/./renderable3d.h
@@ -1838,6 +1850,7 @@ CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/entitie
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/entities/model.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/entities/renderableCollection.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/entities/transform.h
+CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./graphics/entities/vertex.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./shaders/./shader.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./shaders/program.h
 CMakeFiles/main.dir/NeonEngine/src/main.cpp.o: NeonEngine/src/./shaders/shader.h

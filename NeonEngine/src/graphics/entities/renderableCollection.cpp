@@ -54,7 +54,6 @@ namespace neon {
 		Transform t = m_renderable->GetTransform();
 		m_renderable->SetUpDraw(t.GetModelMatrix());
 		
-		// std::cout << "indices: " << m_renderable->GetIndexData().size() << std::endl;
 		GL_Call(glDrawElementsInstanced(GL_TRIANGLES, m_renderable->GetIndexData().size(), GL_UNSIGNED_INT, NULL, m_transforms.size()));
 
 		m_renderable->UnSetDraw();

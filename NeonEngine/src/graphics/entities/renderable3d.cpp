@@ -46,10 +46,6 @@ namespace neon {
 		
 		GL_Call(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, pos))));
 		GL_Call(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, uv))));
-
-		// TODO: should I be deleting this data?
-		// m_vertexData.clear();
-		// m_indices.clear();
 	}
 
 	void Renderable3d::SetUpDraw(const glm::mat4 &transform) const {

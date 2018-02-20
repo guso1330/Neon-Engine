@@ -16,16 +16,16 @@ namespace neon {
 		init();
 	}
 
+	RenderableCollection::~RenderableCollection() {
+		delete m_vbo;
+	}
+
 	// TODO: make the RenderableCollection not a static buffer, but dynamic
 	void RenderableCollection::init() {
-		GL_Call(glBindVertexArray(m_vao));
+		// GL_Call(glBindVertexArray(m_vao));
+		m_vbo = new VertexBuffer(m_transforms);
 
-		// generate a VBO
-		GL_Call(glGenBuffers(1, &m_vbo));
-		
-		// Bind the buffer object
-		GL_Call(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
-		GL_Call(glBufferData(GL_ARRAY_BUFFER, m_transforms.size() * sizeof(glm::mat4), &m_transforms.front() , GL_STATIC_DRAW));
+		m_vao->Bind();
 
 		// set attribute pointers for matrix (4 times vec4)
 		GL_Call(glEnableVertexAttribArray(2));
@@ -41,15 +41,12 @@ namespace neon {
 		GL_Call(glVertexAttribDivisor(3, 1));
 		GL_Call(glVertexAttribDivisor(4, 1));
 		GL_Call(glVertexAttribDivisor(5, 1));
-
-		GL_Call(glBindBuffer(GL_ARRAY_BUFFER, 0));
-		GL_Call(glBindVertexArray(0));
 	}
 
 	void RenderableCollection::Flush() {
 		m_program->Bind();
 
-		GL_Call(glBindVertexArray(m_vao));
+		m_vao->Bind();
 		
 		Transform t = m_renderable->GetTransform();
 		m_renderable->SetUpDraw(t.GetModelMatrix());

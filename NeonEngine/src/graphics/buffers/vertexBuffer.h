@@ -22,6 +22,7 @@ namespace neon {
 			VertexBuffer(GLfloat* data, GLsizei count, GLuint componentCount);
 			VertexBuffer(const std::vector<glm::vec3> &data);
 			VertexBuffer(const std::vector<glm::vec2> &data);
+			VertexBuffer(const std::vector<glm::mat4> &data);
 			VertexBuffer(const std::vector<Vertex> &data);
 
 			// TODO: make a transform VertexBuffer

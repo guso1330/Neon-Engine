@@ -26,6 +26,13 @@ VertexBuffer::VertexBuffer(const std::vector<glm::vec2> &data)
 	GL_Call(glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec2), &data[0][0], GL_STATIC_DRAW));
 }
 
+VertexBuffer::VertexBuffer(const std::vector<glm::mat4> &data) {
+	// Generate a new buffer
+	GL_Call(glGenBuffers(1, &m_vbo));
+	Bind();
+	GL_Call(glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::mat4), &data.front(), GL_STATIC_DRAW));
+}
+
 VertexBuffer::VertexBuffer(const std::vector<Vertex> &data) {
 	GL_Call(glGenBuffers(1, &m_vbo));
 	Bind();

@@ -1,9 +1,0 @@
-/Users/aroberd/Documents/Neon-Engine/CMakeFiles/rebuild_cache.dir
-/Users/aroberd/Documents/Neon-Engine/CMakeFiles/edit_cache.dir
-/Users/aroberd/Documents/Neon-Engine/CMakeFiles/glad.dir
-/Users/aroberd/Documents/Neon-Engine/CMakeFiles/main.dir
-/Users/aroberd/Documents/Neon-Engine/Dependencies/glfw/CMakeFiles/rebuild_cache.dir
-/Users/aroberd/Documents/Neon-Engine/Dependencies/glfw/CMakeFiles/edit_cache.dir
-/Users/aroberd/Documents/Neon-Engine/Dependencies/glfw/src/CMakeFiles/rebuild_cache.dir
-/Users/aroberd/Documents/Neon-Engine/Dependencies/glfw/src/CMakeFiles/edit_cache.dir
-/Users/aroberd/Documents/Neon-Engine/Dependencies/glfw/src/CMakeFiles/glfw.dir

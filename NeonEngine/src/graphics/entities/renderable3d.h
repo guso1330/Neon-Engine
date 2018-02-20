@@ -35,7 +35,7 @@ namespace neon {
 			inline const std::vector<Vertex> 		&GetVertexData() const { return m_vertexData; }
 			inline const std::vector<unsigned int>  &GetIndexData() const { return m_indices; }
 			inline Transform 						&GetTransform() { return m_transform; }
-			inline const unsigned int				GetVao() const { return m_vao->GetVao(); }
+			inline VertexArray*						&GetVao() { return m_vao; }
 			inline const unsigned int 				GetIbo() const { return m_ibo->GetIbo(); }
 			
 			// SETTERS

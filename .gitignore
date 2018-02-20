@@ -16,8 +16,8 @@ main
 
 # Cmake exclude files
 CMakeCache.txt
-./Makefile
-./CMakeFiles
+[Mm]akefile
+CMakeFiles/
 cmake_install.cmake
 
 # User-specific files

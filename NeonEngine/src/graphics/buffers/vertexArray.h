@@ -18,7 +18,7 @@ namespace neon {
 
 			void Bind() const;
 			void Unbind() const;
-			void AddBuffer(const VertexBuffer *buffer, const VertexBufferLayout& layout);
+			void AddBuffer(const VertexBuffer *buffer, const VertexBufferLayout& layout, const int i);
 		private:
 			unsigned int m_vao;
 			std::vector<VertexBuffer*> m_buffers;

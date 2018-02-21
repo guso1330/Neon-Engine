@@ -10,32 +10,43 @@
 #define NEON_VERTEX_UV 0x9127
 
 namespace neon {
+	enum VALUE_TYPE {
+		FLOAT 		  = 0,
+		UNSIGNED_INT  = 1,
+		UNSIGNED_BYTE = 2,
+		VERTEX 		  = 3,
+		// VEC2		  = 4,
+		// VEC3		  = 5,
+		// VEC4		  = 6,
+		// MAT4		  = 7
+	};
+
 	struct VertexBufferElement {
-		// unsigned int type;
-		// unsigned int count;
-		// unsigned char normalized;
+		unsigned int type;
+		unsigned int count;
+		unsigned char normalized;
+		enum VALUE_TYPE value_type;
 
-		// static unsigned int GetSizeOfType(unsigned int type) {
-		// 	switch(type) {
-		// 		case GL_FLOAT: 			return 4;
-		// 		case GL_UNSIGNED_INT: 	return 4;
-		// 		case GL_UNSIGNED_BYTE: 	return 1;
-		// 	}
-		// 	NEON_ASSERT(false);
-		// 	return 0;
-		// }
+		static unsigned int GetSizeOfType(unsigned int type) {
+			switch(type) {
+				case GL_FLOAT: 			return sizeof(float);
+				case GL_UNSIGNED_INT: 	return sizeof(unsigned int);
+				case GL_UNSIGNED_BYTE: 	return sizeof(unsigned char);
+			}
+			NEON_ASSERT(false);
+			return 0;
+		}
 
-		// static unsigned int GetOffsetOfType(unsigned int type, unsigned int count) {
-		// 	switch(type) {
-		// 		case GL_FLOAT: 			return count * 4;
-		// 		case GL_UNSIGNED_INT: 	return count * 4;
-		// 		case GL_UNSIGNED_BYTE: 	return count * 1;
-		// 		case NEON_VERTEX_POS: 	return (offsetof(struct neon::Vertex, pos));
-		// 		case NEON_VERTEX_UV:	return (offsetof(struct neon::Vertex, uv));
-		// 	}
-		// 	NEON_ASSERT(false);
-		// 	return 0;
-		// }
+		static unsigned int GetOffsetOfType(enum VALUE_TYPE type, unsigned int count) {
+			switch(type) {
+				case VALUE_TYPE::FLOAT: 			return count * GetSizeOfType(GL_FLOAT);
+				case VALUE_TYPE::UNSIGNED_INT: 		return count * GetSizeOfType(GL_UNSIGNED_BYTE);
+				case VALUE_TYPE::UNSIGNED_BYTE: 	return count * GetSizeOfType(GL_UNSIGNED_INT);
+				case VALUE_TYPE::VERTEX:			return count;
+			}
+			NEON_ASSERT(false);
+			return 0;
+		}
 	};
 
 	class VertexBufferLayout {
@@ -44,57 +55,49 @@ namespace neon {
 				m_stride(0)
 			{}
 
-		// 	// todo: read up on why this works
-		// 	// 
-		// 	// Is this the generic type if you enter an invalid
-		// 	// type that isn't supported?
-		// 	template<typename T>
-		// 	void Push(int count) {
-		// 		static_assert(false);
-		// 	}
+			void Push(VALUE_TYPE value, unsigned int count) {
+				switch(value) {				
+					case VALUE_TYPE::FLOAT:
+						m_elements.push_back({
+							GL_FLOAT,
+							count,
+							GL_FALSE,
+							FLOAT
+						});
+						m_stride += count * VertexBufferElement::GetSizeOfType(GL_FLOAT);
+						break;
+					case VALUE_TYPE::UNSIGNED_INT:
+						m_elements.push_back({
+							GL_UNSIGNED_INT,
+							count,
+							GL_FALSE,
+							UNSIGNED_INT
+						});
+						m_stride += count * VertexBufferElement::GetSizeOfType(GL_UNSIGNED_INT);
+						break;
+					case VALUE_TYPE::UNSIGNED_BYTE:
+						m_elements.push_back({
+							GL_UNSIGNED_BYTE,
+							count,
+							GL_TRUE,
+							UNSIGNED_BYTE
+						});
+						m_stride += count * VertexBufferElement::GetSizeOfType(GL_UNSIGNED_BYTE);
+						break;
+					case VALUE_TYPE::VERTEX:
+						m_elements.push_back({
+							GL_FLOAT,
+							count,
+							GL_FALSE,
+							VERTEX
+						});
+						m_stride += sizeof(Vertex);
+						break;
+				}
+			}
 
-		// 	template<>
-		// 	void Push<float>(int count) {
-		// 		m_elements.push_back({
-		// 			GL_FLOAT,
-		// 			count,
-		// 			GL_FALSE
-		// 		});
-		// 		m_stride += VertexBufferElement::GetSizeOfType(GL_FLOAT);
-		// 	}
-
-		// 	template<>
-		// 	void Push<unsigned int>(int count) {
-		// 		m_elements.push_back({
-		// 			GL_UNSIGNED_INT,
-		// 			count,
-		// 			GL_FALSE
-		// 		});
-		// 		m_stride += VertexBufferElement::GetSizeOfType(GL_UNSIGNED_INT);
-		// 	}
-
-		// 	template<>
-		// 	void Push<unsigned char>(int count) {
-		// 		m_elements.push_back({
-		// 			GL_UNSIGNED_BYTE,
-		// 			count,
-		// 			GL_TRUE
-		// 		});
-		// 		m_stride += VertexBufferElement::GetSizeOfType(GL_UNSIGNED_BYTE);
-		// 	}
-
-		// 	template<>
-		// 	void Push<neon::Vertex>(int count) {
-		// 		m_elements.push_back({
-		// 			GL_FLOAT,
-		// 			count,
-		// 			GL_FALSE
-		// 		});
-		// 		m_stide += sizeof(neon::Vertex);
-		// 	}
-
-		// 	inline const std::vector<VertexBufferElement> &GetElements() const { return m_elements; }
-		// 	inline unsigned int GetStride() const { return m_stride; }
+			inline const std::vector<VertexBufferElement> &GetElements() const { return m_elements; }
+			inline unsigned int GetStride() const { return m_stride; }
 
 		private:
 			std::vector<VertexBufferElement> m_elements;

@@ -27,6 +27,13 @@ namespace neon {
 
 		m_vao->Bind();
 
+		// VertexBufferLayout layout;
+		// layout.Push(VALUE_TYPE::FLOAT, 4);
+		// layout.Push(VALUE_TYPE::FLOAT, 4);
+		// layout.Push(VALUE_TYPE::FLOAT, 4);
+		// layout.Push(VALUE_TYPE::FLOAT, 4);
+		// m_vao->AddBuffer(m_vbo, layout, 2);
+
 		// set attribute pointers for matrix (4 times vec4)
 		GL_Call(glEnableVertexAttribArray(2));
 		GL_Call(glEnableVertexAttribArray(3));

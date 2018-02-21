@@ -38,11 +38,13 @@ namespace neon {
 
 		m_vao->Bind();
 		m_vbo->Bind();
-		
+		// VertexBufferLayout layout;
+		// layout.Push(VALUE_TYPE::VERTEX, 3);
+		// layout.Push(VALUE_TYPE::VERTEX, 2);
+		// m_vao->AddBuffer(m_vbo, layout);
 
 		GL_Call(glEnableVertexAttribArray(0));
 		GL_Call(glEnableVertexAttribArray(1));
-
 		
 		GL_Call(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, pos))));
 		GL_Call(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, uv))));

@@ -16,9 +16,6 @@
 #include "../../shaders/texture.h"
 #include "./transform.h"
 
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
 #include <vector>
 
 namespace neon {

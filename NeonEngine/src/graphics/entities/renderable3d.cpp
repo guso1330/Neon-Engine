@@ -38,16 +38,18 @@ namespace neon {
 
 		m_vao->Bind();
 		m_vbo->Bind();
-		// VertexBufferLayout layout;
-		// layout.Push(VALUE_TYPE::VERTEX, 3);
-		// layout.Push(VALUE_TYPE::VERTEX, 2);
-		// m_vao->AddBuffer(m_vbo, layout);
-
-		GL_Call(glEnableVertexAttribArray(0));
-		GL_Call(glEnableVertexAttribArray(1));
+		VertexBufferLayout layout;
+		layout.Push(VALUE_TYPE::VERTEX, 3, offsetof(struct Vertex, pos));
+		layout.Push(VALUE_TYPE::VERTEX, 2, offsetof(struct Vertex, uv));
 		
-		GL_Call(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, pos))));
-		GL_Call(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, uv))));
+		// GL_Call(glEnableVertexAttribArray(0));
+		// GL_Call(glEnableVertexAttribArray(1));
+		
+		// GL_Call(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, pos))));
+		// GL_Call(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, uv))));
+		
+		m_vao->PushBuffer(m_vbo, layout);
+
 	}
 
 	void Renderable3d::SetUpDraw(const glm::mat4 &transform) const {

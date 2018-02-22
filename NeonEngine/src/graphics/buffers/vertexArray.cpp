@@ -22,16 +22,18 @@ void VertexArray::Unbind() const {
 	GL_Call(glBindVertexArray(0));
 }
 
-void VertexArray::AddBuffer(const VertexBuffer *buffer, const VertexBufferLayout& layout, int i = 0) {
+void VertexArray::PushBuffer(const VertexBuffer *buffer, const VertexBufferLayout& layout, int start_index) {
 	Bind(); // bind vao
 	buffer->Bind(); // bind vbo
 
 	const auto& elements = layout.GetElements();
-	unsigned int offset = 0;
-	for(; i < elements.size(); ++i) {
-		const auto& element = elements[i];
+	for(int i = start_index; i < (elements.size() + start_index); ++i) {
+		const auto& element = elements[i - start_index];
 		GL_Call(glEnableVertexAttribArray(i));
-		GL_Call(glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStride(), (void*)offset));
-		offset += i * VertexBufferElement::GetSizeOfType(element.type);
+		GL_Call(glVertexAttribPointer(i, element.count, element.type, element.normalized, element.size, (const void*)(element.offset)));
 	}
+}
+
+void VertexArray::SetVertexAttribDivisor(unsigned int index, unsigned int divisor) {
+	GL_Call(glVertexAttribDivisor(index, divisor));
 }

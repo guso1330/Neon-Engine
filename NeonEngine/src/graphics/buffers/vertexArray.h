@@ -1,11 +1,12 @@
 #pragma once
 
-#include "../../engine/GL_Error.h"
+// #include "../../engine/GL_Error.h"
 #include "./vertexBuffer.h"
 #include "./vertexBufferLayout.h"
 
 #include <glad/glad.h>
 #include <vector>
+#include <iostream>
 
 namespace neon {
 	class VertexArray {
@@ -18,7 +19,8 @@ namespace neon {
 
 			void Bind() const;
 			void Unbind() const;
-			void AddBuffer(const VertexBuffer *buffer, const VertexBufferLayout& layout, const int i);
+			void PushBuffer(const VertexBuffer *buffer, const VertexBufferLayout& layout, int start_index = 0);
+			void SetVertexAttribDivisor(unsigned int index, unsigned int divisor);
 		private:
 			unsigned int m_vao;
 			std::vector<VertexBuffer*> m_buffers;

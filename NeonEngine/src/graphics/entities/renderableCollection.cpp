@@ -25,29 +25,34 @@ namespace neon {
 		// GL_Call(glBindVertexArray(m_vao));
 		m_vbo = new VertexBuffer(m_transforms);
 
-		m_vao->Bind();
+		// m_vao->Bind();
 
-		// VertexBufferLayout layout;
-		// layout.Push(VALUE_TYPE::FLOAT, 4);
-		// layout.Push(VALUE_TYPE::FLOAT, 4);
-		// layout.Push(VALUE_TYPE::FLOAT, 4);
-		// layout.Push(VALUE_TYPE::FLOAT, 4);
-		// m_vao->AddBuffer(m_vbo, layout, 2);
+		VertexBufferLayout layout;
+		layout.Push(VALUE_TYPE::MAT4, 4, 0 * sizeof(glm::vec4));
+		layout.Push(VALUE_TYPE::MAT4, 4, 1 * sizeof(glm::vec4));
+		layout.Push(VALUE_TYPE::MAT4, 4, 2 * sizeof(glm::vec4));
+		layout.Push(VALUE_TYPE::MAT4, 4, 3 * sizeof(glm::vec4));
+		m_vao->PushBuffer(m_vbo, layout, 2);
+		m_vao->SetVertexAttribDivisor(2, 1);
+		m_vao->SetVertexAttribDivisor(3, 1);
+		m_vao->SetVertexAttribDivisor(4, 1);
+		m_vao->SetVertexAttribDivisor(5, 1);
 
 		// set attribute pointers for matrix (4 times vec4)
-		GL_Call(glEnableVertexAttribArray(2));
-		GL_Call(glEnableVertexAttribArray(3));
-		GL_Call(glEnableVertexAttribArray(4));
-		GL_Call(glEnableVertexAttribArray(5));
-		GL_Call(glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0));
-		GL_Call(glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4))));
-		GL_Call(glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4))));
-		GL_Call(glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4))));
+		// GL_Call(glEnableVertexAttribArray(2));
+		// GL_Call(glEnableVertexAttribArray(3));
+		// GL_Call(glEnableVertexAttribArray(4));
+		// GL_Call(glEnableVertexAttribArray(5));
+		// GL_Call(glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0));
+		// GL_Call(glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(1 * sizeof(glm::vec4))));
+		// GL_Call(glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4))));
+		// GL_Call(glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4))));
 
-		GL_Call(glVertexAttribDivisor(2, 1));
-		GL_Call(glVertexAttribDivisor(3, 1));
-		GL_Call(glVertexAttribDivisor(4, 1));
-		GL_Call(glVertexAttribDivisor(5, 1));
+		// GL_Call(glVertexAttribDivisor(2, 1));
+		// GL_Call(glVertexAttribDivisor(3, 1));
+		// GL_Call(glVertexAttribDivisor(4, 1));
+		// GL_Call(glVertexAttribDivisor(5, 1));
+
 	}
 
 	void RenderableCollection::Flush() {

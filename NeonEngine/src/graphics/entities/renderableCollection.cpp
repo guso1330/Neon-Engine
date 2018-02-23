@@ -1,17 +1,13 @@
 #include "renderableCollection.h"
 
 namespace neon {
-	RenderableCollection::RenderableCollection(Renderable3d *renderable, std::vector<Transform> &transforms, Program *program) :
+	RenderableCollection::RenderableCollection(Renderable3d *renderable, Program *program) :
 		m_renderable(renderable),
 		m_program(program)
 
 	{
 		m_modelMatrix = glm::mat4(1.0f);
 		m_vao = m_renderable->GetVao();
-
-		for(int i=0; i < transforms.size(); ++i) {
-			m_transforms.push_back(transforms[i].GetModelMatrix());
-		}
 
 		init();
 	}
@@ -23,20 +19,14 @@ namespace neon {
 	// TODO: make the RenderableCollection not a static buffer, but dynamic
 	void RenderableCollection::init() {
 		// GL_Call(glBindVertexArray(m_vao));
-		m_vbo = new VertexBuffer(m_transforms);
+		m_vbo = new VertexBuffer(BUFFER_SIZE);
+
+		m_layout.Push(VALUE_TYPE::MAT4, 4, 0 * sizeof(glm::vec4));
+		m_layout.Push(VALUE_TYPE::MAT4, 4, 1 * sizeof(glm::vec4));
+		m_layout.Push(VALUE_TYPE::MAT4, 4, 2 * sizeof(glm::vec4));
+		m_layout.Push(VALUE_TYPE::MAT4, 4, 3 * sizeof(glm::vec4));
 
 		// m_vao->Bind();
-
-		VertexBufferLayout layout;
-		layout.Push(VALUE_TYPE::MAT4, 4, 0 * sizeof(glm::vec4));
-		layout.Push(VALUE_TYPE::MAT4, 4, 1 * sizeof(glm::vec4));
-		layout.Push(VALUE_TYPE::MAT4, 4, 2 * sizeof(glm::vec4));
-		layout.Push(VALUE_TYPE::MAT4, 4, 3 * sizeof(glm::vec4));
-		m_vao->PushBuffer(m_vbo, layout, 2);
-		m_vao->SetVertexAttribDivisor(2, 1);
-		m_vao->SetVertexAttribDivisor(3, 1);
-		m_vao->SetVertexAttribDivisor(4, 1);
-		m_vao->SetVertexAttribDivisor(5, 1);
 
 		// set attribute pointers for matrix (4 times vec4)
 		// GL_Call(glEnableVertexAttribArray(2));
@@ -52,13 +42,26 @@ namespace neon {
 		// GL_Call(glVertexAttribDivisor(3, 1));
 		// GL_Call(glVertexAttribDivisor(4, 1));
 		// GL_Call(glVertexAttribDivisor(5, 1));
+	}
 
+	void RenderableCollection::UpdateTransforms(std::vector<Transform> &transforms, Transform &transform) {
+		m_transforms.clear();
+		for(int i=0; i < transforms.size(); ++i) {
+			m_transforms.push_back(transforms[i].GetModelMatrix() * transform.GetModelMatrix());
+		}
 	}
 
 	void RenderableCollection::Flush() {
 		m_program->Bind();
 
 		m_vao->Bind();
+		m_vbo->BufferData(m_transforms);
+
+		m_vao->PushBuffer(m_vbo, m_layout, 2);
+		m_vao->SetVertexAttribDivisor(2, 1);
+		m_vao->SetVertexAttribDivisor(3, 1);
+		m_vao->SetVertexAttribDivisor(4, 1);
+		m_vao->SetVertexAttribDivisor(5, 1);
 		
 		Transform t = m_renderable->GetTransform();
 		m_renderable->SetUpDraw(t.GetModelMatrix());

@@ -113,10 +113,14 @@ int main() {
 	/**********************************/
 
 	plane.SetTexture(plane_tex);
+	glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
+	program->Bind();
+	plane.GetTransform().SetModelMatrix(plane_model_matrix);
+	program->Unbind();
+
 	cube_model.SetTexture(cube_tex);
 
-	// Set the game object
-	GameObject cube(&cube_model);
+	RenderableCollection instanced_cubes(&cube_model, instancedProgram);
 
 	std::vector<Transform> transforms(CUBE_COL * CUBE_ROW);
 
@@ -131,8 +135,6 @@ int main() {
 			transforms[i * CUBE_ROW + j].SetPosition(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j));
 		}
 	}
-
-	RenderableCollection instanced_cubes(&cube_model, transforms, instancedProgram);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -164,16 +166,14 @@ int main() {
 		//
 		// Draw the plane
 		//
-		glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
-		program->Bind();
-		plane.GetTransform().SetModelMatrix(plane_model_matrix);
-		program->Unbind();
 		plane.Draw();
 
 		//
 		// Draw the cubes
 		//
-		cube.SetRotation((float)angle, glm::vec3(0, 1, 0));
+		Transform new_rotation;
+		new_rotation.SetRotation((float)angle, glm::vec3(0, 1, 0));
+		instanced_cubes.UpdateTransforms(transforms, new_rotation);
 		instanced_cubes.Flush();
 
 		window->Update();

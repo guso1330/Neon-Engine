@@ -25,43 +25,34 @@ namespace neon {
 		m_layout.Push(VALUE_TYPE::MAT4, 4, 1 * sizeof(glm::vec4));
 		m_layout.Push(VALUE_TYPE::MAT4, 4, 2 * sizeof(glm::vec4));
 		m_layout.Push(VALUE_TYPE::MAT4, 4, 3 * sizeof(glm::vec4));
+		m_vao->PushBuffer(m_vbo, m_layout, 2);
 
-		// m_vao->Bind();
-
-		// set attribute pointers for matrix (4 times vec4)
-		// GL_Call(glEnableVertexAttribArray(2));
-		// GL_Call(glEnableVertexAttribArray(3));
-		// GL_Call(glEnableVertexAttribArray(4));
-		// GL_Call(glEnableVertexAttribArray(5));
-		// GL_Call(glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0));
-		// GL_Call(glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(1 * sizeof(glm::vec4))));
-		// GL_Call(glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4))));
-		// GL_Call(glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4))));
-
-		// GL_Call(glVertexAttribDivisor(2, 1));
-		// GL_Call(glVertexAttribDivisor(3, 1));
-		// GL_Call(glVertexAttribDivisor(4, 1));
-		// GL_Call(glVertexAttribDivisor(5, 1));
+		GL_Call(glVertexAttribDivisor(2, 1));
+		GL_Call(glVertexAttribDivisor(3, 1));
+		GL_Call(glVertexAttribDivisor(4, 1));
+		GL_Call(glVertexAttribDivisor(5, 1));
 	}
 
-	void RenderableCollection::UpdateTransforms(std::vector<Transform> &transforms, Transform &transform) {
+	void RenderableCollection::SetTransforms(std::vector<Transform> &n_transforms) {
+		m_transforms.clear();
+		for(int i=0; i<n_transforms.size(); ++i) {
+			m_transforms.push_back(n_transforms[i].GetModelMatrix());
+		}
+		m_vbo->BufferData(m_transforms);
+	}
+
+	// Todo: This performance could most likely be vastly improved
+	void RenderableCollection::UpdateAllTransforms(std::vector<Transform> &transforms, Transform &transform) {
 		m_transforms.clear();
 		for(int i=0; i < transforms.size(); ++i) {
 			m_transforms.push_back(transforms[i].GetModelMatrix() * transform.GetModelMatrix());
 		}
+		m_vbo->BufferData(m_transforms);
 	}
 
-	void RenderableCollection::Flush() {
+	void RenderableCollection::Draw() {
 		m_program->Bind();
-
 		m_vao->Bind();
-		m_vbo->BufferData(m_transforms);
-
-		m_vao->PushBuffer(m_vbo, m_layout, 2);
-		m_vao->SetVertexAttribDivisor(2, 1);
-		m_vao->SetVertexAttribDivisor(3, 1);
-		m_vao->SetVertexAttribDivisor(4, 1);
-		m_vao->SetVertexAttribDivisor(5, 1);
 		
 		Transform t = m_renderable->GetTransform();
 		m_renderable->SetUpDraw(t.GetModelMatrix());
@@ -69,7 +60,5 @@ namespace neon {
 		GL_Call(glDrawElementsInstanced(GL_TRIANGLES, m_renderable->GetIndexData().size(), GL_UNSIGNED_INT, NULL, m_transforms.size()));
 
 		m_renderable->UnSetDraw();
-
-		m_program->Unbind();
 	}
 }

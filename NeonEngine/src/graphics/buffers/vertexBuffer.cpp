@@ -42,12 +42,12 @@ VertexBuffer::VertexBuffer(const std::vector<Vertex> &data) {
 VertexBuffer::VertexBuffer(unsigned int size) {
 	GL_Call(glGenBuffers(1, &m_vbo));
 	Bind();
-	GL_Call(glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_STREAM_DRAW));
+	GL_Call(glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_DYNAMIC_DRAW));
 }
 
 void VertexBuffer::BufferData(std::vector<glm::mat4> &data) const {
 	Bind();
-	GL_Call(glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::mat4), &data.front(), GL_STREAM_DRAW));
+	GL_Call(glBufferSubData(GL_ARRAY_BUFFER, 0, data.size() * sizeof(glm::mat4), &data.front()));
 }
 
 void VertexBuffer::Bind() const {

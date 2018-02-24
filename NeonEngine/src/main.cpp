@@ -44,7 +44,7 @@ int main() {
 	float g_NEAR = 0.1f;
 	float g_FAR = 1000.0f;
 
-	Camera camera(glm::vec3(0, 250.0f, -400.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	Camera camera(glm::vec3(0, 50.0f, -200.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 	camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glm::mat4 view_projection = camera.GetViewProjection();
@@ -96,7 +96,7 @@ int main() {
 		Model plane("../NeonEngine/src/res/models/plane_5unit.obj", program);
 	#elif __APPLE__
 		Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
-		Model cube_model("./NeonEngine/src/res/models/cube_5unit.obj", instancedProgram);
+		Model cube_model("./NeonEngine/src/res/models/Plasmacannon/plasma_cannon.obj", instancedProgram);
 	#endif
 	/**********************************/
 	
@@ -107,7 +107,7 @@ int main() {
 		Texture cube_tex("../NeonEngine/src/res/textures/checker.png"),
 				plane_tex("../NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
 	#elif __APPLE__
-		Texture cube_tex("./NeonEngine/src/res/textures/checkered_colored.jpg"),
+		Texture cube_tex("./NeonEngine/src/res/models/Plasmacannon/plasmacannon_weapon_diffuse.bmp"),
 				plane_tex("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
 	#endif
 	/**********************************/
@@ -122,19 +122,20 @@ int main() {
 
 	RenderableCollection instanced_cubes(&cube_model, instancedProgram);
 
-	std::vector<Transform> transforms(CUBE_COL * CUBE_ROW);
-
 	// Set transform rotation and position
+	std::vector<Transform> transforms(CUBE_COL * CUBE_ROW);
 	glm::vec3 square_pos = glm::vec3(245.0f, 0.5f, 245.0f);
 	for(int i=0; i<CUBE_COL; ++i) {
 		for(int j=0; j < CUBE_COL; ++j) {
-			rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
-			rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
-			rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
-			// cubes[i * CUBE_ROW + j]->SetColor(glm::vec4(rand_color_r-1.0f, rand_color_g-1.0f, rand_color_b-1.0f, 1.0f));
+			// rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
+			// rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
+			// rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
 			transforms[i * CUBE_ROW + j].SetPosition(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j));
+			// transforms[i * CUBE_ROW + j].SetScale(glm::vec3(0.2, 0.2, 0.2));
 		}
 	}
+
+	// instanced_cubes.SetTransforms(transforms);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -147,6 +148,7 @@ int main() {
 	double angle, elapsed_time, speed;
 	angle=elapsed_time=speed=0;
 	double start_time = glfwGetTime();
+
 
 	while (!window->isClosed()) {
 
@@ -171,10 +173,11 @@ int main() {
 		//
 		// Draw the cubes
 		//
-		Transform new_rotation;
-		new_rotation.SetRotation((float)angle, glm::vec3(0, 1, 0));
-		instanced_cubes.UpdateTransforms(transforms, new_rotation);
-		instanced_cubes.Flush();
+		Transform new_transform;
+		new_transform.SetScale(glm::vec3(0.2, 0.2, 0.2));
+		new_transform.SetRotation((float)angle, glm::vec3(0, 1, 0));
+		instanced_cubes.UpdateAllTransforms(transforms, new_transform);
+		instanced_cubes.Draw();
 
 		window->Update();
 

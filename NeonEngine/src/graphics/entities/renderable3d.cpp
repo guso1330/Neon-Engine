@@ -41,15 +41,8 @@ namespace neon {
 		VertexBufferLayout layout;
 		layout.Push(VALUE_TYPE::VERTEX, 3, offsetof(struct Vertex, pos));
 		layout.Push(VALUE_TYPE::VERTEX, 2, offsetof(struct Vertex, uv));
-		
-		// GL_Call(glEnableVertexAttribArray(0));
-		// GL_Call(glEnableVertexAttribArray(1));
-		
-		// GL_Call(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, pos))));
-		// GL_Call(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(offsetof(struct Vertex, uv))));
-		
-		m_vao->PushBuffer(m_vbo, layout);
 
+		m_vao->PushBuffer(m_vbo, layout);
 	}
 
 	void Renderable3d::SetUpDraw(const glm::mat4 &transform) const {
@@ -69,7 +62,6 @@ namespace neon {
 	}	
 
 	void Renderable3d::Draw() const {
-
 		if(isDataSent) {
 			m_program->Bind();
 			m_vao->Bind();
@@ -83,7 +75,6 @@ namespace neon {
 	}
 
 	void Renderable3d::Draw(glm::mat4 transform) const {
-
 		if(isDataSent) {
 			m_program->Bind();
 			m_vao->Bind();

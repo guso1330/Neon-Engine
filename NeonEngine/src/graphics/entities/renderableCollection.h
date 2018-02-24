@@ -22,8 +22,11 @@ namespace neon {
 		public:
 			RenderableCollection(Renderable3d *renderable, Program *program);
 			~RenderableCollection();
-			void UpdateTransforms(std::vector<Transform> &transforms, Transform &transform);
-			void Flush();
+			
+			void SetTransforms(std::vector<Transform> &n_transforms);
+
+			void UpdateAllTransforms(std::vector<Transform> &transforms, Transform &transform);
+			void Draw();
 
 		private:
 			void init();

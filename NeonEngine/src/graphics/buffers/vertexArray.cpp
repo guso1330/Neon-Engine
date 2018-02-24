@@ -7,10 +7,6 @@ VertexArray::VertexArray() {
 }
 
 VertexArray::~VertexArray() {
-	for(int i=0; i < m_buffers.size(); ++i) {
-		delete m_buffers[i];
-	}
-
 	GL_Call(glDeleteVertexArrays(1, &m_vao));
 }
 
@@ -26,6 +22,11 @@ void VertexArray::PushBuffer(const VertexBuffer *buffer, const VertexBufferLayou
 	Bind(); // bind vao
 	buffer->Bind(); // bind vbo
 
+	m_buffers.push_back(buffer);
+	UpdateVertexAttribs(layout, start_index);
+}
+
+void VertexArray::UpdateVertexAttribs(const VertexBufferLayout& layout, int start_index) {
 	const auto& elements = layout.GetElements();
 	for(int i = start_index; i < (elements.size() + start_index); ++i) {
 		const auto& element = elements[i - start_index];

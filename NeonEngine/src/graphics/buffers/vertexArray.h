@@ -20,9 +20,10 @@ namespace neon {
 			void Bind() const;
 			void Unbind() const;
 			void PushBuffer(const VertexBuffer *buffer, const VertexBufferLayout& layout, int start_index = 0);
+			void UpdateVertexAttribs(const VertexBufferLayout& layout, int start_index = 0);
 			void SetVertexAttribDivisor(unsigned int index, unsigned int divisor);
 		private:
 			unsigned int m_vao;
-			std::vector<VertexBuffer*> m_buffers;
+			std::vector<const VertexBuffer*> m_buffers;
 	};
 }

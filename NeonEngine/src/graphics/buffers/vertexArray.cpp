@@ -22,7 +22,8 @@ void VertexArray::PushBuffer(const VertexBuffer *buffer, const VertexBufferLayou
 	Bind(); // bind vao
 	buffer->Bind(); // bind vbo
 
-	m_buffers.push_back(buffer);
+	// NOTE: in renderableCollection::SetUpBufferData the buffer needs to be removed from m_buffers
+	// m_buffers.push_back(buffer); 
 	UpdateVertexAttribs(layout, start_index);
 }
 
@@ -35,6 +36,17 @@ void VertexArray::UpdateVertexAttribs(const VertexBufferLayout& layout, int star
 	}
 }
 
+void VertexArray::DisableVertexAttribs(unsigned int start_index, unsigned int end_index) {
+	for(; start_index <= end_index; ++start_index)
+		GL_Call(glDisableVertexAttribArray(start_index));
+}
+
 void VertexArray::SetVertexAttribDivisor(unsigned int index, unsigned int divisor) {
 	GL_Call(glVertexAttribDivisor(index, divisor));
+}
+
+void VertexArray::SetVertexAttribDivisors(unsigned int i, unsigned int index_end, unsigned int divisor) {
+	for(; i <= index_end; ++i) {
+		GL_Call(glVertexAttribDivisor(i, divisor));
+	}
 }

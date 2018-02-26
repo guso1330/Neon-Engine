@@ -1,4 +1,5 @@
 #include "renderableCollection.h"
+#include <math.h>
 
 namespace neon {
 	RenderableCollection::RenderableCollection(Renderable3d *renderable, Program *program) :
@@ -9,7 +10,7 @@ namespace neon {
 		m_modelMatrix = glm::mat4(1.0f);
 		m_vao = m_renderable->GetVao();
 
-		init();
+		Init();
 	}
 
 	RenderableCollection::~RenderableCollection() {
@@ -17,7 +18,7 @@ namespace neon {
 	}
 
 	// TODO: make the RenderableCollection not a static buffer, but dynamic
-	void RenderableCollection::init() {
+	void RenderableCollection::Init() {
 		// GL_Call(glBindVertexArray(m_vao));
 		m_vbo = new VertexBuffer(BUFFER_SIZE);
 
@@ -26,19 +27,16 @@ namespace neon {
 		m_layout.Push(VALUE_TYPE::MAT4, 4, 2 * sizeof(glm::vec4));
 		m_layout.Push(VALUE_TYPE::MAT4, 4, 3 * sizeof(glm::vec4));
 		m_vao->PushBuffer(m_vbo, m_layout, 2);
-
-		GL_Call(glVertexAttribDivisor(2, 1));
-		GL_Call(glVertexAttribDivisor(3, 1));
-		GL_Call(glVertexAttribDivisor(4, 1));
-		GL_Call(glVertexAttribDivisor(5, 1));
+		m_vao->SetVertexAttribDivisors(2, 5, 1);
 	}
 
+	// Todo: This performance could most likely be vastly improved
 	void RenderableCollection::SetTransforms(std::vector<Transform> &n_transforms) {
 		m_transforms.clear();
 		for(int i=0; i<n_transforms.size(); ++i) {
 			m_transforms.push_back(n_transforms[i].GetModelMatrix());
 		}
-		m_vbo->BufferData(m_transforms);
+		HandleBufferData();
 	}
 
 	// Todo: This performance could most likely be vastly improved
@@ -47,7 +45,21 @@ namespace neon {
 		for(int i=0; i < transforms.size(); ++i) {
 			m_transforms.push_back(transforms[i].GetModelMatrix() * transform.GetModelMatrix());
 		}
-		m_vbo->BufferData(m_transforms);
+		HandleBufferData();
+	}
+
+	void RenderableCollection::HandleBufferData() {
+		if(!(m_transforms.size() > (MAX_ELEMENTS * m_size_factor))) {
+			m_vbo->BufferData(m_transforms);
+		} else { // TODO: dynamically create buffers for mutliple draw calls if vbos get to large, just allocating more and more data
+			m_size_factor = (int)(ceil((double)m_transforms.size() / MAX_ELEMENTS));
+			delete m_vbo;
+			m_vbo = new VertexBuffer(BUFFER_SIZE * m_size_factor);
+			m_vao->DisableVertexAttribs(2, 5);
+			m_vao->PushBuffer(m_vbo, m_layout, 2);
+			m_vao->SetVertexAttribDivisors(2, 5, 1);
+			m_vbo->BufferData(m_transforms);
+		}
 	}
 
 	void RenderableCollection::Draw() {

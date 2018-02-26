@@ -44,7 +44,7 @@ int main() {
 	float g_NEAR = 0.1f;
 	float g_FAR = 1000.0f;
 
-	Camera camera(glm::vec3(0, 50.0f, -200.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	Camera camera(glm::vec3(0, 150.0f, -250.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 	camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glm::mat4 view_projection = camera.GetViewProjection();

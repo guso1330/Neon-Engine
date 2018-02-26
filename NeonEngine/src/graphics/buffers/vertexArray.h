@@ -21,7 +21,9 @@ namespace neon {
 			void Unbind() const;
 			void PushBuffer(const VertexBuffer *buffer, const VertexBufferLayout& layout, int start_index = 0);
 			void UpdateVertexAttribs(const VertexBufferLayout& layout, int start_index = 0);
+			void DisableVertexAttribs(unsigned int start_index, unsigned int end_index);
 			void SetVertexAttribDivisor(unsigned int index, unsigned int divisor);
+			void SetVertexAttribDivisors(unsigned int i, unsigned int index_end, unsigned int divisor);
 		private:
 			unsigned int m_vao;
 			std::vector<const VertexBuffer*> m_buffers;

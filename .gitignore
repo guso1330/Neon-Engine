@@ -13,6 +13,8 @@ main
 *.exe
 *.out
 *r8_gt.obj
+.DS_Store
+*.[Dd][Ss]_[Ss]tore
 
 # Cmake exclude files
 CMakeCache.txt

@@ -44,7 +44,7 @@ int main() {
 	float g_NEAR = 0.1f;
 	float g_FAR = 1000.0f;
 
-	Camera camera(glm::vec3(0, 150.0f, -250.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	Camera camera(glm::vec3(0, 10.0f, -10.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 	camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glm::mat4 view_projection = camera.GetViewProjection();
@@ -80,11 +80,21 @@ int main() {
 	Program *instancedProgram = new Program(instancedShaders),
 			*program = new Program(shaders);
 
+	glm::vec3 lightColor(1.0),
+			  lightPos(0.0, 15.0, 0.0);
+
+	// Set up the instanced program
 	instancedProgram->Bind();
 	instancedProgram->SetUniformMat4("view_projection", view_projection);
+	instancedProgram->SetUniform3f("lightColor", lightColor);
+	instancedProgram->SetUniform3f("lightPos", lightPos);
 	instancedProgram->Unbind();
+
+	// Set up normal program
 	program->Bind();
 	program->SetUniformMat4("view_projection", view_projection);
+	program->SetUniform3f("lightColor", lightColor);
+	program->SetUniform3f("lightPos", lightPos);
 	program->Unbind();
 	
 	/***************************
@@ -96,7 +106,7 @@ int main() {
 		Model plane("../NeonEngine/src/res/models/plane_5unit.obj", program);
 	#elif __APPLE__
 		Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
-		Model cube_model("./NeonEngine/src/res/models/Plasmacannon/plasma_cannon.obj", instancedProgram);
+		Model cube_model("./NeonEngine/src/res/models/f16.obj", instancedProgram);
 	#endif
 	/**********************************/
 	
@@ -107,7 +117,7 @@ int main() {
 		Texture cube_tex("../NeonEngine/src/res/textures/checker.png"),
 				plane_tex("../NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
 	#elif __APPLE__
-		Texture cube_tex("./NeonEngine/src/res/models/Plasmacannon/plasmacannon_weapon_diffuse.bmp"),
+		Texture cube_tex("./NeonEngine/src/res/textures/checker.png"),
 				plane_tex("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
 	#endif
 	/**********************************/
@@ -119,6 +129,10 @@ int main() {
 	program->Unbind();
 
 	cube_model.SetTexture(cube_tex);
+	// rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
+	// rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
+	// rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
+	// cube_model.SetColor(glm::vec4(rand_color_r, rand_color_g, rand_color_b, 1.0f));
 
 	RenderableCollection instanced_cubes(&cube_model, instancedProgram);
 
@@ -127,11 +141,8 @@ int main() {
 	glm::vec3 square_pos = glm::vec3(245.0f, 0.5f, 245.0f);
 	for(int i=0; i<CUBE_COL; ++i) {
 		for(int j=0; j < CUBE_COL; ++j) {
-			// rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
-			// rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
-			// rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
 			transforms[i * CUBE_ROW + j].SetPosition(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j));
-			// transforms[i * CUBE_ROW + j].SetScale(glm::vec3(0.2, 0.2, 0.2));
+			transforms[i * CUBE_ROW + j].SetScale(glm::vec3(0.5, 0.5, 0.5));
 		}
 	}
 
@@ -174,7 +185,6 @@ int main() {
 		// Draw the cubes
 		//
 		Transform new_transform;
-		new_transform.SetScale(glm::vec3(0.2, 0.2, 0.2));
 		new_transform.SetRotation((float)angle, glm::vec3(0, 1, 0));
 		instanced_cubes.UpdateAllTransforms(transforms, new_transform);
 		instanced_cubes.Draw();

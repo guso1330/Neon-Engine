@@ -33,20 +33,33 @@ namespace neon {
 		}
 	}
 
-	GLint Program::GetUniformLocation(const char* name) {
-		if(m_uniformlocationCache.find(name) != m_uniformlocationCache.end())
-			return m_uniformlocationCache[name];
+	int Program::GetUniformLocation(const char* name) {
+		if(m_uniformLocationCache.find(name) != m_uniformLocationCache.end())
+			return m_uniformLocationCache[name];
 
 		GLint loc = glGetUniformLocation(m_programID, name);
 		if (loc == -1) {
-			std::cerr << "Could not locate the the uniform " << name << std::endl;
-			system("PAUSE");
+			std::cerr << "glGetUniformLocation Error: Could not locate the the uniform " << name << std::endl;
 		}
 
-		m_uniformlocationCache[name] = loc;
+		m_uniformLocationCache[name] = loc;
 		return loc;
 	}
 
+	int Program::GetAttributeLocation(const char* name) {
+		if(m_attributeLocationCache.find(name) != m_attributeLocationCache.end())
+			return m_attributeLocationCache[name];
+
+		GLint loc = glGetAttribLocation(m_programID, name);
+		if (loc == -1) {
+			std::cerr << "glGetAttribLocation Error: Could not locate the the attribute " << name << std::endl;
+		}
+
+		m_attributeLocationCache[name] = loc;
+		return loc;
+	}
+
+	// Matrix
 	void Program::SetUniformMat4(const char* name, const glm::mat4& matrix) {
 		GL_Call(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 	}
@@ -55,9 +68,24 @@ namespace neon {
 		GL_Call(glUniformMatrix4fv(loc, 1, GL_FALSE, &matrix[0][0]));
 	}
 
+	// Vec4
 	void Program::SetUniform4f(GLuint loc, const glm::vec4& v4) {
 		GL_Call(glUniform4f(loc, v4.x, v4.y, v4.z, v4.w));
 	}
+
+	void Program::SetUniform4f(const char* name, const glm::vec4& v4) {
+		GL_Call(glUniform4f(GetUniformLocation(name), v4.x, v4.y, v4.z, v4.w));
+	}
+
+	// Vec3
+	void Program::SetUniform3f(GLuint loc, const glm::vec3& v3) {
+		GL_Call(glUniform3f(loc, v3.x, v3.y, v3.z));
+	}
+
+	void Program::SetUniform3f(const char* name, const glm::vec3& v3) {
+		GL_Call(glUniform3f(GetUniformLocation(name), v3.x, v3.y, v3.z));
+	}
+
 
 	void Program::SetUniform1i(const char* name, GLfloat v0) {
 		GL_Call(glUniform1i(GetUniformLocation(name), v0));

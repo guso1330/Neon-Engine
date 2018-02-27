@@ -41,6 +41,7 @@ namespace neon {
 		VertexBufferLayout layout;
 		layout.Push(VALUE_TYPE::VERTEX, 3, offsetof(struct Vertex, pos));
 		layout.Push(VALUE_TYPE::VERTEX, 2, offsetof(struct Vertex, uv));
+		layout.Push(VALUE_TYPE::VERTEX, 3, offsetof(struct Vertex, normal));
 
 		m_vao->PushBuffer(m_vbo, layout);
 	}

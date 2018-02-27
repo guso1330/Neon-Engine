@@ -8,6 +8,9 @@ namespace neon {
 
 	{
 		m_modelMatrix = glm::mat4(1.0f);
+		m_transformLoc = m_program->GetAttributeLocation("transform");
+		// TODO: error handling on the m_transformLoc!
+
 		m_vao = m_renderable->GetVao();
 
 		Init();
@@ -26,8 +29,8 @@ namespace neon {
 		m_layout.Push(VALUE_TYPE::MAT4, 4, 1 * sizeof(glm::vec4));
 		m_layout.Push(VALUE_TYPE::MAT4, 4, 2 * sizeof(glm::vec4));
 		m_layout.Push(VALUE_TYPE::MAT4, 4, 3 * sizeof(glm::vec4));
-		m_vao->PushBuffer(m_vbo, m_layout, 2);
-		m_vao->SetVertexAttribDivisors(2, 5, 1);
+		m_vao->PushBuffer(m_vbo, m_layout, m_transformLoc);
+		m_vao->SetVertexAttribDivisors(m_transformLoc, m_transformLoc+3, 1);
 	}
 
 	// Todo: This performance could most likely be vastly improved
@@ -55,9 +58,9 @@ namespace neon {
 			m_size_factor = (int)(ceil((double)m_transforms.size() / MAX_ELEMENTS));
 			delete m_vbo;
 			m_vbo = new VertexBuffer(BUFFER_SIZE * m_size_factor);
-			m_vao->DisableVertexAttribs(2, 5);
-			m_vao->PushBuffer(m_vbo, m_layout, 2);
-			m_vao->SetVertexAttribDivisors(2, 5, 1);
+			m_vao->DisableVertexAttribs(m_transformLoc, m_transformLoc+3);
+			m_vao->PushBuffer(m_vbo, m_layout, m_transformLoc);
+			m_vao->SetVertexAttribDivisors(m_transformLoc, m_transformLoc+3, 1);
 			m_vbo->BufferData(m_transforms);
 		}
 	}

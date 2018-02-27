@@ -42,6 +42,7 @@ namespace neon {
 			glm::mat4 m_modelMatrix;
 			
 			int m_size_factor = 1;
+			unsigned int m_transformLoc;
 			
 
 	};

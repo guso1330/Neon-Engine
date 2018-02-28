@@ -75,7 +75,7 @@ namespace neon {
 		}
 	}
 
-	void Renderable3d::Draw(glm::mat4 transform) const {
+	void Renderable3d::Draw(const glm::mat4 &transform) const {
 		if(isDataSent) {
 			m_program->Bind();
 			m_vao->Bind();

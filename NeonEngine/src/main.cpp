@@ -44,7 +44,7 @@ int main() {
 	float g_NEAR = 0.1f;
 	float g_FAR = 1000.0f;
 
-	Camera camera(glm::vec3(0, 10.0f, -10.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	Camera camera(glm::vec3(0, 25.0f, -150.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 	camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glm::mat4 view_projection = camera.GetViewProjection();
@@ -53,6 +53,12 @@ int main() {
 	/* GLFW is initialized within the window */
 	Window *window = new Window(WIDTH, HEIGHT, false, "Neon Engine");
 	window->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	/***********************
+		  Light Stuff
+	***********************/
+	glm::vec3 lightColor(1.0),
+			  lightPos(0.0, 20.0, 0.0);
 
 	/************************************
 		Setting up Shaders and Program
@@ -65,37 +71,46 @@ int main() {
 		Shader *vShader = new Shader("../NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
 		Shader *fShader = new Shader("../NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER);
 	#elif __APPLE__
+		Shader *simpleVShader = new Shader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
+		Shader *simpleFShader = new Shader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
 		Shader *vShader = new Shader("./NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
 		Shader *fShader = new Shader("./NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER);
 		Shader *instancedVShader = new Shader("./NeonEngine/src/res/shaders/instancedVShader.glsl", GL_VERTEX_SHADER);
 		Shader *instancedFShader = new Shader("./NeonEngine/src/res/shaders/instancedFShader.glsl", GL_FRAGMENT_SHADER);
 	#endif
 
-	std::vector<Shader*> shaders, instancedShaders;
+	std::vector<Shader*> shaders, instancedShaders, simpleShaders;
 	shaders.push_back(vShader);
 	shaders.push_back(fShader);
 	instancedShaders.push_back(instancedVShader);
 	instancedShaders.push_back(instancedFShader);
+	simpleShaders.push_back(simpleVShader);
+	simpleShaders.push_back(simpleFShader);
 
 	Program *instancedProgram = new Program(instancedShaders),
-			*program = new Program(shaders);
-
-	glm::vec3 lightColor(1.0),
-			  lightPos(0.0, 15.0, 0.0);
+			*program = new Program(shaders),
+			*simpleProgram = new Program(simpleShaders);
 
 	// Set up the instanced program
 	instancedProgram->Bind();
 	instancedProgram->SetUniformMat4("view_projection", view_projection);
 	instancedProgram->SetUniform3f("lightColor", lightColor);
 	instancedProgram->SetUniform3f("lightPos", lightPos);
+	instancedProgram->SetUniform3f("viewPos", camera.GetPos());
 	instancedProgram->Unbind();
 
 	// Set up normal program
 	program->Bind();
 	program->SetUniformMat4("view_projection", view_projection);
 	program->SetUniform3f("lightColor", lightColor);
-	program->SetUniform3f("lightPos", lightPos);
+			program->SetUniform3f("lightPos", lightPos);
+	program->SetUniform3f("viewPos", camera.GetPos());
 	program->Unbind();
+
+	// Set Up simple program
+	simpleProgram->Bind();
+	simpleProgram->SetUniformMat4("view_projection", view_projection);
+	simpleProgram->Unbind();
 	
 	/***************************
 		Setting up The Models
@@ -106,7 +121,8 @@ int main() {
 		Model plane("../NeonEngine/src/res/models/plane_5unit.obj", program);
 	#elif __APPLE__
 		Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
-		Model cube_model("./NeonEngine/src/res/models/f16.obj", instancedProgram);
+		Model cube_model("./NeonEngine/src/res/models/cube.obj", instancedProgram);
+		Model sphere_model("./NeonEngine/src/res/models/sphere.obj", simpleProgram);
 	#endif
 	/**********************************/
 	
@@ -129,12 +145,16 @@ int main() {
 	program->Unbind();
 
 	cube_model.SetTexture(cube_tex);
-	// rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
-	// rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
-	// rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
-	// cube_model.SetColor(glm::vec4(rand_color_r, rand_color_g, rand_color_b, 1.0f));
+	rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
+	rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
+	rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
+	cube_model.SetColor(glm::vec4(rand_color_r, rand_color_g, rand_color_b, 1.0f));
 
 	RenderableCollection instanced_cubes(&cube_model, instancedProgram);
+
+	sphere_model.SetColor(glm::vec4(lightColor, 1.0f));
+	GameObject sphere(&sphere_model);
+	sphere.SetPosition(lightPos);
 
 	// Set transform rotation and position
 	std::vector<Transform> transforms(CUBE_COL * CUBE_ROW);
@@ -142,7 +162,7 @@ int main() {
 	for(int i=0; i<CUBE_COL; ++i) {
 		for(int j=0; j < CUBE_COL; ++j) {
 			transforms[i * CUBE_ROW + j].SetPosition(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j));
-			transforms[i * CUBE_ROW + j].SetScale(glm::vec3(0.5, 0.5, 0.5));
+			// transforms[i * CUBE_ROW + j].SetScale(glm::vec3(0.5, 0.5, 0.5));
 		}
 	}
 
@@ -155,12 +175,14 @@ int main() {
 	glEnable(GL_CULL_FACE);
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	
-	/* timing stuff */
+	// Timer variables
 	double angle, elapsed_time, speed;
 	angle=elapsed_time=speed=0;
-	double start_time = glfwGetTime();
+	double last_time = glfwGetTime(), current_time = 0;
 
-
+	// Light movement variables
+	short direction = -1;
+	float light_speed = 100.0;
 	while (!window->isClosed()) {
 
 		window->Clear();
@@ -169,12 +191,30 @@ int main() {
 		/*******************************************
 		* TIME BASED MOVEMENT - THIS ISN'T WORKING *
 		*******************************************/
-		elapsed_time = glfwGetTime() - start_time;
-		speed = 10.0f * (std::max(elapsed_time, 0.03) * (1/30.0f));
-		angle = angle + speed;
+		// Handle cube rotations
+		current_time = glfwGetTime();
+		elapsed_time = current_time - last_time;
+		speed = 2.0f;
+
+		angle += elapsed_time * speed;
 		if (angle > 360.0) {
 			angle = 0;
 		}
+
+		// Handle light movement
+		lightPos.z += elapsed_time * (light_speed * direction);
+		if(lightPos.z <= -200.0f) { direction *= -1; }
+		else if(lightPos.z >= 200.0f) { direction *= -1; }
+		instancedProgram->Bind();
+		instancedProgram->SetUniform3f("lightPos", lightPos);
+		instancedProgram->Unbind();
+		program->Bind();
+		program->SetUniform3f("lightPos", lightPos);
+		program->Unbind();
+
+		// Draw sphere (lamp)
+		sphere.SetPosition(lightPos);
+		sphere.Draw();
 		
 		//
 		// Draw the plane
@@ -191,7 +231,7 @@ int main() {
 
 		window->Update();
 
-		start_time = glfwGetTime();
+		last_time = current_time;
 	}
 
 	return EXIT_SUCCESS;

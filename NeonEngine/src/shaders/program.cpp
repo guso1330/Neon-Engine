@@ -86,7 +86,7 @@ namespace neon {
 		GL_Call(glUniform3f(GetUniformLocation(name), v3.x, v3.y, v3.z));
 	}
 
-
+	// Float
 	void Program::SetUniform1i(const char* name, GLfloat v0) {
 		GL_Call(glUniform1i(GetUniformLocation(name), v0));
 	}

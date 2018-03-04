@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{ec7d8b20-353d-4f25-b99a-1371ef0c9ed7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\app">
+      <UniqueIdentifier>{f1a45c53-ba30-4e33-ab5f-139475c2db05}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Dependencies\glad\src\glad.c" />
+    <ClCompile Include="NeonEngine\src\app\window.cpp" />
+    <ClCompile Include="NeonEngine\src\graphics\buffers\indexBuffer.cpp" />
+    <ClCompile Include="NeonEngine\src\graphics\buffers\vertexArray.cpp" />
+    <ClCompile Include="NeonEngine\src\graphics\buffers\vertexBuffer.cpp" />
+    <ClCompile Include="NeonEngine\src\graphics\cameras\camera.cpp" />
+    <ClCompile Include="NeonEngine\src\graphics\entities\gameobject.cpp" />
+    <ClCompile Include="NeonEngine\src\graphics\entities\mesh.cpp" />
+    <ClCompile Include="NeonEngine\src\graphics\entities\model.cpp" />
+    <ClCompile Include="NeonEngine\src\graphics\entities\renderable3d.cpp" />
+    <ClCompile Include="NeonEngine\src\graphics\entities\renderableCollection.cpp" />
+    <ClCompile Include="NeonEngine\src\graphics\entities\transform.cpp" />
+    <ClCompile Include="NeonEngine\src\graphics\renderers\forwardRenderer.cpp" />
+    <ClCompile Include="NeonEngine\src\shaders\program.cpp" />
+    <ClCompile Include="NeonEngine\src\shaders\shader.cpp" />
+    <ClCompile Include="NeonEngine\src\shaders\texture.cpp" />
+    <ClCompile Include="NeonEngine\src\utils\file_utils\fileUtils.cpp" />
+    <ClCompile Include="NeonEngine\src\utils\obj_loader\objloader.cpp" />
+    <ClCompile Include="NeonEngine\src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Dependencies\glad\include\glad\glad.h" />
+    <ClInclude Include="NeonEngine\src\app\window.h" />
+    <ClInclude Include="NeonEngine\src\engine\GL_Error.h" />
+    <ClInclude Include="NeonEngine\src\graphics\buffers\indexBuffer.h" />
+    <ClInclude Include="NeonEngine\src\graphics\buffers\vertexArray.h" />
+    <ClInclude Include="NeonEngine\src\graphics\buffers\vertexBuffer.h" />
+    <ClInclude Include="NeonEngine\src\graphics\buffers\vertexBufferLayout.h" />
+    <ClInclude Include="NeonEngine\src\graphics\cameras\camera.h" />
+    <ClInclude Include="NeonEngine\src\graphics\entities\gameobject.h" />
+    <ClInclude Include="NeonEngine\src\graphics\entities\mesh.h" />
+    <ClInclude Include="NeonEngine\src\graphics\entities\model.h" />
+    <ClInclude Include="NeonEngine\src\graphics\entities\renderable3d.h" />
+    <ClInclude Include="NeonEngine\src\graphics\entities\renderableCollection.h" />
+    <ClInclude Include="NeonEngine\src\graphics\entities\transform.h" />
+    <ClInclude Include="NeonEngine\src\graphics\entities\vertex.h" />
+    <ClInclude Include="NeonEngine\src\graphics\renderers\forwardRenderer.h" />
+    <ClInclude Include="NeonEngine\src\shaders\program.h" />
+    <ClInclude Include="NeonEngine\src\shaders\shader.h" />
+    <ClInclude Include="NeonEngine\src\shaders\texture.h" />
+    <ClInclude Include="NeonEngine\src\utils\debugging\debug.h" />
+    <ClInclude Include="NeonEngine\src\utils\file_utils\fileUtils.h" />
+    <ClInclude Include="NeonEngine\src\utils\obj_loader\objloader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NeonEngine\src\res\shaders\basicFShader.glsl" />
+    <None Include="NeonEngine\src\res\shaders\basicVShader.glsl" />
+    <None Include="NeonEngine\src\res\shaders\instancedFShader.glsl" />
+    <None Include="NeonEngine\src\res\shaders\instancedVShader.glsl" />
+    <None Include="NeonEngine\src\res\shaders\textureFShader.glsl" />
+    <None Include="NeonEngine\src\res\shaders\textureVShader.glsl" />
+    <None Include="NeonEngine\src\res\shaders\lightingFShader.glsl" />
+  </ItemGroup>
+</Project>

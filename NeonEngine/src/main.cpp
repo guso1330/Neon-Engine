@@ -44,7 +44,7 @@ int main() {
 	float g_NEAR = 0.1f;
 	float g_FAR = 1000.0f;
 
-	Camera camera(glm::vec3(0, 5.0f, -10.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	Camera camera(glm::vec3(0, 15.0f, -50.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 	camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glm::mat4 view_projection = camera.GetViewProjection();
@@ -69,16 +69,11 @@ int main() {
 		class that has the capability
 		of attaching shaders to it
 	*************************************/
-	#if _WIN32
-		Shader *vShader = new Shader("../NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
-		Shader *fShader = new Shader("../NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER);
-	#elif __APPLE__
-		Shader *simpleVShader = new Shader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
-		Shader *simpleFShader = new Shader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
-		Shader *vShader = new Shader("./NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
-		Shader *instancedVShader = new Shader("./NeonEngine/src/res/shaders/instancedVShader.glsl", GL_VERTEX_SHADER);
-		Shader *lightingFShader = new Shader("./NeonEngine/src/res/shaders/lightingFShader.glsl", GL_FRAGMENT_SHADER);
-	#endif
+	Shader *simpleVShader = new Shader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
+	Shader *simpleFShader = new Shader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
+	Shader *vShader = new Shader("./NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER);
+	Shader *instancedVShader = new Shader("./NeonEngine/src/res/shaders/instancedVShader.glsl", GL_VERTEX_SHADER);
+	Shader *lightingFShader = new Shader("./NeonEngine/src/res/shaders/lightingFShader.glsl", GL_FRAGMENT_SHADER);
 
 	std::vector<Shader*> shaders, instancedShaders, simpleShaders;
 	shaders.push_back(vShader);
@@ -123,30 +118,18 @@ int main() {
 	/***************************
 		Setting up The Models
 	****************************/
-	#if _WIN32
-		std::vector<GameObject*> cubes;
-		Model cube_model("../NeonEngine/src/res/models/cube_5unit.obj", program);
-		Model plane("../NeonEngine/src/res/models/plane_5unit.obj", program);
-	#elif __APPLE__
-		Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
-		Model cube_model("./NeonEngine/src/res/models/cube_basic.obj", instancedProgram);
-		Model sphere_model("./NeonEngine/src/res/models/sphere.obj", simpleProgram);
-	#endif
+	Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
+	Model cube_model("./NeonEngine/src/res/models/cube_basic.obj", instancedProgram);
+	Model sphere_model("./NeonEngine/src/res/models/sphere.obj", simpleProgram);
 	/**********************************/
 	
 	/***************************
 		Setting up The Textures
 	****************************/
-	#if _WIN32
-		Texture cube_tex("../NeonEngine/src/res/textures/checker.png"),
-				plane_tex("../NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
-	#elif __APPLE__
-		Texture cube_tex("./NeonEngine/src/res/textures/wood_crate.png"),
-				cube_spec_tex("./NeonEngine/src/res/textures/wood_crate_spec.png"),
-				plane_tex("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
-	#endif
+	Texture cube_tex("./NeonEngine/src/res/textures/wood_crate.png"),
+			cube_spec_tex("./NeonEngine/src/res/textures/wood_crate_spec.png"),
+			plane_tex("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
 	/**********************************/
-
 	plane.SetTexture(plane_tex);
 	glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
 	program->Bind();
@@ -175,7 +158,6 @@ int main() {
 			// transforms[i * CUBE_ROW + j].SetScale(glm::vec3(0.5, 0.5, 0.5));
 		}
 	}
-
 	// instanced_cubes.SetTransforms(transforms);
 
 	//

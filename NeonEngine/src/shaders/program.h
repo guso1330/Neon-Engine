@@ -39,7 +39,8 @@ namespace neon {
 			void SetUniform4f(const char* name, const glm::vec4& v4);
 			void SetUniform3f(GLuint loc, const glm::vec3& v3);
 			void SetUniform3f(const char* name, const glm::vec3& v3);
-			void SetUniform1i(const char* name, GLfloat v0);
+			void SetUniform1f(const char* name, GLfloat v0);
+			void SetUniform1i(const char* name, GLint v0);
 
 			// TODO: call glUseProgram
 			void Bind();

@@ -14,9 +14,14 @@ uniform mat4 view_projection;
 uniform vec4 vcolor;
 
 void main() {
-	fragPos = vec3(model * transform * vec4(vPosition, 1.0));
 	fcolor = vcolor;
 	texFrag = texCoord;
-	normal = mat3(transpose(inverse(model * transform))) * vNormal;
+	mat4 model_transform = model * transform;
+	fragPos = vec3(model_transform * vec4(vPosition, 1.0));
+	// Creates the Normal Model Matrix
+	// TODO: inverse matrix calculations are very costly operations so do 
+	// this on the CPU and send it over instead.
+	normal = mat3(transpose(inverse(model_transform))) * vNormal;
+
 	gl_Position = view_projection * vec4(fragPos, 1.0);
 }

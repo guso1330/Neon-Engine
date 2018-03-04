@@ -39,6 +39,7 @@ namespace neon {
             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         #endif
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_SAMPLES, 4);
 
 		/* Create variable to store the window */
 		m_window = glfwCreateWindow(m_width, m_height, m_title, nullptr, nullptr);
@@ -87,19 +88,19 @@ namespace neon {
 	}
 
 	void Window::Clear() const {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glFlush();
+		GL_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+		GL_Call(glFlush());
 	}
 
 	void Window::SetClearColor(float r, float g, float b, float a) {
-		glClearColor(r, g, b, a);
+		GL_Call(glClearColor(r, g, b, a));
 	}
 
 	/******************
 	* Static function *
 	******************/
 	static void window_resize_callback(GLFWwindow *window, int width, int height) {
-		glViewport(0, 0, width, height);
+		GL_Call(glViewport(0, 0, width, height));
 	}
 
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {

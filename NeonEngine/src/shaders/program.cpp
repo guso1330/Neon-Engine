@@ -87,7 +87,11 @@ namespace neon {
 	}
 
 	// Float
-	void Program::SetUniform1i(const char* name, GLfloat v0) {
+	void Program::SetUniform1f(const char* name, GLfloat v0) {
+		GL_Call(glUniform1f(GetUniformLocation(name), v0));
+	}
+
+	void Program::SetUniform1i(const char* name, GLint v0) {
 		GL_Call(glUniform1i(GetUniformLocation(name), v0));
 	}
 

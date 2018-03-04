@@ -40,6 +40,8 @@ namespace neon {
 			inline void SetColor(const glm::vec4 &n_color) { m_color = n_color; }
 			void 		SetTexture(const char* filename); // Generate a new texture
 			void 		SetTexture(Texture& n_texture); // Pass in a texture that already exists
+			void 		SetSpecularTexture(const char* filename); // Generate a new texture
+			void 		SetSpecularTexture(Texture& n_texture); // Pass in a texture that already exists
 			void 		SetUpDraw(const glm::mat4 &transform) const;
 			void 		UnSetDraw() const;
 
@@ -62,6 +64,7 @@ namespace neon {
 
 			Program   *m_program;
 			Texture   *m_texture;
+			Texture   *m_specular_texture;	
 			Transform m_transform;
 
 			std::vector<Vertex> 	  m_vertexData;

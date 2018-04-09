@@ -6,11 +6,12 @@ namespace neon {
 	Mesh::Mesh() {}
 
 	// Parametric Constructor
-	Mesh::Mesh(const char *filename) {
-		InitMesh(filename);
-	}
-
-	void Mesh::InitMesh(const char *filename) {
-		tiny_obj_loader_load_obj(filename, m_vertices, m_indices, m_uvs, m_normals, m_indexObj);
+	Mesh::Mesh(std::vector<Vertex> &vertex_data, std::vector<unsigned int> &indices) :
+	m_indices(indices) {
+		for(std::vector<Vertex>::iterator it = vertex_data.begin(); it != vertex_data.end(); ++it) {
+			m_vertices.push_back((*it).pos);
+			m_uvs.push_back((*it).uv);
+			m_normals.push_back((*it).normal);
+		}
 	}
 }

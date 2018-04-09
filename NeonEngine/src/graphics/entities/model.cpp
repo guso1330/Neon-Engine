@@ -1,14 +1,20 @@
 #include "model.h"
 
+
 namespace neon {
+	vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName);
+
 	Model::Model(const char *filename, Program* program, bool shouldSendData) : 
 		Renderable3d(program)
 	{
-		m_mesh = new Mesh(filename);
-		BuildVertexData();
+		bool loaded_mesh = InitMeshes(filename);
+		if(!loaded_mesh) {
+			std::cout << "Error: " << filename << " was not loaded" << std::endl;
+		} else {
+			std::cout << filename << " loaded succesfully with " << m_meshes.size() << " meshes loaded" << std::endl;
+			std::cout << "Materials loaded: " << m_materials.size() << std::endl;
+		}
 
-		// TODO: need a method or something to run this
-		// 		 function only if you want to draw yourself
 		isDataSent = shouldSendData;
 		if(shouldSendData) {
 			SendVertexData();
@@ -17,87 +23,103 @@ namespace neon {
 
 	Model::~Model() {}
 
-	void Model::BuildVertexData() {
-		std::unordered_set<Index> index_set;
+	bool Model::InitMeshes(const std::string &filename) {
+		Assimp::Importer importer;
+
+		std::cout << "\nAssimp Loading: " << filename << std::endl;
+
+		// Load the scene
+		const aiScene* scene = importer.ReadFile( 
+			filename,
+			aiProcessPreset_TargetRealtime_Quality);
+
+		// Check if there was errors with 
+		if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+		{
+			std::cout << importer.GetErrorString() << std::endl;
+			return false;
+		}
+
+		m_directory = filename.substr(0, filename.find_last_of('/'));
+
+		AssimpProcessNode(scene->mRootNode, scene);
+
+		return true;
+	}
+
+	void Model::AssimpProcessNode(aiNode *node, const aiScene *scene) {
+		for(unsigned int i = 0; i < node->mNumMeshes; i++)
+		{
+			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+			m_meshes.push_back(AssimpProcessMesh(mesh, scene));
+		}
+		for(unsigned int i = 0; i < node->mNumChildren; i++)
+		{
+			AssimpProcessNode(node->mChildren[i], scene);
+		}
+	}
+
+	Mesh* Model::AssimpProcessMesh(aiMesh *mesh, const aiScene *scene) {
+		std::vector<Texture> textures;
 		
-		/*****************************/
-		/* Build the unique indices */
-		/*****************************/
-		clock_t begin = std::clock();
-		int index = 0;
-		for(int i=0; i < (m_mesh->GetIndexObjSize()); ++i) {
-			Index n_index, c_index = m_mesh->GetIndexObj()[i];
-			n_index.vertex_index = c_index.vertex_index;
-			n_index.uv_index = c_index.uv_index;
-			n_index.normal_index = c_index.normal_index;
-			n_index.has_vi = c_index.has_vi;
-			n_index.has_ui = c_index.has_ui;
-			n_index.has_ni = c_index.has_ni;
+		for(unsigned int i = 0; i < mesh->mNumVertices; ++i)
+		{
+			Vertex vertex;
+			// process vertex positions, normals and texture coordinates
+			vertex.pos.x = mesh->mVertices[i].x;
+			vertex.pos.y = mesh->mVertices[i].y;
+			vertex.pos.z = mesh->mVertices[i].z;
 
-			std::unordered_set<Index>::iterator index_exists = index_set.find(n_index);
-			if(index_exists == index_set.end()) {
-				n_index.index = index;
-				index_set.insert(n_index);
-				index++;
+			// UVs coordinates
+			if(mesh->mTextureCoords[0]) // domes the mesh contain texture coordinates?
+			{
+				vertex.uv.x = mesh->mTextureCoords[0][i].x; 
+				vertex.uv.y = mesh->mTextureCoords[0][i].y;
+			}
+			else {
+				vertex.uv.x = 0.0f;
+				vertex.uv.y = 0.0f;
+			}
+
+			// Normals
+			vertex.normal.x = mesh->mNormals[i].x;
+			vertex.normal.y = mesh->mNormals[i].y;
+			vertex.normal.z = mesh->mNormals[i].z;
+
+			//
+			// TODO: Handle tangent and bittangent
+			//
+			m_vertexData.push_back(vertex);
+		}
+
+		// process indices
+		for(unsigned int i = 0; i < mesh->mNumFaces; i++)
+		{
+			aiFace face = mesh->mFaces[i];
+
+			for(unsigned int j = 0; j < face.mNumIndices; j++) {
+				m_indices.push_back(face.mIndices[j]);
 			}
 		}
-		clock_t end = std::clock();
-		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		printf("Time of BuildVertexData 1st for loop: %lf\n", elapsed_secs);
 
-		begin = std::clock();
-		/*********************/
-		/* Build vertex data */
-		/*********************/
-		m_vertexData.resize(index_set.size());
-		for (std::unordered_set<Index>::iterator it=index_set.begin(); it!=index_set.end(); ++it) {
-			Index c_index = (*it);
+		// process material
+		if(mesh->mMaterialIndex >= 0)
+		{
+			// Handle materials
+			aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
-			// Create a temporary vertex
-			Vertex temp_vertex;
-			// Grab the indices for the current_index
-			int pos_index, uv_index, normal_index;
-
-			// Will alwasy have_vi
-			if(c_index.has_vi) {
-				pos_index = c_index.vertex_index;
-				temp_vertex.pos = m_mesh->GetVertices()[pos_index];
+			aiString path;
+			if(aiReturn_SUCCESS == material->GetTexture(aiTextureType_DIFFUSE, 0, &path))
+			{
+				std::cout << "Path Name: " << path.C_Str() << std::endl;
+				std::cout << "Directory: " << m_directory << std::endl;
 			}
-			if(c_index.has_ui) {
-				uv_index = c_index.uv_index;
-				temp_vertex.uv = m_mesh->GetUVs()[uv_index];
-			} else {
-				temp_vertex.uv = glm::vec2(0.0, 0.0);
-			}
-			if(c_index.has_ni) {
-				normal_index = c_index.normal_index;
-				temp_vertex.normal = m_mesh->GetNormals()[normal_index];
-			} else {
-				temp_vertex.normal = glm::vec3(0.0,0.0,0.0);
-			}
-			m_vertexData[c_index.index] = temp_vertex;
+			// Todo: Probably can remove the m_materials vector, because I don't need to store the materials
+			m_materials.push_back(material);
 		}
-		end = std::clock();
-		elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		printf("Time of BuildVertexData 2nd for loop: %lf\n", elapsed_secs);
 
-		begin = std::clock();
-		/****************************************/
-		/* Grab the index of each unique vertex */
-		/****************************************/
-		for (int i=0; i < (m_mesh->GetIndexObjSize()); ++i) {
-			Index c_index = m_mesh->GetIndexObj()[i];
-			// find the index
-			std::unordered_set<Index>::iterator found = index_set.find(c_index);
-			m_indices.push_back((*found).index);
-		}
-		end = std::clock();
-		elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		printf("Time of BuildVertexData 3rd for loop: %lf\n", elapsed_secs);
+		Mesh *n_mesh = new Mesh(m_vertexData, m_indices);
 
-		std::cout << "Size of m_vertexData: " << m_vertexData.size() << std::endl;
-		std::cout << "Size of m_indices: " << m_indices.size() << std::endl;
-
-		delete m_mesh;
+		return n_mesh;
 	}
 }

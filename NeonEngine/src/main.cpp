@@ -23,8 +23,8 @@
 using namespace neon;
 using namespace glm;
 
-const GLint WIDTH = 1280,
-			HEIGHT = 720;
+const GLint WIDTH = 768,
+			HEIGHT = 432;
 
 short int CUBE_COL = 50,
 		  CUBE_ROW = 50;
@@ -119,25 +119,25 @@ int main() {
 		Setting up The Models
 	****************************/
 	Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
-	Model cube_model("./NeonEngine/src/res/models/cube_basic.obj", instancedProgram);
+	Model cube_model("./NeonEngine/src/res/models/plasmacannon/plasma cannon.x", instancedProgram);
 	Model sphere_model("./NeonEngine/src/res/models/sphere.obj", simpleProgram);
 	/**********************************/
 	
 	/***************************
 		Setting up The Textures
 	****************************/
-	Texture cube_tex("./NeonEngine/src/res/textures/wood_crate.png"),
-			cube_spec_tex("./NeonEngine/src/res/textures/wood_crate_spec.png"),
-			plane_tex("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg");
+	Texture cube_tex("./NeonEngine/src/res/models/plasmacannon/plasmacannon_weapon_diffuse.bmp", Diffuse),
+			cube_spec_tex("./NeonEngine/src/res/models/plasmacannon/plasmacannon_weapon_specular.jpg", Specular),
+			plane_tex("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg", Diffuse);
 	/**********************************/
-	plane.SetTexture(plane_tex);
+	plane.SetTexture(&plane_tex);
 	glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
 	program->Bind();
 	plane.GetTransform().SetModelMatrix(plane_model_matrix);
 	program->Unbind();
 
-	cube_model.SetTexture(cube_tex);
-	cube_model.SetSpecularTexture(cube_spec_tex);
+	cube_model.SetTexture(&cube_tex);
+	cube_model.SetTexture(&cube_spec_tex);
 	// rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
 	// rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
 	// rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
@@ -149,16 +149,17 @@ int main() {
 	GameObject sphere(&sphere_model);
 	sphere.SetPosition(lightPos);
 
+
 	// Set transform rotation and position
 	std::vector<Transform> transforms(CUBE_COL * CUBE_ROW);
 	glm::vec3 square_pos = glm::vec3(245.0f, 0.5f, 245.0f);
 	for(int i=0; i<CUBE_COL; ++i) {
 		for(int j=0; j < CUBE_COL; ++j) {
 			transforms[i * CUBE_ROW + j].SetPosition(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j));
-			// transforms[i * CUBE_ROW + j].SetScale(glm::vec3(0.5, 0.5, 0.5));
+			transforms[i * CUBE_ROW + j].SetScale(glm::vec3(0.5, 0.5, 0.5));
 		}
 	}
-	// instanced_cubes.SetTransforms(transforms);
+	// instanced_cubes.UpdateAllTransforms(transforms, scale);
 
 	//
 	// OpenGL Setting
@@ -231,6 +232,7 @@ int main() {
 		//
 		Transform new_transform;
 		new_transform.SetRotation((float)angle, glm::vec3(0, 1, 0));
+		new_transform.SetScale(glm::vec3(0.3));
 		instanced_cubes.UpdateAllTransforms(transforms, new_transform);
 		instanced_cubes.Draw();
 

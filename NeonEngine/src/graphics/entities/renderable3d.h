@@ -38,10 +38,8 @@ namespace neon {
 			
 			// SETTERS
 			inline void SetColor(const glm::vec4 &n_color) { m_color = n_color; }
-			void 		SetTexture(const char* filename); // Generate a new texture
-			void 		SetTexture(Texture& n_texture); // Pass in a texture that already exists
-			void 		SetSpecularTexture(const char* filename); // Generate a new texture
-			void 		SetSpecularTexture(Texture& n_texture); // Pass in a texture that already exists
+			void 		SetTexture(const std::string &filename, TextureType type = Diffuse); // Generate a new texture
+			void 		SetTexture(Texture* n_texture); // Pass in a texture that already exists
 			void 		SetUpDraw(const glm::mat4 &transform) const;
 			void 		UnSetDraw() const;
 
@@ -50,10 +48,8 @@ namespace neon {
 			void 	SendVertexData();
 			// NOTE: you must build m_indices and m_vertexData,
 			// because they're used in SendVertexData()
-			virtual void BuildVertexData() = 0;
+			// virtual void BuildVertexData() = 0;
 		protected:
-			// GL id's for self drawing
-			// GLuint 		m_vao, m_vbo;
 			VertexBuffer *m_vbo;
 			IndexBuffer *m_ibo;
 			VertexArray *m_vao;
@@ -63,10 +59,9 @@ namespace neon {
 			glm::vec4 	m_color;
 
 			Program   *m_program;
-			Texture   *m_texture;
-			Texture   *m_specular_texture;	
 			Transform m_transform;
 
+			std::vector<Texture*> m_textures;
 			std::vector<Vertex> 	  m_vertexData;
 			std::vector<unsigned int> m_indices;
 

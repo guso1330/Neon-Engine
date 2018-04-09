@@ -10,8 +10,6 @@ namespace neon {
 
 		// Default values
 		m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-		m_texture = nullptr;
-		m_specular_texture = nullptr;
 
 		// Set the flags
 		isDataSent = false;
@@ -23,18 +21,19 @@ namespace neon {
 		delete m_ibo;
 	}
 
-	void Renderable3d::SetTexture(const char* filename) { m_texture = new Texture(filename); }
+void Renderable3d::SetTexture(const std::string &filename, TextureType type) { 
+	Texture* texture = new Texture(filename, type);
+	m_textures.push_back(texture);
+}
 
-	void Renderable3d::SetTexture(Texture& n_texture) { m_texture = &n_texture; }
-
-	void Renderable3d::SetSpecularTexture(const char* filename) { m_specular_texture = new Texture(filename); }
-
-	void Renderable3d::SetSpecularTexture(Texture& n_texture) { m_specular_texture = &n_texture; }
+void Renderable3d::SetTexture(Texture* n_texture) { 
+	m_textures.push_back(n_texture);
+}
 
 	void Renderable3d::SendVertexData() {
 
 		printf("Size of m_vertexData: %lu bytes\n", m_vertexData.size() * sizeof(Vertex));
-		printf("Size of m_indicies: %lu bytes\n", m_indices.size() * sizeof(unsigned int));
+		printf("Size of m_indicies: %lu bytes\n\n", m_indices.size() * sizeof(unsigned int));
 
 		// Create VAO, VBO, and IBO
 		m_vao = new VertexArray();
@@ -53,12 +52,12 @@ namespace neon {
 
 	void Renderable3d::SetUpDraw(const glm::mat4 &transform) const {
 		m_ibo->Bind();
-		if(m_texture != nullptr) {
-			m_texture->Bind(0);
+		if(m_textures.size() > 0) {
+			m_textures[0]->Bind(0);
 			m_program->SetUniform1i("material.diffuse", 0);
 		}
-		if(m_specular_texture != nullptr) {
-			m_specular_texture->Bind(1);
+		if(m_textures.size() > 1) {
+			m_textures[1]->Bind(1);
 			m_program->SetUniform1i("material.specular", 1);
 		}
 
@@ -67,8 +66,12 @@ namespace neon {
 	}
 
 	void Renderable3d::UnSetDraw() const {
-		if(m_texture != nullptr)
-			m_texture->Unbind(0);
+		if(m_textures.size() > 0) {
+			m_textures[0]->Unbind(0);
+		}
+		if(m_textures.size() > 1) {
+			m_textures[1]->Unbind(1);
+		}
 	}	
 
 	void Renderable3d::Draw() const {

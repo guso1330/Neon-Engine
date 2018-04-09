@@ -9,14 +9,21 @@ file(GLOB_RECURSE SRC_FILES ${SRC_DIR}/*.cpp)
 
 include_directories(
 	${LIB_DIR}/glm
-	${LIB_DIR}/tinyobjloader-1.0.6
 	${LIB_DIR}/stb_image
+	${LIB_DIR}/tinyobjloader-1.0.6
+	${LIB_DIR}/assimp-4.1.0/include
 )
 
 # Executable definition and properties
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 target_include_directories(${PROJECT_NAME} PRIVATE "${SRC_DIR}")
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
+
+# assimp
+set(ASSIMP_DIR "${LIB_DIR}/assimp-4.1.0")
+add_subdirectory("${ASSIMP_DIR}")
+target_link_libraries(${PROJECT_NAME} "assimp" ${ASSIMP_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE "${ASSIMP_DIR}/include")
 
 # GLFW
 set(GLFW_DIR "${LIB_DIR}/glfw")

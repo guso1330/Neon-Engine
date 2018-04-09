@@ -6,7 +6,10 @@
 #include <stb_image.h>
 
 namespace neon {
-	Texture::Texture(const std::string& filename) {
+	Texture::Texture(const std::string& filename, TextureType type) :
+		m_type(type)
+	{
+
 		/* LOAD THE IMAGE DATA */
 		m_filename = filename;
 
@@ -39,13 +42,13 @@ namespace neon {
 		GL_Call(glDeleteTextures(1, &m_texID)); // delete the texture
 	}
 
-	void Texture::Bind(unsigned int unit) {
+	void Texture::Bind(unsigned int unit) const {
 		assert(unit >= 0 && unit <= 31);
 		GL_Call(glActiveTexture(GL_TEXTURE0 + unit));
 		GL_Call(glBindTexture(GL_TEXTURE_2D, m_texID));
 	}
 
-	void Texture::Unbind(unsigned int unit) {
+	void Texture::Unbind(unsigned int unit) const {
 		GL_Call(glActiveTexture(GL_TEXTURE0 + unit));
 		GL_Call(glBindTexture(GL_TEXTURE_2D, 0));
 	}

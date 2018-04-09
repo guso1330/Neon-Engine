@@ -2,6 +2,11 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <vector>
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #include "../../shaders/texture.h"
 #include "./mesh.h"
@@ -15,15 +20,18 @@ namespace neon {
 		~Model();
 
 		// GETTERS
-		inline const Mesh* GetMesh() const { return m_mesh; }
+		inline const std::vector<Mesh*> &GetMeshes() const { return m_meshes; }
+
+		// Assimp Model Loading functions
+		bool InitMeshes(const std::string &filename);
 
 	private:
-		void BuildVertexData();
+		void AssimpProcessNode(aiNode *node, const aiScene *scene);
+		Mesh* AssimpProcessMesh(aiMesh *mesh, const aiScene *scene);
 
 	private:
-		/* 
-			TODO: Maybe I shouldn't declare this on the heap...?
-		*/
-		Mesh *m_mesh;
+		std::vector<Mesh*> m_meshes;
+		std::string m_directory;
+		std::vector<aiMaterial*> m_materials;
 	};
 }

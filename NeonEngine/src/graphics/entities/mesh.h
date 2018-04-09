@@ -2,7 +2,8 @@
 
 #include <vector>
 #include <glm/glm.hpp>
-#include "../../utils/obj_loader/objloader.h"
+
+#include "./vertex.h"
 
 namespace neon {
 	class Mesh {
@@ -11,10 +12,7 @@ namespace neon {
 			* CONSTRUCTORs *
 			***************/
 			Mesh(); // default constructor
-			Mesh(const char *filename); // Parametric constructor
-
-			/* Manipulator Functions */
-			void InitMesh(const char *filename);
+			Mesh(std::vector<Vertex> &vertex_data, std::vector<unsigned int> &indices); // Parametric constructor
 
 			/********************
 			*  Getter functions *
@@ -31,14 +29,19 @@ namespace neon {
 			inline const std::vector<glm::vec3>& GetNormals() const { return m_normals; }
 			inline unsigned int GetNormalsSize() const { return m_normals.size(); }
 
-			inline const std::vector<Index>& GetIndexObj() const { return m_indexObj; }
-			inline unsigned int GetIndexObjSize() const { return m_indexObj.size(); }
+			inline const unsigned short GetIndex() const { return m_index; }
+
+			/********************
+			*  Setter functions *
+			********************/
+			inline void SetIndex(unsigned short n_index) { m_index = n_index; }
 
 		private:
 			std::vector<glm::vec3> m_vertices;
 			std::vector<unsigned int> m_indices;
 			std::vector<glm::vec2> m_uvs;
 			std::vector<glm::vec3> m_normals;
-			std::vector<Index> m_indexObj;
+
+			unsigned short m_index;
 	};
 }

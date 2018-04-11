@@ -23,8 +23,8 @@
 using namespace neon;
 using namespace glm;
 
-const GLint WIDTH = 1280,
-			HEIGHT = 720;
+const GLint WIDTH = 768,
+			HEIGHT = 540;
 
 short int CUBE_COL = 50,
 		  CUBE_ROW = 50;

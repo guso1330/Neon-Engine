@@ -1,6 +1,8 @@
 #pragma once
 
 #include "./renderable3d.h"
+#include "./mesh.h"
+#include "./model.h"
 #include "../../shaders/program.h"
 #include "../buffers/vertexArray.h"
 #include "../buffers/vertexBuffer.h"
@@ -21,19 +23,25 @@ namespace neon {
 	class RenderableCollection {
 		public:
 			RenderableCollection(Renderable3d *renderable, Program *program);
+			RenderableCollection(Model *model, Program *program);
+
 			~RenderableCollection();
 			
 			void HandleBufferData();
 			void SetTransforms(std::vector<Transform> &n_transforms);
 			void UpdateAllTransforms(std::vector<Transform> &transforms, Transform &transform);
-			void Draw();
+			void Draw() const;
+			void Draw(const std::vector<Mesh*> &meshes) const;
 
 		private:
 			void Init();
 
 		private:
-			Program *m_program;			
 			Renderable3d *m_renderable;
+			Model *m_model;
+			
+			Program *m_program;			
+
 			VertexArray *m_vao;
 			VertexBuffer *m_vbo;
 			VertexBufferLayout m_layout;
@@ -43,7 +51,5 @@ namespace neon {
 			
 			int m_size_factor = 1;
 			unsigned int m_transformLoc;
-			
-
 	};
 }

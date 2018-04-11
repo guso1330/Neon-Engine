@@ -34,7 +34,7 @@ namespace neon {
 			inline const std::vector<unsigned int>  &GetIndexData() const { return m_indices; }
 			inline Transform 						&GetTransform() { return m_transform; }
 			inline VertexArray*						&GetVao() { return m_vao; }
-			inline const unsigned int 				GetIbo() const { return m_ibo->GetIbo(); }
+			inline IndexBuffer* 					&GetIbo() { return m_ibo; }
 			
 			// SETTERS
 			inline void SetColor(const glm::vec4 &n_color) { m_color = n_color; }

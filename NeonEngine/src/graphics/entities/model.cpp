@@ -153,8 +153,6 @@ namespace neon {
 
 		m_program->SetUniform4f(m_colorLoc, m_color);
 		m_program->SetUniformMat4(m_modelLoc, transform);
-		// Handle material switching
-		GL_Call(glDrawElementsBaseVertex(GL_TRIANGLES, mesh->GetIndicesSize(), GL_UNSIGNED_INT, NULL, mesh->GetIndex()));
 	}
 
 	void Model::UnSetDraw(Mesh *mesh) const {
@@ -174,6 +172,7 @@ namespace neon {
 
 		for(int i=0; i < m_meshes.size(); ++i) {
 			this->SetUpDraw(m_transform.GetModelMatrix(), m_meshes[i]);
+			GL_Call(glDrawElementsBaseVertex(GL_TRIANGLES, m_meshes[i]->GetIndicesSize(), GL_UNSIGNED_INT, NULL, m_meshes[i]->GetIndex()));
 			this->UnSetDraw(m_meshes[i]);
 		}
 	}
@@ -183,6 +182,7 @@ namespace neon {
 
 		for(int i=0; i < m_meshes.size(); ++i) {
 			this->SetUpDraw(transform, m_meshes[i]);
+			GL_Call(glDrawElementsBaseVertex(GL_TRIANGLES, m_meshes[i]->GetIndicesSize(), GL_UNSIGNED_INT, NULL, m_meshes[i]->GetIndex()));
 			this->UnSetDraw(m_meshes[i]);
 		}
 	}

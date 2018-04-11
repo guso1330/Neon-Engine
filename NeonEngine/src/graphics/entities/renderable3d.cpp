@@ -70,8 +70,6 @@ namespace neon {
 
 			m_program->SetUniform4f(m_colorLoc, m_color);
 			m_program->SetUniformMat4(m_modelLoc, transform);
-
-			GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
 		}
 	}
 
@@ -81,11 +79,13 @@ namespace neon {
 
 	void Renderable3d::Draw() const {
 		this->SetUpDraw(m_transform.GetModelMatrix());
+		GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
 		this->UnSetDraw();
 	}
 
 	void Renderable3d::Draw(const glm::mat4 &transform) const {
 		this->SetUpDraw(transform);
+		GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
 		this->UnSetDraw();
 	}
 }

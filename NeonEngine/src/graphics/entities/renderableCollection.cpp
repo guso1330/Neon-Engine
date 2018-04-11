@@ -7,11 +7,18 @@ namespace neon {
 		m_program(program)
 
 	{
-		m_modelMatrix = glm::mat4(1.0f);
-		m_transformLoc = m_program->GetAttributeLocation("transform");
-		// TODO: error handling on the m_transformLoc!
-
+		m_model = nullptr;
 		m_vao = m_renderable->GetVao();
+
+		Init();
+	}
+
+	RenderableCollection::RenderableCollection(Model *model, Program *program) :
+		m_model(model),
+		m_program(program)
+	{
+		m_renderable = nullptr;
+		m_vao = m_model->GetVao();
 
 		Init();
 	}
@@ -22,7 +29,9 @@ namespace neon {
 
 	// TODO: make the RenderableCollection not a static buffer, but dynamic
 	void RenderableCollection::Init() {
-		// GL_Call(glBindVertexArray(m_vao));
+		m_modelMatrix = glm::mat4(1.0f);
+		// TODO: error handling on the m_transformLoc!
+		m_transformLoc = m_program->GetAttributeLocation("transform");
 		m_vbo = new VertexBuffer(BUFFER_SIZE);
 
 		m_layout.Push(VALUE_TYPE::MAT4, 4, 0 * sizeof(glm::vec4));
@@ -65,15 +74,30 @@ namespace neon {
 		}
 	}
 
-	void RenderableCollection::Draw() {
+	void RenderableCollection::Draw() const {
 		m_program->Bind();
 		m_vao->Bind();
 		
-		Transform t = m_renderable->GetTransform();
-		m_renderable->SetUpDraw(t.GetModelMatrix());
-		
-		GL_Call(glDrawElementsInstanced(GL_TRIANGLES, m_renderable->GetIndexData().size(), GL_UNSIGNED_INT, NULL, m_transforms.size()));
+		Transform t = m_renderable != nullptr ? m_renderable->GetTransform() : m_model->GetTransform();
 
-		m_renderable->UnSetDraw();
+		if (m_renderable != nullptr) {
+			m_renderable->SetUpDraw(t.GetModelMatrix());
+			GL_Call(glDrawElementsInstanced(GL_TRIANGLES, m_renderable->GetIndexData().size(), GL_UNSIGNED_INT, NULL, m_transforms.size()));
+			m_renderable->UnSetDraw();
+		} else if (m_model != nullptr) {
+			m_model->GetIbo()->Bind();
+
+			Transform t = m_model->GetTransform();
+
+			for(int i=0; i < m_model->GetMeshes().size(); ++i) {
+
+				m_model->SetUpDraw(t.GetModelMatrix(), m_model->GetMeshes()[i]);
+
+				// Handle material switching
+				GL_Call(glDrawElementsInstancedBaseVertex(GL_TRIANGLES, m_model->GetMeshes()[i]->GetIndicesSize(), GL_UNSIGNED_INT, NULL,  m_transforms.size(), m_model->GetMeshes()[i]->GetIndex()));
+
+				m_model->UnSetDraw(m_model->GetMeshes()[i]);
+			}
+		}
 	}
 }

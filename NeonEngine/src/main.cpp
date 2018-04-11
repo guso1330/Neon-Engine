@@ -23,8 +23,8 @@
 using namespace neon;
 using namespace glm;
 
-const GLint WIDTH = 768,
-			HEIGHT = 432;
+const GLint WIDTH = 1280,
+			HEIGHT = 720;
 
 short int CUBE_COL = 50,
 		  CUBE_ROW = 50;
@@ -130,14 +130,14 @@ int main() {
 			cube_spec_tex("./NeonEngine/src/res/models/plasmacannon/plasmacannon_weapon_specular.jpg", Specular),
 			plane_tex("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg", Diffuse);
 	/**********************************/
-	plane.SetTexture(&plane_tex);
+	plane.SetTexture(&plane_tex, Diffuse);
 	glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
 	program->Bind();
 	plane.GetTransform().SetModelMatrix(plane_model_matrix);
 	program->Unbind();
 
-	cube_model.SetTexture(&cube_tex);
-	cube_model.SetTexture(&cube_spec_tex);
+	cube_model.SetTexture(&cube_tex, Diffuse);
+	cube_model.SetTexture(&cube_spec_tex, Specular);
 	// rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
 	// rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
 	// rand_color_b = ((float)rand() / (RAND_MAX)) + 1;

@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "./vertex.h"
+#include "../../shaders/material.h"
 
 namespace neon {
 	class Mesh {
@@ -13,6 +14,7 @@ namespace neon {
 			***************/
 			Mesh(); // default constructor
 			Mesh(std::vector<Vertex> &vertex_data, std::vector<unsigned int> &indices); // Parametric constructor
+			Mesh(std::vector<Vertex> &vertex_data, std::vector<unsigned int> &indices, Material* n_material); // Parametric constructor
 
 			/********************
 			*  Getter functions *
@@ -29,12 +31,15 @@ namespace neon {
 			inline const std::vector<glm::vec3>& GetNormals() const { return m_normals; }
 			inline unsigned int GetNormalsSize() const { return m_normals.size(); }
 
-			inline const unsigned short GetIndex() const { return m_index; }
+			inline const unsigned int GetIndex() const { return m_index; }
+
+			inline const Material* GetMaterial() const { return m_material; }
 
 			/********************
 			*  Setter functions *
 			********************/
-			inline void SetIndex(unsigned short n_index) { m_index = n_index; }
+			inline void SetIndex(unsigned int n_index) { m_index = n_index; }
+			inline void SetMaterial(Material *n_material) { m_material = n_material; }
 
 		private:
 			std::vector<glm::vec3> m_vertices;
@@ -42,6 +47,7 @@ namespace neon {
 			std::vector<glm::vec2> m_uvs;
 			std::vector<glm::vec3> m_normals;
 
-			unsigned short m_index;
+			unsigned int m_index;
+			Material* m_material;
 	};
 }

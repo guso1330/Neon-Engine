@@ -13,7 +13,7 @@
 #include "../buffers/vertexBuffer.h"
 #include "../buffers/indexBuffer.h"
 #include "../../shaders/program.h"
-#include "../../shaders/texture.h"
+#include "../../shaders/material.h"
 #include "./transform.h"
 
 #include <vector>
@@ -26,8 +26,8 @@ namespace neon {
 		public:
 			Renderable3d(Program* program);
 
-			void Draw() const;
-			void Draw(const glm::mat4 &tranform) const;
+			virtual void Draw() const;
+			virtual void Draw(const glm::mat4 &transform) const;
 
 			// Getters
 			inline const std::vector<Vertex> 		&GetVertexData() const { return m_vertexData; }
@@ -39,9 +39,9 @@ namespace neon {
 			// SETTERS
 			inline void SetColor(const glm::vec4 &n_color) { m_color = n_color; }
 			void 		SetTexture(const std::string &filename, TextureType type = Diffuse); // Generate a new texture
-			void 		SetTexture(Texture* n_texture); // Pass in a texture that already exists
-			void 		SetUpDraw(const glm::mat4 &transform) const;
-			void 		UnSetDraw() const;
+			void 		SetTexture(Texture* n_texture, TextureType type); // Pass in a texture that already exists
+			virtual void 		SetUpDraw(const glm::mat4 &transform) const;
+			virtual void 		UnSetDraw() const;
 
 		protected:
 			virtual ~Renderable3d();
@@ -61,7 +61,7 @@ namespace neon {
 			Program   *m_program;
 			Transform m_transform;
 
-			std::vector<Texture*> m_textures;
+			Material *m_material;
 			std::vector<Vertex> 	  m_vertexData;
 			std::vector<unsigned int> m_indices;
 

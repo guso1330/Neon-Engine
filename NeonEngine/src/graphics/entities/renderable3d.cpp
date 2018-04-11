@@ -13,6 +13,8 @@ namespace neon {
 
 		// Set the flags
 		isDataSent = false;
+
+		m_material = new Material();
 	}
 
 	Renderable3d::~Renderable3d() {
@@ -21,14 +23,22 @@ namespace neon {
 		delete m_ibo;
 	}
 
-void Renderable3d::SetTexture(const std::string &filename, TextureType type) { 
-	Texture* texture = new Texture(filename, type);
-	m_textures.push_back(texture);
-}
+	void Renderable3d::SetTexture(const std::string &filename, TextureType type) {
+		Texture* texture = new Texture(filename, type);
+		if(type == Diffuse) {
+			m_material->diffuse = texture;
+		} else if (type == Specular) {
+			m_material->specular = texture;
+		}
+	}
 
-void Renderable3d::SetTexture(Texture* n_texture) { 
-	m_textures.push_back(n_texture);
-}
+	void Renderable3d::SetTexture(Texture* n_texture, TextureType type) { 
+		if(type == Diffuse) {
+			m_material->diffuse = n_texture;
+		} else if (type == Specular) {
+			m_material->specular = n_texture;
+		}
+	}
 
 	void Renderable3d::SendVertexData() {
 
@@ -51,52 +61,31 @@ void Renderable3d::SetTexture(Texture* n_texture) {
 	}
 
 	void Renderable3d::SetUpDraw(const glm::mat4 &transform) const {
-		m_ibo->Bind();
-		if(m_textures.size() > 0) {
-			m_textures[0]->Bind(0);
-			m_program->SetUniform1i("material.diffuse", 0);
-		}
-		if(m_textures.size() > 1) {
-			m_textures[1]->Bind(1);
-			m_program->SetUniform1i("material.specular", 1);
-		}
+		if(isDataSent) {
+			m_program->Bind();
+			m_vao->Bind();
+			m_ibo->Bind();
 
-		m_program->SetUniform4f(m_colorLoc, m_color);
-		m_program->SetUniformMat4(m_modelLoc, transform);
+			m_material->Bind(m_program);
+
+			m_program->SetUniform4f(m_colorLoc, m_color);
+			m_program->SetUniformMat4(m_modelLoc, transform);
+
+			GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
+		}
 	}
 
 	void Renderable3d::UnSetDraw() const {
-		if(m_textures.size() > 0) {
-			m_textures[0]->Unbind(0);
-		}
-		if(m_textures.size() > 1) {
-			m_textures[1]->Unbind(1);
-		}
-	}	
+		m_material->Unbind();
+	}
 
 	void Renderable3d::Draw() const {
-		if(isDataSent) {
-			m_program->Bind();
-			m_vao->Bind();
-			
-			this->SetUpDraw(m_transform.GetModelMatrix());
-
-			GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
-
-			this->UnSetDraw();
-		}
+		this->SetUpDraw(m_transform.GetModelMatrix());
+		this->UnSetDraw();
 	}
 
 	void Renderable3d::Draw(const glm::mat4 &transform) const {
-		if(isDataSent) {
-			m_program->Bind();
-			m_vao->Bind();
-
-			this->SetUpDraw(transform);
-			
-			GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
-
-			this->UnSetDraw();
-		}
+		this->SetUpDraw(transform);
+		this->UnSetDraw();
 	}
 }

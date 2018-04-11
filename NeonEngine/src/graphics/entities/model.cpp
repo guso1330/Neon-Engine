@@ -11,13 +11,20 @@ namespace neon {
 		if(!loaded_mesh) {
 			std::cout << "Error: " << filename << " was not loaded" << std::endl;
 		} else {
-			std::cout << filename << " loaded succesfully with " << m_meshes.size() << " meshes loaded" << std::endl;
+			std::string mesh_word = m_meshes.size() > 1 ? "meshes" : "mesh";
+			std::cout << filename << " loaded succesfully with " << m_meshes.size() << " " << mesh_word << " loaded" << std::endl;
 			std::cout << "Materials loaded: " << m_materials.size() << std::endl;
 		}
 
 		isDataSent = shouldSendData;
 		if(shouldSendData) {
 			SendVertexData();
+		}
+
+		for(int i=0; i < m_meshes.size(); ++i) {
+			std::cout << "IBO size:" << m_ibo->GetCount() << std::endl;
+			std::cout << "Mesh index: " << m_meshes[i]->GetIndex() << std::endl;
+			std::cout << "Mesh indices size:" << m_meshes[i]->GetIndicesSize() << std::endl;
 		}
 	}
 
@@ -60,8 +67,9 @@ namespace neon {
 	}
 
 	Mesh* Model::AssimpProcessMesh(aiMesh *mesh, const aiScene *scene) {
-		std::vector<Texture> textures;
-		
+		Material *n_material = new Material();
+		unsigned int mesh_index = m_vertexData.size();
+
 		for(unsigned int i = 0; i < mesh->mNumVertices; ++i)
 		{
 			Vertex vertex;
@@ -106,20 +114,76 @@ namespace neon {
 		if(mesh->mMaterialIndex >= 0)
 		{
 			// Handle materials
-			aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+			aiMaterial *ai_material = scene->mMaterials[mesh->mMaterialIndex];
 
-			aiString path;
-			if(aiReturn_SUCCESS == material->GetTexture(aiTextureType_DIFFUSE, 0, &path))
+			aiString filename;
+			if(aiReturn_SUCCESS == ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &filename))
 			{
-				std::cout << "Path Name: " << path.C_Str() << std::endl;
-				std::cout << "Directory: " << m_directory << std::endl;
+				std::string diffuse_path = m_directory + "/" + std::string(filename.C_Str());
+				std::cout << "Diffuse Texture Path: " << diffuse_path << std::endl;
+				n_material->diffuse = new Texture(diffuse_path, Diffuse);
+			} else if (aiReturn_SUCCESS == ai_material->GetTexture(aiTextureType_SPECULAR, 0, &filename)) {
+				std::cout << "Specular Texture Path: " << filename.C_Str() << std::endl;
+				std::string diffuse_path = m_directory + "/" + std::string(filename.C_Str());
+				n_material->specular = new Texture(diffuse_path, Specular);
 			}
+
 			// Todo: Probably can remove the m_materials vector, because I don't need to store the materials
-			m_materials.push_back(material);
+			m_materials.push_back(n_material);
 		}
 
-		Mesh *n_mesh = new Mesh(m_vertexData, m_indices);
+		Mesh *n_mesh = new Mesh(m_vertexData, m_indices, n_material);
+		n_mesh->SetIndex(mesh_index);
 
 		return n_mesh;
+	}
+
+	void Model::DrawInit() const {
+		m_program->Bind();
+		m_vao->Bind();
+		m_ibo->Bind();
+	}
+
+	void Model::SetUpDraw(const glm::mat4 &transform, Mesh *mesh) const {
+		if(mesh->GetMaterial()->diffuse != nullptr) {
+			mesh->GetMaterial()->Bind(m_program);
+		} else {
+			m_material->Bind(m_program);
+		}
+
+		m_program->SetUniform4f(m_colorLoc, m_color);
+		m_program->SetUniformMat4(m_modelLoc, transform);
+		// Handle material switching
+		GL_Call(glDrawElementsBaseVertex(GL_TRIANGLES, mesh->GetIndicesSize(), GL_UNSIGNED_INT, NULL, mesh->GetIndex()));
+	}
+
+	void Model::UnSetDraw(Mesh *mesh) const {
+		if(mesh->GetMaterial()->diffuse != nullptr) {
+			mesh->GetMaterial()->Unbind();
+		} else {
+			m_material->Unbind();
+		}
+	}
+
+	// TODO: Better way of determining if a material is set or not.
+	//		 Adjust to make sure that the code duplication between
+	//		 these two versions of the model::draw functions and the
+	//		 Renderable3d::draw versions from aren't overlapping.
+	void Model::Draw() const {
+		this->DrawInit();
+
+		for(int i=0; i < m_meshes.size(); ++i) {
+			this->SetUpDraw(m_transform.GetModelMatrix(), m_meshes[i]);
+			this->UnSetDraw(m_meshes[i]);
+		}
+	}
+
+	void Model::Draw(const glm::mat4 &transform) const {
+		this->DrawInit();
+
+		for(int i=0; i < m_meshes.size(); ++i) {
+			this->SetUpDraw(transform, m_meshes[i]);
+			this->UnSetDraw(m_meshes[i]);
+		}
 	}
 }

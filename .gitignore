@@ -15,6 +15,9 @@ main
 *r8_gt.obj
 .DS_Store
 *.[Dd][Ss]_[Ss]tore
+Makefile*
+lib/
+bin/
 
 # Cmake exclude files
 CMakeCache.txt

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine/GL_Error.h"
+#include "./input/input.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -11,14 +12,7 @@ namespace neon {
 		public:
 			Window(unsigned int width, unsigned int height, bool fullscreen, const char* title);
 			~Window();
-		private:
-			int m_width, m_height;
-			bool m_fullscreen;
-			// bool m_Closed;
-			const char* m_title;
-			GLFWwindow *m_window;
-		private:
-			bool Init();
+
 		public:
 			bool isClosed() const;
 			void Clear() const;
@@ -29,5 +23,17 @@ namespace neon {
 			inline int GetWidth() const { return m_width; }
 			inline int GetHeight() const { return m_height; }
 			inline GLFWwindow* const GetGLFWwindow() const { return m_window; }
+
+		private:
+			bool Init();
+
+		private:
+			int m_width, m_height;
+			bool m_fullscreen;
+			
+			const char* m_title;
+			GLFWwindow *m_window;
+
+			
 	};
 }

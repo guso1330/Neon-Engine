@@ -1,4 +1,5 @@
 #include "./app/window.h"
+#include "./app/scene.h"
 #include "./shaders/shader.h"
 #include "./shaders/program.h"
 #include "./graphics/buffers/vertexBuffer.h"
@@ -23,8 +24,8 @@
 using namespace neon;
 using namespace glm;
 
-const GLint WIDTH = 768,
-			HEIGHT = 540;
+const GLint WIDTH = 1268,
+			HEIGHT = 748;
 
 short int CUBE_COL = 50,
 		  CUBE_ROW = 50;
@@ -42,9 +43,9 @@ int main() {
 	float ASPECT_RATIO = (float)WIDTH / (float)HEIGHT;
 	float FOV = 70.0f;
 	float g_NEAR = 0.1f;
-	float g_FAR = 1000.0f;
+	float g_FAR = 500.0f;
 
-	Camera camera(glm::vec3(0, 15.0f, -50.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	Camera camera(glm::vec3(0, 5.0f, -10.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
 	camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glm::mat4 view_projection = camera.GetViewProjection();
@@ -53,6 +54,8 @@ int main() {
 	/* GLFW is initialized within the window */
 	Window *window = new Window(WIDTH, HEIGHT, false, "Neon Engine");
 	window->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	Scene myScene;
+	myScene.LoadSettings("./NeonEngine/src/res/settings/testSceneSettings.init");
 
 	/***********************
 		  Light Stuff
@@ -114,6 +117,9 @@ int main() {
 	simpleProgram->Bind();
 	simpleProgram->SetUniformMat4("view_projection", view_projection);
 	simpleProgram->Unbind();
+
+	unsigned int instanced_light_pos_loc = instancedProgram->GetUniformLocation("light.position"),
+				 program_light_pos_loc = program->GetUniformLocation("light.position");
 	
 	/***************************
 		Setting up The Models
@@ -210,10 +216,10 @@ int main() {
 		if(lightPos.z <= -200.0f) { direction *= -1; }
 		else if(lightPos.z >= 200.0f) { direction *= -1; }		
 		instancedProgram->Bind();
-		instancedProgram->SetUniform3f("light.position", lightPos);
+		instancedProgram->SetUniform3f(instanced_light_pos_loc, lightPos);
 		instancedProgram->Unbind();
 		program->Bind();
-		program->SetUniform3f("light.position", lightPos);
+		program->SetUniform3f(program_light_pos_loc, lightPos);
 		program->Unbind();
 
 		//

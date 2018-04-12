@@ -12,6 +12,7 @@ include_directories(
 	${LIB_DIR}/stb_image
 	${LIB_DIR}/tinyobjloader-1.0.6
 	${LIB_DIR}/assimp-4.1.0/include
+	${LIB_DIR}/json-3.1.2/include
 )
 
 # Executable definition and properties

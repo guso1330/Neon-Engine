@@ -20,12 +20,6 @@ namespace neon {
 		if(shouldSendData) {
 			SendVertexData();
 		}
-
-		for(int i=0; i < m_meshes.size(); ++i) {
-			std::cout << "IBO size:" << m_ibo->GetCount() << std::endl;
-			std::cout << "Mesh index: " << m_meshes[i]->GetIndex() << std::endl;
-			std::cout << "Mesh indices size:" << m_meshes[i]->GetIndicesSize() << std::endl;
-		}
 	}
 
 	Model::~Model() {}

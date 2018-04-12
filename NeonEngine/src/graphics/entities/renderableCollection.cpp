@@ -93,7 +93,6 @@ namespace neon {
 
 				m_model->SetUpDraw(t.GetModelMatrix(), m_model->GetMeshes()[i]);
 
-				// Handle material switching
 				GL_Call(glDrawElementsInstancedBaseVertex(GL_TRIANGLES, m_model->GetMeshes()[i]->GetIndicesSize(), GL_UNSIGNED_INT, NULL,  m_transforms.size(), m_model->GetMeshes()[i]->GetIndex()));
 
 				m_model->UnSetDraw(m_model->GetMeshes()[i]);

@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_BUTTONS = 32
+#define MAX_BUTTONS 32
 
 namespace neon {
 	class Mouse {

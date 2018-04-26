@@ -11,10 +11,17 @@ namespace neon {
 			inline glm::mat4 GetViewMatrix() const { return m_lookat; }
 			inline const glm::vec3 &GetPos() const { return m_pos; }
 
-			inline void SetLookAt(const glm::vec3& n_pos) { m_lookat = glm::lookAt(m_pos, n_pos, m_up); }
+			void SetPos(glm::vec3 &n_pos);
+			inline void SetLookAt(const glm::vec3& n_pos) { 
+				m_lookatPos = n_pos;
+				m_lookat = glm::lookAt(m_pos, m_lookatPos, m_up);
+			}
+
+			void Update();
 			
 		private:	
 			glm::mat4 m_perspective, m_lookat;
+			glm::vec3 m_lookatPos;
 			glm::vec3 m_pos;
 			glm::vec3 m_forward, m_dir;
 			glm::vec3 m_up;

@@ -1,5 +1,6 @@
 #include "./app/window.h"
 #include "./app/scene.h"
+#include "./app/input/eventManager.h"
 #include "./shaders/shader.h"
 #include "./shaders/program.h"
 #include "./graphics/buffers/vertexBuffer.h"
@@ -24,13 +25,18 @@
 using namespace neon;
 using namespace glm;
 
-const GLint WIDTH = 1268,
-			HEIGHT = 748;
+const GLint WIDTH = 512,
+			HEIGHT = 256;
 
 short int CUBE_COL = 50,
 		  CUBE_ROW = 50;
 
 short int CUBE_COUNT = CUBE_COL * CUBE_ROW;
+
+// void MoveCamera(Camera &cam, int x, int y, int key) {
+	
+// }
+
 
 int main() {
 
@@ -46,14 +52,15 @@ int main() {
 	float g_FAR = 500.0f;
 
 	Camera camera(glm::vec3(0, 5.0f, -10.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
-	camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	glm::mat4 view_projection = camera.GetViewProjection();
 	glm::mat4 model = glm::mat4(1.0f);
 
 	/* GLFW is initialized within the window */
 	Window *window = new Window(WIDTH, HEIGHT, false, "Neon Engine");
+	Input *inputManager = window->GetInput();
 	window->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	
 	Scene myScene;
 	myScene.LoadSettings("./NeonEngine/src/res/settings/testSceneSettings.init");
 
@@ -64,6 +71,8 @@ int main() {
 			  lightDiffuse(0.9f),
 			  lightSpecular(0.5f),
 			  lightPos(0.0, 25.0, 0.0);
+
+	camera.SetLookAt(lightPos);
 
 	/************************************
 		Setting up Shaders and Program
@@ -162,10 +171,11 @@ int main() {
 	for(int i=0; i<CUBE_COL; ++i) {
 		for(int j=0; j < CUBE_COL; ++j) {
 			transforms[i * CUBE_ROW + j].SetPosition(square_pos + glm::vec3(-10.0f * i, 0.5f, -10.0f*j));
-			transforms[i * CUBE_ROW + j].SetScale(glm::vec3(0.5, 0.5, 0.5));
+			transforms[i * CUBE_ROW + j].SetScale(glm::vec3(0.2, 0.2, 0.2));
 		}
 	}
-	// instanced_cubes.UpdateAllTransforms(transforms, scale);
+
+	instanced_cubes.SetTransforms(transforms);
 
 	//
 	// OpenGL Setting
@@ -184,20 +194,61 @@ int main() {
 	double angle, elapsed_time, speed;
 	angle=elapsed_time=speed=0;
 	double last_time = glfwGetTime(), current_time = 0;
+	float camera_speed = 0.0f;
+	float camera_acceleration = 0.4f;
+	float camera_speed_limit = 2.0f;
+
+	//
+	// Input Callback Functions
+	//
+	auto MoveCamera = [&window, &camera, &view_projection, inputManager, &elapsed_time, &camera_speed, camera_acceleration, camera_speed_limit]() {
+		glm::vec3 position = camera.GetPos();
+
+		camera_speed = camera_speed + (camera_acceleration * elapsed_time);
+
+
+		if (camera_speed > camera_speed_limit) {
+			camera_speed = camera_speed_limit;
+		}
+
+		std::cout << "camera_speed: " << camera_speed << std::endl;
+		// std::cout << "camera_pos: " << glm::to_string(camera.GetPos()) << std::endl;
+
+		if(inputManager->IsKeyDown(GLFW_KEY_A)) {
+			position.x += camera_speed;
+		}
+		if (inputManager->IsKeyDown(GLFW_KEY_D)) {
+			position.x += -camera_speed;
+		}
+		view_projection = camera.GetViewProjection();
+		camera.SetPos(position);
+	};
+
+	auto MoveStopCamera = [&camera_speed] () {
+		camera_speed = 0.0f;
+	};
+
+	// inputManager->BindKeyboardEvent("moveLeft", GLFW_KEY_A, NEON_KEY_DOWN, 0, Callback<>(MoveCamera));
+	// inputManager->BindKeyboardEvent("moveLeftHold", GLFW_KEY_A, NEON_KEY_HOLD, 0, Callback<>(MoveCamera));
+	inputManager->BindKeyboardEvent("moveStopA", GLFW_KEY_A, NEON_KEY_UP, 0, Callback<>(MoveStopCamera));
+
+	// inputManager->BindKeyboardEvent("moveRight", GLFW_KEY_D, NEON_KEY_DOWN, 0, Callback<>(MoveCamera));
+	// inputManager->BindKeyboardEvent("moveRightHold", GLFW_KEY_D, NEON_KEY_HOLD, 0, Callback<>(MoveCamera));
+	inputManager->BindKeyboardEvent("moveStopD", GLFW_KEY_D, NEON_KEY_UP, 0, Callback<>(MoveStopCamera));
 
 	//
 	// Light movement variables
 	//
 	short direction = -1;
 	float light_speed = 100.0;
-	while (!window->isClosed()) {
 
+	/**************************
+	** MAIN APPLICATION LOOP **
+	***************************/
+	while (!window->isClosed()) {
 		window->Clear();
 		debug::calcFPS(window->GetGLFWwindow(), 1.0, "Neon Engine - Current FPS: ");
 
-		/**********************
-		* TIME BASED MOVEMENT *
-		**********************/
 		// Handle cube rotations
 		current_time = glfwGetTime();
 		elapsed_time = current_time - last_time;
@@ -213,14 +264,29 @@ int main() {
 		// Handle light movement
 		//
 		lightPos.z += elapsed_time * (light_speed * direction);
-		if(lightPos.z <= -200.0f) { direction *= -1; }
-		else if(lightPos.z >= 200.0f) { direction *= -1; }		
+		if(lightPos.z < -200.0f) { direction *= -1; }
+		else if(lightPos.z > 200.0f) { direction *= -1; }
+
+
+		//
+		// Handle Camera Movement
+		//
+		MoveCamera();
+
+		camera.SetLookAt(lightPos);
 		instancedProgram->Bind();
 		instancedProgram->SetUniform3f(instanced_light_pos_loc, lightPos);
+		instancedProgram->SetUniformMat4("view_projection", view_projection);
+		instancedProgram->SetUniform3f("viewPos", camera.GetPos());
 		instancedProgram->Unbind();
 		program->Bind();
 		program->SetUniform3f(program_light_pos_loc, lightPos);
+		program->SetUniformMat4("view_projection", view_projection);
+		program->SetUniform3f("viewPos", camera.GetPos());
 		program->Unbind();
+		simpleProgram->Bind();
+		simpleProgram->SetUniformMat4("view_projection", view_projection);
+		simpleProgram->Unbind();
 
 		//
 		// Draw sphere (lamp)
@@ -239,7 +305,7 @@ int main() {
 		Transform new_transform;
 		new_transform.SetRotation((float)angle, glm::vec3(0, 1, 0));
 		new_transform.SetScale(glm::vec3(0.3));
-		instanced_cubes.UpdateAllTransforms(transforms, new_transform);
+		// instanced_cubes.UpdateAllTransforms(transforms, new_transform);
 		instanced_cubes.Draw();
 
 		window->Update();

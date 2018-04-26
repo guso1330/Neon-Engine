@@ -8,4 +8,13 @@ namespace neon {
 		m_up = glm::vec3(0, 1, 0);
 		m_lookat = glm::lookAt(m_pos, m_pos + m_dir, m_up);
 	}
+
+	void Camera::SetPos(glm::vec3 &n_pos) { 
+		m_pos = n_pos;
+		m_lookat = glm::lookAt(m_pos, m_lookatPos, m_up);
+	}
+
+	void Camera::Update() {
+
+	}
 }

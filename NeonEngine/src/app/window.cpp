@@ -14,6 +14,7 @@ namespace neon {
 		m_height(height),
 		m_fullscreen(fullscreen),
 		m_title(title) {
+
 		if (!Init()) {
 			std::cerr << "Error: window did not initialize" << std::endl;
 			glfwTerminate();
@@ -50,6 +51,9 @@ namespace neon {
 			return false;
 		}
 
+		// Assign the user pointer to this
+		glfwSetWindowUserPointer(m_window, this);
+
 		/* Set the newly created window to the current context */
 		glfwMakeContextCurrent(m_window);
 
@@ -58,6 +62,8 @@ namespace neon {
 		glfwSetKeyCallback(m_window, key_callback);
 		glfwSetCursorPosCallback(m_window, mouse_cursor_position_callback);
 		glfwSetMouseButtonCallback(m_window, mouse_button_callback);
+
+		m_input = new Input();
 
 		// WARNING
 		// Eliminate the frame cap
@@ -84,9 +90,9 @@ namespace neon {
 	}
 
 	void Window::Update() {
-		glfwPollEvents();
 		glfwGetFramebufferSize(m_window, &m_width, &m_height);
 		glfwSwapBuffers(m_window);
+		glfwPollEvents();
 	}
 
 	void Window::Clear() const {
@@ -101,27 +107,32 @@ namespace neon {
 	/*******************************
 	* Static functions - Callbacks *
 	*******************************/
-	static void window_resize_callback(GLFWwindow *window, int width, int height) {
+	void window_resize_callback(GLFWwindow *glfwWindow, int width, int height) {
+		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
+		Window *window = static_cast<Window *>(ptr_window);
+
 		GL_Call(glViewport(0, 0, width, height));
 	}
 
-	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	void key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
+		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
+		Window *window = static_cast<Window *>(ptr_window);
 
-		std::cout << "Key: " << key << std::endl;
-		std::cout << "Scancode: " << scancode << std::endl;
-		std::cout << "Action: " << action << std::endl;
-		std::cout << "Mods: " << mods << std::endl;
+		window->m_input->KeyboardEvent(key, action, mods);
 
 		// Close the window
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-			glfwSetWindowShouldClose(window, GLFW_TRUE);
+			glfwSetWindowShouldClose(glfwWindow, GLFW_TRUE);
 		}
 	}
 
-	static void mouse_cursor_position_callback(GLFWwindow *window, double x_pos, double y_pos) {
-		
+	void mouse_cursor_position_callback(GLFWwindow *glfwWindow, double x_pos, double y_pos) {
+		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
+		Window *window = static_cast<Window *>(ptr_window);
 	}
 
-	static void mouse_button_callback (GLFWwindow *window, int button, int action, int mods) {
+	void mouse_button_callback (GLFWwindow *glfwWindow, int button, int action, int mods) {
+		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
+		Window *window = static_cast<Window *>(ptr_window);	
 	}
 }

@@ -23,6 +23,7 @@ namespace neon {
 			inline int GetWidth() const { return m_width; }
 			inline int GetHeight() const { return m_height; }
 			inline GLFWwindow* const GetGLFWwindow() const { return m_window; }
+			inline Input* GetInput() const { return m_input; }
 
 		private:
 			bool Init();
@@ -34,6 +35,7 @@ namespace neon {
 			const char* m_title;
 			GLFWwindow *m_window;
 
-			
+		public:
+			Input *m_input;
 	};
 }

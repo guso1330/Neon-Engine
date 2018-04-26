@@ -1,5 +1,8 @@
 #pragma once
 
+// TODO: Currently arguments are supported, but there is no way of actually 
+// 		 passing new arguments or updating arguments.
+
 #include <iostream>
 #include <functional>
 #include <map>

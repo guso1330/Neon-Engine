@@ -25,18 +25,13 @@
 using namespace neon;
 using namespace glm;
 
-const GLint WIDTH = 512,
+const int WIDTH = 512,
 			HEIGHT = 256;
 
 short int CUBE_COL = 50,
 		  CUBE_ROW = 50;
 
 short int CUBE_COUNT = CUBE_COL * CUBE_ROW;
-
-// void MoveCamera(Camera &cam, int x, int y, int key) {
-	
-// }
-
 
 int main() {
 
@@ -153,10 +148,6 @@ int main() {
 
 	cube_model.SetTexture(&cube_tex, Diffuse);
 	cube_model.SetTexture(&cube_spec_tex, Specular);
-	// rand_color_r = ((float)rand() / (RAND_MAX)) + 1;
-	// rand_color_g = ((float)rand() / (RAND_MAX)) + 1;
-	// rand_color_b = ((float)rand() / (RAND_MAX)) + 1;
-	// cube_model.SetColor(glm::vec4(rand_color_r, rand_color_g, rand_color_b, 1.0f));
 
 	RenderableCollection instanced_cubes(&cube_model, instancedProgram);
 
@@ -174,7 +165,6 @@ int main() {
 			transforms[i * CUBE_ROW + j].SetScale(glm::vec3(0.2, 0.2, 0.2));
 		}
 	}
-
 	instanced_cubes.SetTransforms(transforms);
 
 	//
@@ -206,20 +196,23 @@ int main() {
 
 		camera_speed = camera_speed + (camera_acceleration * elapsed_time);
 
-
 		if (camera_speed > camera_speed_limit) {
 			camera_speed = camera_speed_limit;
 		}
 
-		std::cout << "camera_speed: " << camera_speed << std::endl;
-		// std::cout << "camera_pos: " << glm::to_string(camera.GetPos()) << std::endl;
-
 		if(inputManager->IsKeyDown(GLFW_KEY_A)) {
 			position.x += camera_speed;
 		}
-		if (inputManager->IsKeyDown(GLFW_KEY_D)) {
+		if(inputManager->IsKeyDown(GLFW_KEY_D)) {
 			position.x += -camera_speed;
 		}
+		if(inputManager->IsKeyDown(GLFW_KEY_W)) {
+			position.z += camera_speed;
+		}
+		if(inputManager->IsKeyDown(GLFW_KEY_S)) {
+			position.z += -camera_speed;
+		}
+
 		view_projection = camera.GetViewProjection();
 		camera.SetPos(position);
 	};
@@ -228,13 +221,14 @@ int main() {
 		camera_speed = 0.0f;
 	};
 
-	// inputManager->BindKeyboardEvent("moveLeft", GLFW_KEY_A, NEON_KEY_DOWN, 0, Callback<>(MoveCamera));
-	// inputManager->BindKeyboardEvent("moveLeftHold", GLFW_KEY_A, NEON_KEY_HOLD, 0, Callback<>(MoveCamera));
-	inputManager->BindKeyboardEvent("moveStopA", GLFW_KEY_A, NEON_KEY_UP, 0, Callback<>(MoveStopCamera));
+	Click clicks[] = {
+		std::make_tuple(GLFW_KEY_A, NEON_KEY_UP, 0),
+		std::make_tuple(GLFW_KEY_D, NEON_KEY_UP, 0),
+		std::make_tuple(GLFW_KEY_S, NEON_KEY_UP, 0),
+		std::make_tuple(GLFW_KEY_W, NEON_KEY_UP, 0)
+	};
+	inputManager->BindKeyboardEvent("moveStop", clicks, 2, Callback<>(MoveStopCamera));
 
-	// inputManager->BindKeyboardEvent("moveRight", GLFW_KEY_D, NEON_KEY_DOWN, 0, Callback<>(MoveCamera));
-	// inputManager->BindKeyboardEvent("moveRightHold", GLFW_KEY_D, NEON_KEY_HOLD, 0, Callback<>(MoveCamera));
-	inputManager->BindKeyboardEvent("moveStopD", GLFW_KEY_D, NEON_KEY_UP, 0, Callback<>(MoveStopCamera));
 
 	//
 	// Light movement variables
@@ -278,15 +272,12 @@ int main() {
 		instancedProgram->SetUniform3f(instanced_light_pos_loc, lightPos);
 		instancedProgram->SetUniformMat4("view_projection", view_projection);
 		instancedProgram->SetUniform3f("viewPos", camera.GetPos());
-		instancedProgram->Unbind();
 		program->Bind();
 		program->SetUniform3f(program_light_pos_loc, lightPos);
 		program->SetUniformMat4("view_projection", view_projection);
 		program->SetUniform3f("viewPos", camera.GetPos());
-		program->Unbind();
 		simpleProgram->Bind();
 		simpleProgram->SetUniformMat4("view_projection", view_projection);
-		simpleProgram->Unbind();
 
 		//
 		// Draw sphere (lamp)
@@ -304,8 +295,7 @@ int main() {
 		//
 		Transform new_transform;
 		new_transform.SetRotation((float)angle, glm::vec3(0, 1, 0));
-		new_transform.SetScale(glm::vec3(0.3));
-		// instanced_cubes.UpdateAllTransforms(transforms, new_transform);
+		instanced_cubes.UpdateAllTransforms(transforms, new_transform);
 		instanced_cubes.Draw();
 
 		window->Update();

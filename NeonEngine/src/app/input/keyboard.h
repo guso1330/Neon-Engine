@@ -7,9 +7,7 @@
 #include <glm/glm.hpp>
 
 #include <iostream>
-#include <map>
-#include <iterator>
-#include <tuple>
+#include <algorithm>
 
 namespace neon {
 
@@ -18,8 +16,6 @@ namespace neon {
 		NEON_KEY_DOWN,
 		NEON_KEY_HOLD
 	};
-
-	typedef std::map<std::tuple<int, int, int>, const char*> KeyboardEventMap;
 
 	class Keyboard : public InputDevice {
 		public:
@@ -36,30 +32,16 @@ namespace neon {
 					m_keys[key] = false;
 				}
 
-				std::tuple<int, int, int> key_call = std::make_tuple(key, action, mod);
+				Click key_call = std::make_tuple(key, action, mod);
 
-				KeyboardEventMap::const_iterator it = m_keyboardEventsMap.find(key_call);
+				ClickEvent::const_iterator it = m_clickEvents.find(key_call);
 
-				if(it != m_keyboardEventsMap.end()) {
-					// std::cout << (*it).second << std::endl;
-					FireEvent((*it).second, args...);
-				}
-			}
-
-			template<class T>
-			void BindKeyboardEvent(const char* name, int key, int action, int mods, const T &callback) {
-				if(BindEvent(name, callback)) {
-					m_keyboardEventsMap.insert(
-						std::make_pair(
-							std::make_tuple(key, action, mods),
-							name
-						)
-					);
+				if(it != m_clickEvents.end()) {
+					FireEvent(it->second, args...);
 				}
 			}
 
 		private:
 			bool m_keys[MAX_KEYS];
-			KeyboardEventMap m_keyboardEventsMap;
 	};
 }

@@ -4,10 +4,11 @@
 
 namespace neon {
 
-	static void window_resize_callback(GLFWwindow *window, int width, int height);
-	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	static void mouse_cursor_position_callback(GLFWwindow *window, double x_pos, double y_pos);
-	static void mouse_button_callback (GLFWwindow *window, int button, int action, int mods);
+	static void window_resize_callback(GLFWwindow *glfwWindow, int width, int height);
+	static void key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods);
+	static void mouse_cursor_position_callback(GLFWwindow *glfwWindow, double x_pos, double y_pos);
+	static void mouse_button_callback (GLFWwindow *glfwWindow, int button, int action, int mods);
+	static void scroll_callback(GLFWwindow* glfwWindow, double xoffset, double yoffset);
 
 	Window::Window(unsigned int width, unsigned int height, bool fullscreen, const char* title) :
 		m_width(width),
@@ -22,6 +23,7 @@ namespace neon {
 	}
 
 	Window::~Window() {
+		delete m_input;
 		glfwDestroyWindow(m_window);
 		glfwTerminate();
 	}
@@ -62,6 +64,7 @@ namespace neon {
 		glfwSetKeyCallback(m_window, key_callback);
 		glfwSetCursorPosCallback(m_window, mouse_cursor_position_callback);
 		glfwSetMouseButtonCallback(m_window, mouse_button_callback);
+		glfwSetScrollCallback(m_window, scroll_callback);
 
 		m_input = new Input();
 
@@ -90,6 +93,8 @@ namespace neon {
 	}
 
 	void Window::Update() {
+		m_input->FlushEvents();
+
 		glfwGetFramebufferSize(m_window, &m_width, &m_height);
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();
@@ -118,6 +123,8 @@ namespace neon {
 		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
 		Window *window = static_cast<Window *>(ptr_window);
 
+		// TODO: Pass arguments from the window object ot this
+		//		 event function
 		window->m_input->KeyboardEvent(key, action, mods);
 
 		// Close the window
@@ -129,10 +136,22 @@ namespace neon {
 	void mouse_cursor_position_callback(GLFWwindow *glfwWindow, double x_pos, double y_pos) {
 		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
 		Window *window = static_cast<Window *>(ptr_window);
+
+		window->m_input->MouseCursorEvent(x_pos, y_pos);
 	}
 
-	void mouse_button_callback (GLFWwindow *glfwWindow, int button, int action, int mods) {
+	void mouse_button_callback(GLFWwindow *glfwWindow, int button, int action, int mods) {
 		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
-		Window *window = static_cast<Window *>(ptr_window);	
+		Window *window = static_cast<Window *>(ptr_window);
+
+		// TODO: Pass arguments from the window object ot this
+		//		 event function
+		window->m_input->MouseEvent(button, action, mods);
+	}
+
+	void scroll_callback(GLFWwindow *glfwWindow, double xoffset, double yoffset) {
+		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
+		Window *window = static_cast<Window *>(ptr_window);
+
 	}
 }

@@ -6,6 +6,6 @@ namespace neon {
 			m_keys[i] = false;
 		}
 	}
-
+	
 	Keyboard::~Keyboard() {}
 }

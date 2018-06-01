@@ -41,19 +41,22 @@ namespace neon {
 
 			template<class T>
 			bool Register(const char* name, const T &callback) {
-				if(m_events.insert(std::pair<const char*, BaseCallbackPtr>(name, BaseCallbackPtr(new T(callback)))).second == true) {
-					std::cout << "EventManager: '" << name << "' was registered" << std::endl;
+				if(m_events.insert(std::make_pair(name, BaseCallbackPtr(new T(callback)))).second == true) {
 					return true;
 				} else {
-					std::cout << "EventManager: '" << name << "' was not registered and already exists" << std::endl;
 					return false;
 				}
 			}
 
 			// TODO: Understand this code haha
 			template <class... ArgTypes>
-			void Run(const char* name, ArgTypes... args)
-			{
+			void Run(const char* name, ArgTypes... args) {
+				// Warning: just prints the name and function address
+				// for(EventsMap::iterator i = m_events.begin(); i != m_events.end(); ++i) {
+				// 	std::cout << (*i).first << ", " << (*i).second << std::endl;
+				// }
+				// std::cout << std::endl;
+
 				typedef Callback<ArgTypes...> CallbackType;
 				EventsMap::const_iterator it = m_events.find(name);
 				if(it != m_events.end()) {
@@ -61,7 +64,18 @@ namespace neon {
 					if(c)
 					{
 						(*c)(args...);
+					} else {
+						std::cout << "EventManager: Callback function doesn't exist" << std::endl;
 					}
+				} else {
+					std::cout << "EventManager: '" << name << "' was not found and run" << std::endl;
+				}
+			}
+
+			// DEBUG FUNCTION
+			void PrintAllEvents() {
+				for(EventsMap::iterator it = m_events.begin(); it != m_events.end(); ++it) {
+					std::cout << (*it).first << std::endl;
 				}
 			}
 

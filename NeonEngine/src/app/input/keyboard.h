@@ -2,8 +2,6 @@
 
 #define MAX_KEYS 1024
 
-#include "inputDevice.h"
-
 #include <glm/glm.hpp>
 
 #include <iostream>
@@ -17,29 +15,25 @@ namespace neon {
 		NEON_KEY_HOLD
 	};
 
-	class Keyboard : public InputDevice {
+	class Keyboard {
 		public:
 			Keyboard();
+
 			~Keyboard();
 
-			inline bool GetKey(int key) { return m_keys[key]; }
+			inline const bool GetKey(const int key) const { return m_keys[key]; }
+			inline void SetKey(const int key, const bool state) { m_keys[key] = state; }
 
-			template<class... ArgTypes>
-			void OnKeyEvent(int key, int action, int mod, ArgTypes... args) {
-				if(action != NEON_KEY_UP) {
-					m_keys[key] = true;
-				} else {
-					m_keys[key] = false;
-				}
+			// template<class... ArgTypes>
+			// void OnKeyEvent(int key, int action, int mod, ArgTypes... args) {
+			// 	Click key_call = std::make_tuple(key, action, mod);
 
-				Click key_call = std::make_tuple(key, action, mod);
+			// 	ClickEvent::const_iterator it = m_clickEvents.find(key_call);
 
-				ClickEvent::const_iterator it = m_clickEvents.find(key_call);
-
-				if(it != m_clickEvents.end()) {
-					FireEvent(it->second, args...);
-				}
-			}
+			// 	if(it != m_clickEvents.end()) {
+			// 		FireEvent(it->second, args...);
+			// 	}
+			// }
 
 		private:
 			bool m_keys[MAX_KEYS];

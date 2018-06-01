@@ -26,7 +26,7 @@ using namespace neon;
 using namespace glm;
 
 const int WIDTH = 512,
-			HEIGHT = 256;
+		  HEIGHT = 256;
 
 short int CUBE_COL = 50,
 		  CUBE_ROW = 50;
@@ -66,8 +66,6 @@ int main() {
 			  lightDiffuse(0.9f),
 			  lightSpecular(0.5f),
 			  lightPos(0.0, 25.0, 0.0);
-
-	camera.SetLookAt(lightPos);
 
 	/************************************
 		Setting up Shaders and Program
@@ -140,6 +138,7 @@ int main() {
 			cube_spec_tex("./NeonEngine/src/res/models/plasmacannon/plasmacannon_weapon_specular.jpg", Specular),
 			plane_tex("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg", Diffuse);
 	/**********************************/
+
 	plane.SetTexture(&plane_tex, Diffuse);
 	glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
 	program->Bind();
@@ -166,17 +165,6 @@ int main() {
 		}
 	}
 	instanced_cubes.SetTransforms(transforms);
-
-	//
-	// OpenGL Setting
-	//
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-	glEnable (GL_BLEND);
-	glEnable(GL_CULL_FACE);
-	glClearDepth(1.0f);
-	glEnable(GL_MULTISAMPLE); // 4x MSAA is used in window.h
-	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	
 	//
 	// Timer variables
@@ -184,18 +172,35 @@ int main() {
 	double angle, elapsed_time, speed;
 	angle=elapsed_time=speed=0;
 	double last_time = glfwGetTime(), current_time = 0;
+
+	//
+	// Camera Variables
+	//
 	float camera_speed = 0.0f;
 	float camera_acceleration = 0.4f;
-	float camera_speed_limit = 2.0f;
+	float camera_speed_limit = 1.5f;
+
+
+	//
+	// Light movement variables
+	//
+	short direction = -1;
+	float light_speed = 100.0;
 
 	//
 	// Input Callback Functions
 	//
-	auto MoveCamera = [&window, &camera, &view_projection, inputManager, &elapsed_time, &camera_speed, camera_acceleration, camera_speed_limit]() {
+	auto MoveCameraFunc = [&window, &camera, &view_projection, inputManager, &elapsed_time, &camera_speed, camera_acceleration, camera_speed_limit]() {
 		glm::vec3 position = camera.GetPos();
 
 		camera_speed = camera_speed + (camera_acceleration * elapsed_time);
 
+		// On Key up set camera_speed to 0
+		if(inputManager->IsKeyUp(GLFW_KEY_A) && inputManager->IsKeyUp(GLFW_KEY_D) && inputManager->IsKeyUp(GLFW_KEY_W) && inputManager->IsKeyUp(GLFW_KEY_S)) {
+			camera_speed = 0.0f;
+		}
+
+		// Limit Camera Speed
 		if (camera_speed > camera_speed_limit) {
 			camera_speed = camera_speed_limit;
 		}
@@ -217,24 +222,26 @@ int main() {
 		camera.SetPos(position);
 	};
 
-	auto MoveStopCamera = [&camera_speed] () {
-		camera_speed = 0.0f;
-	};
+	auto MouseCursorFunc = [inputManager] () {
+		int x = inputManager->GetCursorPos().x,
+			y = inputManager->GetCursorPos().y;
 
-	Click clicks[] = {
-		std::make_tuple(GLFW_KEY_A, NEON_KEY_UP, 0),
-		std::make_tuple(GLFW_KEY_D, NEON_KEY_UP, 0),
-		std::make_tuple(GLFW_KEY_S, NEON_KEY_UP, 0),
-		std::make_tuple(GLFW_KEY_W, NEON_KEY_UP, 0)
+		
 	};
-	inputManager->BindKeyboardEvent("moveStop", clicks, 2, Callback<>(MoveStopCamera));
-
+	
+	// Todo: Test a callback that passes a variable to manipulate a variable
+	inputManager->BindEvent("CameraMove", Callback<>(MoveCameraFunc));
 
 	//
-	// Light movement variables
+	// OpenGL Setting
 	//
-	short direction = -1;
-	float light_speed = 100.0;
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glEnable (GL_BLEND);
+	glEnable(GL_CULL_FACE);
+	glClearDepth(1.0f);
+	glEnable(GL_MULTISAMPLE); // 4x MSAA is used in window.h
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	/**************************
 	** MAIN APPLICATION LOOP **
@@ -261,13 +268,10 @@ int main() {
 		if(lightPos.z < -200.0f) { direction *= -1; }
 		else if(lightPos.z > 200.0f) { direction *= -1; }
 
-
 		//
-		// Handle Camera Movement
+		// Handle Camera Updates
 		//
-		MoveCamera();
-
-		camera.SetLookAt(lightPos);
+		// camera.SetLookAt(lightPos);
 		instancedProgram->Bind();
 		instancedProgram->SetUniform3f(instanced_light_pos_loc, lightPos);
 		instancedProgram->SetUniformMat4("view_projection", view_projection);

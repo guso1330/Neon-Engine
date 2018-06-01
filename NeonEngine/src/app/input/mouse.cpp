@@ -1,6 +1,12 @@
 #include "mouse.h"
 
 namespace neon {
-	Mouse::Mouse() {}
+	Mouse::Mouse() {
+		for(int i=0; i < MAX_BUTTONS; ++i) {
+			m_buttons[i] = false;
+		}
+		m_pos = glm::vec2(0.0f);
+	}
+
 	Mouse::~Mouse() {}
 }

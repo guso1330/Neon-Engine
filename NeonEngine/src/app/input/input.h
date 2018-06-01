@@ -1,12 +1,17 @@
 #pragma once
 
+#include "eventManager.h"
 #include "keyboard.h"
 #include "mouse.h"
 
-#include <functional>
+#include <vector>
+#include <iterator>
+#include <tuple>
+#include <typeinfo>
 #include <iostream>
 
 namespace neon {
+
 	class Input {
 
 		public:
@@ -14,39 +19,46 @@ namespace neon {
 			~Input();
 
 			template<class T>
-			void BindKeyboardEvent(const char *name, int key, int action, int mods, const T &callback) {
-				m_keyboard.BindClickEvent(name, key, action, mods, callback);
+			void BindEvent(const char* name, const T &callback) {
+				m_eventNames.push_back(name);
+				if(m_eventManager->Register(name, callback)) {
+					std::cout << "InputManager: '" << name << "' was registered" << std::endl;
+				} else {
+					std::cout << "InputManager: '" << name << "' was not registered and already exists" << std::endl;
+				}
 			}
 
-			template<class T>
-			void BindKeyboardEvent(const char *name, Click* clickEvents, int size, const T &callback) {
-				std::vector<Click> clicks;
-				clicks.assign(clickEvents, clickEvents + size);
-				m_keyboard.BindClickEvent(name, clicks, callback);
+			void FlushEvents() const {
+				for(int i=0; i < m_eventNames.size(); ++i) {
+					m_eventManager->Run(m_eventNames[i]);
+				}
 			}
 
-			template<class... ArgTypes>
-			void KeyboardEvent(int key, int action, int mods, ArgTypes... args) {
-				switch(action) {
-					case NEON_KEY_UP:
-						m_keyboard.OnKeyEvent(key, NEON_KEY_UP, mods);
-						break;
-					case NEON_KEY_DOWN:
-						m_keyboard.OnKeyEvent(key, NEON_KEY_DOWN, mods);
-						break;
-					case NEON_KEY_HOLD:
-						m_keyboard.OnKeyEvent(key, NEON_KEY_HOLD, mods);
-						break;
-					default:
-						break;
-				}	
-			}
+			void KeyboardEvent(const int key, const int action, const int mods);
 
-			bool IsKeyDown(int key) { return m_keyboard.GetKey(key); }
-			bool IsKeyUp(int key) { return !m_keyboard.GetKey(key); }
+			void MouseEvent(const int button, const int action, const int mods);
+
+			void MouseCursorEvent(int x, int y);
+
+			// 
+			// KEYBOARD
+			//
+			const bool IsKeyDown(int key) const { return m_keyboard->GetKey(key); }
+			const bool IsKeyUp(int key)   const { return !m_keyboard->GetKey(key); }
+
+			//
+			// Mouse
+			//
+			const glm::vec2 GetCursorPos()  const { return m_mouse->GetPos(); }
+			const bool IsMouseDown(int key) const { return m_mouse->GetButton(key); }
+			const bool IsMouseUp(int key)   const { return !m_mouse->GetButton(key); }
 
 		private:
-			Keyboard m_keyboard;
-			Mouse m_mouse;
+			// Note: Each input class only has one associated mouse and keyboard
+			Keyboard *m_keyboard;
+			Mouse *m_mouse;
+			EventManager *m_eventManager;
+
+			std::vector<const char*> m_eventNames;
 	};
 }

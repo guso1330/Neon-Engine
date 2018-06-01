@@ -14,6 +14,11 @@ namespace neon {
 		m_lookat = glm::lookAt(m_pos, m_lookatPos, m_up);
 	}
 
+	void Camera::SetLookAt(const glm::vec3& n_pos) {
+		m_lookatPos = n_pos;
+		m_lookat = glm::lookAt(m_pos, m_lookatPos, m_up);
+	}
+
 	void Camera::Update() {
 
 	}

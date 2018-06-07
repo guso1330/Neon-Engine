@@ -9,10 +9,16 @@ namespace neon {
 			Camera(const glm::vec3& pos, float fov, float aspect, float near, float far);
 			inline glm::mat4 GetViewProjection() const { return m_perspective * m_lookat; }
 			inline glm::mat4 GetViewMatrix() const { return m_lookat; }
-			inline const glm::vec3 &GetPos() const { return m_pos; }
+			inline const glm::vec3 &GetPosition() const { return m_pos; }
+			inline const float GetPitch() const { return m_pitch; }
+			inline const float GetYaw() const { return m_yaw; }
 
-			void SetPos(glm::vec3 &n_pos);
+			void SetPosition(glm::vec3 &n_pos);
 			void SetLookAt(const glm::vec3& n_pos);
+
+			void RotateYaw(float angle);
+			void RotatePitch(float angle);
+			void Rotate(float angle);
 
 			virtual void Update();
 			
@@ -22,6 +28,7 @@ namespace neon {
 			glm::vec3 m_pos;
 			glm::vec3 m_forward, m_dir;
 			glm::vec3 m_up;
+			float m_yaw, m_pitch;
 
 		// DEBUG CAMERA STUFF
 		// if(DEBUG_CAM) {

@@ -47,6 +47,7 @@ int main() {
 	float g_FAR = 500.0f;
 
 	Camera camera(glm::vec3(0, 5.0f, -10.0f), FOV, ASPECT_RATIO, g_NEAR, g_FAR);
+	float camera_rotate_speed = (M_PI/180) * 0.8;
 
 	glm::mat4 view_projection = camera.GetViewProjection();
 	glm::mat4 model = glm::mat4(1.0f);
@@ -100,7 +101,7 @@ int main() {
 	instancedProgram->SetUniform3f("light.diffuse", lightDiffuse);
 	instancedProgram->SetUniform3f("light.specular", lightSpecular);
 
-	instancedProgram->SetUniform3f("viewPos", camera.GetPos());
+	instancedProgram->SetUniform3f("viewPos", camera.GetPosition());
 	instancedProgram->SetUniform1f("material.shininess", 32.0f);
 	instancedProgram->Unbind();
 
@@ -111,7 +112,7 @@ int main() {
 	program->SetUniform3f("light.ambient", lightAmbient);
 	program->SetUniform3f("light.specular", lightSpecular);
 
-	program->SetUniform3f("viewPos", camera.GetPos());
+	program->SetUniform3f("viewPos", camera.GetPosition());
 	program->SetUniform1f("material.shininess", 32.0f);
 	program->Unbind();
 
@@ -177,8 +178,8 @@ int main() {
 	// Camera Variables
 	//
 	float camera_speed = 0.0f;
-	float camera_acceleration = 0.4f;
-	float camera_speed_limit = 1.5f;
+	float camera_acceleration = 0.8f;
+	float camera_speed_limit = 2.0f;
 
 
 	//
@@ -190,8 +191,9 @@ int main() {
 	//
 	// Input Callback Functions
 	//
-	auto MoveCameraFunc = [&window, &camera, &view_projection, inputManager, &elapsed_time, &camera_speed, camera_acceleration, camera_speed_limit]() {
-		glm::vec3 position = camera.GetPos();
+	auto MoveCameraFunc = [&window, &camera, inputManager, &elapsed_time, &camera_speed, camera_acceleration, camera_speed_limit]() {
+
+		glm::vec3 position = camera.GetPosition();
 
 		camera_speed = camera_speed + (camera_acceleration * elapsed_time);
 
@@ -218,19 +220,38 @@ int main() {
 			position.z += -camera_speed;
 		}
 
-		view_projection = camera.GetViewProjection();
-		camera.SetPos(position);
+		printf("Position Adjusted: %f, %f, %f\n", position.x, position.y, position.z);
+		printf("Camera Speed: %f\n", camera_speed);
+
+		camera.SetPosition(position);
+		camera.Update();
 	};
 
-	auto MouseCursorFunc = [inputManager] () {
-		int x = inputManager->GetCursorPos().x,
-			y = inputManager->GetCursorPos().y;
+	auto MoveCameraAroundFunc = [inputManager, &camera, camera_rotate_speed, &window]() {
 
-		
+		int x = inputManager->GetCursorPosition().x,
+			y = inputManager->GetCursorPosition().y;
+
+		int dx = x - WIDTH/2,
+			dy = y - HEIGHT/2;
+
+		if(dx) { // get rotation in the x direction
+			camera.RotateYaw(-camera_rotate_speed * dx);
+		}
+		if(dy) {
+			camera.RotatePitch(-camera_rotate_speed * dy);
+		}
+
+		camera.Update();
+		glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
 	};
 	
+	// Disable the cursor
+	glfwSetInputMode(window->GetGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	// Todo: Test a callback that passes a variable to manipulate a variable
-	inputManager->BindEvent("CameraMove", Callback<>(MoveCameraFunc));
+	// inputManager->BindEvent("CameraMove", NEON_KEY_EVENT, Callback<>(MoveCameraFunc));
+	inputManager->BindEvent("CameraMoveAround", NEON_CURSOR_EVENT, Callback<>(MoveCameraAroundFunc));
 
 	//
 	// OpenGL Setting
@@ -268,18 +289,20 @@ int main() {
 		if(lightPos.z < -200.0f) { direction *= -1; }
 		else if(lightPos.z > 200.0f) { direction *= -1; }
 
+		MoveCameraFunc();
+		view_projection = camera.GetViewProjection();
+
 		//
 		// Handle Camera Updates
 		//
-		// camera.SetLookAt(lightPos);
 		instancedProgram->Bind();
 		instancedProgram->SetUniform3f(instanced_light_pos_loc, lightPos);
 		instancedProgram->SetUniformMat4("view_projection", view_projection);
-		instancedProgram->SetUniform3f("viewPos", camera.GetPos());
+		instancedProgram->SetUniform3f("viewPos", camera.GetPosition());
 		program->Bind();
 		program->SetUniform3f(program_light_pos_loc, lightPos);
 		program->SetUniformMat4("view_projection", view_projection);
-		program->SetUniform3f("viewPos", camera.GetPos());
+		program->SetUniform3f("viewPos", camera.GetPosition());
 		simpleProgram->Bind();
 		simpleProgram->SetUniformMat4("view_projection", view_projection);
 

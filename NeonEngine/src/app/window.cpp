@@ -93,8 +93,6 @@ namespace neon {
 	}
 
 	void Window::Update() {
-		m_input->FlushEvents();
-
 		glfwGetFramebufferSize(m_window, &m_width, &m_height);
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();

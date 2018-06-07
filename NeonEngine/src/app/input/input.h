@@ -12,6 +12,12 @@
 
 namespace neon {
 
+	enum EventType {
+		NEON_KEY_EVENT,
+		NEON_MOUSE_EVENT,
+		NEON_CURSOR_EVENT
+	};
+
 	class Input {
 
 		public:
@@ -19,20 +25,30 @@ namespace neon {
 			~Input();
 
 			template<class T>
-			void BindEvent(const char* name, const T &callback) {
-				m_eventNames.push_back(name);
+			void BindEvent(const char* name, EventType event_type,const T &callback) {
 				if(m_eventManager->Register(name, callback)) {
 					std::cout << "InputManager: '" << name << "' was registered" << std::endl;
 				} else {
 					std::cout << "InputManager: '" << name << "' was not registered and already exists" << std::endl;
 				}
-			}
-
-			void FlushEvents() const {
-				for(int i=0; i < m_eventNames.size(); ++i) {
-					m_eventManager->Run(m_eventNames[i]);
+				switch(event_type) {
+					case NEON_KEY_EVENT:
+						m_keyboardEventNames.push_back(name);
+						break;
+					case NEON_MOUSE_EVENT:
+						m_mouseEventNames.push_back(name);
+						break;
+					case NEON_CURSOR_EVENT:
+						m_mouseCursorEventNames.push_back(name);
+						break;
+					default:
+						break;
 				}
 			}
+
+			void FlushKeyboardEvents() const;
+			void FlushMouseEvents() const;
+			void FlushCursorEvents() const;
 
 			void KeyboardEvent(const int key, const int action, const int mods);
 
@@ -49,7 +65,7 @@ namespace neon {
 			//
 			// Mouse
 			//
-			const glm::vec2 GetCursorPos()  const { return m_mouse->GetPos(); }
+			const glm::vec2 GetCursorPosition()  const { return m_mouse->GetPosition(); }
 			const bool IsMouseDown(int key) const { return m_mouse->GetButton(key); }
 			const bool IsMouseUp(int key)   const { return !m_mouse->GetButton(key); }
 
@@ -59,6 +75,8 @@ namespace neon {
 			Mouse *m_mouse;
 			EventManager *m_eventManager;
 
-			std::vector<const char*> m_eventNames;
+			std::vector<const char*> m_keyboardEventNames;
+			std::vector<const char*> m_mouseEventNames;
+			std::vector<const char*> m_mouseCursorEventNames;
 	};
 }

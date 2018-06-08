@@ -25,8 +25,8 @@
 using namespace neon;
 using namespace glm;
 
-const int WIDTH = 512,
-		  HEIGHT = 256;
+const int WIDTH = 1024,
+		  HEIGHT = 768;
 
 short int CUBE_COL = 50,
 		  CUBE_ROW = 50;
@@ -63,7 +63,7 @@ int main() {
 	/***********************
 		  Light Stuff
 	***********************/
-	glm::vec3 lightAmbient(0.3f),
+	glm::vec3 lightAmbient(0.2f),
 			  lightDiffuse(0.9f),
 			  lightSpecular(0.5f),
 			  lightPos(0.0, 25.0, 0.0);
@@ -207,24 +207,32 @@ int main() {
 			camera_speed = camera_speed_limit;
 		}
 
-		if(inputManager->IsKeyDown(GLFW_KEY_A)) {
-			position.x += camera_speed;
-		}
-		if(inputManager->IsKeyDown(GLFW_KEY_D)) {
-			position.x += -camera_speed;
-		}
-		if(inputManager->IsKeyDown(GLFW_KEY_W)) {
-			position.z += camera_speed;
-		}
-		if(inputManager->IsKeyDown(GLFW_KEY_S)) {
-			position.z += -camera_speed;
+		if(inputManager->IsKeyDown(GLFW_KEY_W) || inputManager->IsKeyDown(GLFW_KEY_S)) {
+			float lx = glm::sin(camera.GetYaw())*glm::cos(camera.GetPitch());
+			float ly = glm::sin(camera.GetPitch());
+			float lz = glm::cos(camera.GetYaw())*glm::cos(camera.GetPitch());
+
+			if(inputManager->IsKeyDown(GLFW_KEY_S)) {
+				position.x = position.x + (-camera_speed*lx);
+				position.y = position.y + (-camera_speed*ly);
+				position.z = position.z + (-camera_speed*lz);
+			} else {
+				position.x = position.x + camera_speed*lx;
+				position.y = position.y + camera_speed*ly;
+				position.z = position.z + camera_speed*lz;
+			}
 		}
 
-		printf("Position Adjusted: %f, %f, %f\n", position.x, position.y, position.z);
-		printf("Camera Speed: %f\n", camera_speed);
+		if(inputManager->IsKeyDown(GLFW_KEY_A) || inputManager->IsKeyDown(GLFW_KEY_D)) {
+			if(inputManager->IsKeyDown(GLFW_KEY_A)) {				
+				position += glm::cross(camera.GetRelativeUp(), camera.GetDirection()) * camera_speed;
+				
+			} else {
+				position += glm::cross(camera.GetRelativeUp(), camera.GetDirection()) * -camera_speed;
+			}
+		}
 
 		camera.SetPosition(position);
-		camera.Update();
 	};
 
 	auto MoveCameraAroundFunc = [inputManager, &camera, camera_rotate_speed, &window]() {
@@ -242,7 +250,6 @@ int main() {
 			camera.RotatePitch(-camera_rotate_speed * dy);
 		}
 
-		camera.Update();
 		glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
 	};
 	
@@ -276,7 +283,6 @@ int main() {
 		elapsed_time = current_time - last_time;
 		speed = 2.0f;
 
-		// float rand_deviation = ((float)rand() / (2)) + -2;
 		angle += (elapsed_time * speed);
 		if (angle > 360.0) {
 			angle = 0;
@@ -286,10 +292,11 @@ int main() {
 		// Handle light movement
 		//
 		lightPos.z += elapsed_time * (light_speed * direction);
-		if(lightPos.z < -200.0f) { direction *= -1; }
-		else if(lightPos.z > 200.0f) { direction *= -1; }
+		if(lightPos.z <= -200.0f) { direction *= -1; }
+		else if(lightPos.z >= 200.0f) { direction *= -1; }
 
 		MoveCameraFunc();
+		camera.Update();
 		view_projection = camera.GetViewProjection();
 
 		//

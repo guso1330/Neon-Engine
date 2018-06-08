@@ -9,7 +9,11 @@ namespace neon {
 			Camera(const glm::vec3& pos, float fov, float aspect, float near, float far);
 			inline glm::mat4 GetViewProjection() const { return m_perspective * m_lookat; }
 			inline glm::mat4 GetViewMatrix() const { return m_lookat; }
+
 			inline const glm::vec3 &GetPosition() const { return m_pos; }
+			inline const glm::vec3 &GetRelativeUp() const { return m_up; }
+			inline const glm::vec3 &GetDirection() const { return m_dir; }
+
 			inline const float GetPitch() const { return m_pitch; }
 			inline const float GetYaw() const { return m_yaw; }
 

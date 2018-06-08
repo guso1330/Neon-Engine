@@ -55,6 +55,7 @@ namespace neon {
 			VertexArray *m_vao;
 
 			GLuint 		m_modelLoc;
+			GLuint 		m_normalMatrixLoc;
 			GLuint 		m_colorLoc;
 			glm::vec4 	m_color;
 

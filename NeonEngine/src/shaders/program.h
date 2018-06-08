@@ -35,6 +35,8 @@ namespace neon {
 			// Set Functions
 			void SetUniformMat4(const char* name, const glm::mat4& matrix);
 			void SetUniformMat4(GLuint loc, const glm::mat4& matrix);
+			void SetUniformMat3(const char* name, const glm::mat3& matrix);
+			void SetUniformMat3(GLuint loc, const glm::mat3& matrix);
 			void SetUniform4f(GLuint loc, const glm::vec4& v4);
 			void SetUniform4f(const char* name, const glm::vec4& v4);
 			void SetUniform3f(GLuint loc, const glm::vec3& v3);

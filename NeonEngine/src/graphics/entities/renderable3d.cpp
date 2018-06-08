@@ -7,6 +7,7 @@ namespace neon {
 		m_program->Bind();
 		m_modelLoc = m_program->GetUniformLocation("model");
 		m_colorLoc = m_program->GetUniformLocation("vcolor");
+		m_normalMatrixLoc = m_program->GetUniformLocation("normal_matrix");
 
 		// Default values
 		m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -70,6 +71,7 @@ namespace neon {
 
 			m_program->SetUniform4f(m_colorLoc, m_color);
 			m_program->SetUniformMat4(m_modelLoc, transform);
+			m_program->SetUniformMat4(m_normalMatrixLoc, glm::transpose(glm::inverse(transform)));
 		}
 	}
 

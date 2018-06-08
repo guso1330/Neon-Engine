@@ -147,6 +147,7 @@ namespace neon {
 
 		m_program->SetUniform4f(m_colorLoc, m_color);
 		m_program->SetUniformMat4(m_modelLoc, transform);
+		m_program->SetUniformMat4(m_normalMatrixLoc, glm::transpose(glm::inverse(transform)));
 	}
 
 	void Model::UnSetDraw(Mesh *mesh) const {

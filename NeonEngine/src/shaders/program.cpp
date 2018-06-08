@@ -30,6 +30,8 @@ namespace neon {
 
 			std::cerr << "Program failed to link: " << linkerLog << std::endl;
 			system("PAUSE");
+		} else {
+			std::cout << "Program " << this->GetProgramID() << " was created" << std::endl;
 		}
 	}
 
@@ -39,7 +41,7 @@ namespace neon {
 
 		GLint loc = glGetUniformLocation(m_programID, name);
 		if (loc == -1) {
-			std::cerr << "glGetUniformLocation Error: Could not locate the the uniform " << name << std::endl;
+			std::cerr << "Program " << this->GetProgramID() << " glGetUniformLocation Error: Could not locate the the uniform " << name << std::endl;
 		}
 
 		m_uniformLocationCache[name] = loc;
@@ -66,6 +68,14 @@ namespace neon {
 
 	void Program::SetUniformMat4(GLuint loc, const glm::mat4& matrix) {
 		GL_Call(glUniformMatrix4fv(loc, 1, GL_FALSE, &matrix[0][0]));
+	}
+
+	void Program::SetUniformMat3(const char* name, const glm::mat3& matrix) {
+		GL_Call(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
+	}
+
+	void Program::SetUniformMat3(GLuint loc, const glm::mat3& matrix) {
+		GL_Call(glUniformMatrix3fv(loc, 1, GL_FALSE, &matrix[0][0]));
 	}
 
 	// Vec4

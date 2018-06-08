@@ -10,6 +10,7 @@ out vec3 normal;
 out vec3 fragPos;
 
 uniform mat4 model;
+uniform mat4 normal_matrix;
 uniform mat4 view_projection;
 uniform vec4 vcolor;
 
@@ -21,7 +22,7 @@ void main() {
 	// Creates the Normal Model Matrix
 	// TODO: inverse matrix calculations are very costly operations so do 
 	// this on the CPU and send it over instead.
-	normal = mat3(transpose(inverse(model_transform))) * vNormal;
+	normal = mat3(normal_matrix) * mat3(transform) * vNormal;
 
 	gl_Position = view_projection * vec4(fragPos, 1.0);
 }

@@ -20,7 +20,7 @@ struct Light {
 	vec3 specular;
 };
 
-float intensity = 90.0f;
+float intensity = 100.0f;
 float lightAttenuation = 0.2f;
 
 uniform Light light;
@@ -49,8 +49,10 @@ void main() {
 	float attenuation = 1.0f / (1.0f + lightAttenuation * (dist * dist));
 	vec3 linearColor = ambient + attenuation * (diffuse + specular);
 	
+	vec3 gamma = vec3(1.0/2.2);
+
 	// Final color
-	vec4 result = vec4(linearColor, 1.0f) * fcolor ;
+	vec4 result = vec4(pow(linearColor, gamma), 1.0f) * fcolor;
 	
 	out_FragColor = result;
 }

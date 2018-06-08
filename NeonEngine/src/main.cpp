@@ -25,8 +25,8 @@
 using namespace neon;
 using namespace glm;
 
-const int WIDTH = 1024,
-		  HEIGHT = 768;
+const int WIDTH = 512,
+		  HEIGHT = 256;
 
 short int CUBE_COL = 50,
 		  CUBE_ROW = 50;
@@ -63,7 +63,7 @@ int main() {
 	/***********************
 		  Light Stuff
 	***********************/
-	glm::vec3 lightAmbient(0.2f),
+	glm::vec3 lightAmbient(0.02f),
 			  lightDiffuse(0.9f),
 			  lightSpecular(0.5f),
 			  lightPos(0.0, 25.0, 0.0);
@@ -292,8 +292,8 @@ int main() {
 		// Handle light movement
 		//
 		lightPos.z += elapsed_time * (light_speed * direction);
-		if(lightPos.z <= -200.0f) { direction *= -1; }
-		else if(lightPos.z >= 200.0f) { direction *= -1; }
+		if(lightPos.z <= -200.0f) { direction = 1; }
+		else if(lightPos.z >= 200.0f) { direction = -1; }
 
 		MoveCameraFunc();
 		camera.Update();

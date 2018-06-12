@@ -63,7 +63,7 @@ int main() {
 	/***********************
 		  Light Stuff
 	***********************/
-	glm::vec3 lightAmbient(0.02f),
+	glm::vec3 lightAmbient(0.2f),
 			  lightDiffuse(0.9f),
 			  lightSpecular(0.5f),
 			  lightPos(0.0, 25.0, 0.0);
@@ -110,6 +110,7 @@ int main() {
 	program->SetUniformMat4("view_projection", view_projection);
 	program->SetUniform3f("light.position", lightPos);
 	program->SetUniform3f("light.ambient", lightAmbient);
+	program->SetUniform3f("light.diffuse", lightDiffuse);
 	program->SetUniform3f("light.specular", lightSpecular);
 
 	program->SetUniform3f("viewPos", camera.GetPosition());
@@ -128,28 +129,32 @@ int main() {
 		Setting up The Models
 	****************************/
 	Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
-	Model cube_model("./NeonEngine/src/res/models/plasmacannon/plasma cannon.x", instancedProgram);
+	Model cube("./NeonEngine/src/res/models/cube_5unit.obj", program);
+	Model plasmacannon("./NeonEngine/src/res/models/plasmacannon/plasma cannon.x", instancedProgram);
 	Model sphere_model("./NeonEngine/src/res/models/sphere.obj", simpleProgram);
 	/**********************************/
 	
 	/***************************
 		Setting up The Textures
 	****************************/
-	Texture cube_tex("./NeonEngine/src/res/models/plasmacannon/plasmacannon_weapon_diffuse.bmp", Diffuse),
+	Texture plasmacannon_diff_tex("./NeonEngine/src/res/models/plasmacannon/plasmacannon_weapon_diffuse.bmp", Diffuse),
 			cube_spec_tex("./NeonEngine/src/res/models/plasmacannon/plasmacannon_weapon_specular.jpg", Specular),
-			plane_tex("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg", Diffuse);
+			plane_tex("./NeonEngine/src/res/textures/cartoon_floor_texture.jpg", Diffuse),
+			crate_diff_tex("./NeonEngine/src/res/textures/wood_crate.png", Diffuse),
+			crate_spec_tex("./NeonEngine/src/res/textures/wood_crate_spec.png", Specular);
 	/**********************************/
 
 	plane.SetTexture(&plane_tex, Diffuse);
 	glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
-	program->Bind();
 	plane.GetTransform().SetModelMatrix(plane_model_matrix);
-	program->Unbind();
 
-	cube_model.SetTexture(&cube_tex, Diffuse);
-	cube_model.SetTexture(&cube_spec_tex, Specular);
+	cube.SetTexture(&crate_diff_tex, Diffuse);
+	cube.SetTexture(&crate_spec_tex, Specular);
 
-	RenderableCollection instanced_cubes(&cube_model, instancedProgram);
+	plasmacannon.SetTexture(&plasmacannon_diff_tex, Diffuse);
+	plasmacannon.SetTexture(&cube_spec_tex, Specular);
+
+	RenderableCollection instanced_cannons(&plasmacannon, instancedProgram);
 
 	sphere_model.SetColor(glm::vec4(1.0f));
 	GameObject sphere(&sphere_model);
@@ -165,7 +170,7 @@ int main() {
 			transforms[i * CUBE_ROW + j].SetScale(glm::vec3(0.2, 0.2, 0.2));
 		}
 	}
-	instanced_cubes.SetTransforms(transforms);
+	instanced_cannons.SetTransforms(transforms);
 	
 	//
 	// Timer variables
@@ -302,35 +307,36 @@ int main() {
 		//
 		// Handle Camera Updates
 		//
-		instancedProgram->Bind();
-		instancedProgram->SetUniform3f(instanced_light_pos_loc, lightPos);
-		instancedProgram->SetUniformMat4("view_projection", view_projection);
-		instancedProgram->SetUniform3f("viewPos", camera.GetPosition());
 		program->Bind();
 		program->SetUniform3f(program_light_pos_loc, lightPos);
 		program->SetUniformMat4("view_projection", view_projection);
 		program->SetUniform3f("viewPos", camera.GetPosition());
+
+		//
+		// Draw the plane
+		//
+		plane.Draw();		
+		cube.Draw();
+
 		simpleProgram->Bind();
 		simpleProgram->SetUniformMat4("view_projection", view_projection);
-
 		//
 		// Draw sphere (lamp)
 		//
 		sphere.SetPosition(lightPos);
 		sphere.Draw();
-		
-		//
-		// Draw the plane
-		//
-		plane.Draw();
 
-		//
-		// Draw the cubes
-		//
-		Transform new_transform;
-		new_transform.SetRotation((float)angle, glm::vec3(0, 1, 0));
-		instanced_cubes.UpdateAllTransforms(transforms, new_transform);
-		instanced_cubes.Draw();
+		// instancedProgram->Bind();
+		// instancedProgram->SetUniform3f(instanced_light_pos_loc, lightPos);
+		// instancedProgram->SetUniformMat4("view_projection", view_projection);
+		// instancedProgram->SetUniform3f("viewPos", camera.GetPosition());
+		// //
+		// // Draw the cubes
+		// //
+		// Transform new_transform;
+		// new_transform.SetRotation((float)angle, glm::vec3(0, 1, 0));
+		// instanced_cannons.UpdateAllTransforms(transforms, new_transform);
+		// instanced_cannons.Draw();
 
 		window->Update();
 

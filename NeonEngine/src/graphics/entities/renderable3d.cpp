@@ -26,18 +26,30 @@ namespace neon {
 
 	void Renderable3d::SetTexture(const std::string &filename, TextureType type) {
 		Texture* texture = new Texture(filename, type);
-		if(type == Diffuse) {
-			m_material->diffuse = texture;
-		} else if (type == Specular) {
-			m_material->specular = texture;
-		}
+
+		switch(type) {
+			case Diffuse:
+				m_material->SetDiffuse(texture);
+				break;
+			case Specular:
+				m_material->SetSpecular(texture);
+				break;
+			case Normal:
+				break;
+			case Height:
+				break;
+			case Occlusion:
+				break;
+			default:
+				break;
+		}		
 	}
 
 	void Renderable3d::SetTexture(Texture* n_texture, TextureType type) { 
 		if(type == Diffuse) {
-			m_material->diffuse = n_texture;
+			m_material->SetDiffuse(n_texture);
 		} else if (type == Specular) {
-			m_material->specular = n_texture;
+			m_material->SetSpecular(n_texture);
 		}
 	}
 

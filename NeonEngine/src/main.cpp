@@ -102,7 +102,6 @@ int main() {
 	instancedProgram->SetUniform3f("light.specular", lightSpecular);
 
 	instancedProgram->SetUniform3f("viewPos", camera.GetPosition());
-	instancedProgram->SetUniform1f("material.shininess", 32.0f);
 	instancedProgram->Unbind();
 
 	// Set up normal program
@@ -114,7 +113,6 @@ int main() {
 	program->SetUniform3f("light.specular", lightSpecular);
 
 	program->SetUniform3f("viewPos", camera.GetPosition());
-	program->SetUniform1f("material.shininess", 32.0f);
 	program->Unbind();
 
 	// Set Up simple program
@@ -185,7 +183,6 @@ int main() {
 	float camera_speed = 0.0f;
 	float camera_acceleration = 0.8f;
 	float camera_speed_limit = 2.0f;
-
 
 	//
 	// Light movement variables
@@ -320,6 +317,7 @@ int main() {
 
 		simpleProgram->Bind();
 		simpleProgram->SetUniformMat4("view_projection", view_projection);
+
 		//
 		// Draw sphere (lamp)
 		//

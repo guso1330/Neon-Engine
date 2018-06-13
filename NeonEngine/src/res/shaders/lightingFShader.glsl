@@ -8,6 +8,9 @@ struct Material {
 	vec3 ambient;
 	sampler2D diffuse;
 	sampler2D specular;
+	sampler2D normal;
+	sampler2D height;
+	sampler2D occlusion;
 	float shininess;
 };
 
@@ -29,7 +32,7 @@ void main() {
 	float distance = distance(light.position, fragPos);
 
 	// Ambient Color
-	vec3 ambient = light.ambient * vec3(texture(material.diffuse, texFrag));
+	vec3 ambient = light.ambient * material.ambient * vec3(texture(material.diffuse, texFrag));
 
 	// Diffuse
 	vec3 norm = normalize(normal);

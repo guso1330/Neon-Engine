@@ -2,7 +2,6 @@
 
 
 namespace neon {
-	vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName);
 
 	Model::Model(const char *filename, Program* program, bool shouldSendData) : 
 		Renderable3d(program)
@@ -115,11 +114,11 @@ namespace neon {
 			{
 				std::string diffuse_path = m_directory + "/" + std::string(filename.C_Str());
 				std::cout << "Diffuse Texture Path: " << diffuse_path << std::endl;
-				n_material->diffuse = new Texture(diffuse_path, Diffuse);
+				n_material->SetDiffuse(new Texture(diffuse_path, Diffuse));
 			} else if (aiReturn_SUCCESS == ai_material->GetTexture(aiTextureType_SPECULAR, 0, &filename)) {
 				std::cout << "Specular Texture Path: " << filename.C_Str() << std::endl;
 				std::string diffuse_path = m_directory + "/" + std::string(filename.C_Str());
-				n_material->specular = new Texture(diffuse_path, Specular);
+				n_material->SetSpecular(new Texture(diffuse_path, Specular));
 			}
 
 			// Todo: Probably can remove the m_materials vector, because I don't need to store the materials
@@ -139,7 +138,7 @@ namespace neon {
 	}
 
 	void Model::SetUpDraw(const glm::mat4 &transform, Mesh *mesh) const {
-		if(mesh->GetMaterial()->diffuse != nullptr) {
+		if(mesh->GetMaterial()->GetDiffuse() != nullptr) {
 			mesh->GetMaterial()->Bind(m_program);
 		} else {
 			m_material->Bind(m_program);
@@ -151,7 +150,7 @@ namespace neon {
 	}
 
 	void Model::UnSetDraw(Mesh *mesh) const {
-		if(mesh->GetMaterial()->diffuse != nullptr) {
+		if(mesh->GetMaterial()->GetDiffuse() != nullptr) {
 			mesh->GetMaterial()->Unbind();
 		} else {
 			m_material->Unbind();

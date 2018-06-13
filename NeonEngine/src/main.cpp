@@ -145,7 +145,7 @@ int main() {
 	/**********************************/
 
 	plane.SetTexture(&plane_tex, Diffuse);
-	glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 0, 100.0f));
+	glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 1.0f, 100.0f));
 	plane.GetTransform().SetModelMatrix(plane_model_matrix);
 
 	cube.SetTexture(&crate_diff_tex, Diffuse);
@@ -315,8 +315,8 @@ int main() {
 		//
 		// Draw the plane
 		//
-		plane.Draw();		
-		cube.Draw();
+		plane.Draw();
+		// cube.Draw();
 
 		simpleProgram->Bind();
 		simpleProgram->SetUniformMat4("view_projection", view_projection);
@@ -326,17 +326,17 @@ int main() {
 		sphere.SetPosition(lightPos);
 		sphere.Draw();
 
-		// instancedProgram->Bind();
-		// instancedProgram->SetUniform3f(instanced_light_pos_loc, lightPos);
-		// instancedProgram->SetUniformMat4("view_projection", view_projection);
-		// instancedProgram->SetUniform3f("viewPos", camera.GetPosition());
-		// //
-		// // Draw the cubes
-		// //
-		// Transform new_transform;
+		instancedProgram->Bind();
+		instancedProgram->SetUniform3f(instanced_light_pos_loc, lightPos);
+		instancedProgram->SetUniformMat4("view_projection", view_projection);
+		instancedProgram->SetUniform3f("viewPos", camera.GetPosition());
+		//
+		// Draw the cubes
+		//
+		Transform new_transform;
 		// new_transform.SetRotation((float)angle, glm::vec3(0, 1, 0));
 		// instanced_cannons.UpdateAllTransforms(transforms, new_transform);
-		// instanced_cannons.Draw();
+		instanced_cannons.Draw();
 
 		window->Update();
 

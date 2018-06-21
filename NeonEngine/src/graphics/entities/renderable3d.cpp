@@ -55,8 +55,8 @@ namespace neon {
 
 	void Renderable3d::SendVertexData() {
 
-		printf("Size of m_vertexData: %lu bytes\n", m_vertexData.size() * sizeof(Vertex));
-		printf("Size of m_indicies: %lu bytes\n\n", m_indices.size() * sizeof(unsigned int));
+		// printf("Size of m_vertexData: %lu bytes\n", m_vertexData.size() * sizeof(Vertex));
+		// printf("Size of m_indicies: %lu bytes\n\n", m_indices.size() * sizeof(unsigned int));
 
 		// Create VAO, VBO, and IBO
 		m_vao = new VertexArray();

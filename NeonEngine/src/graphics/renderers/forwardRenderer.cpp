@@ -2,37 +2,40 @@
 
 namespace neon {
 	ForwardRenderer::ForwardRenderer() {
-		Init();
+		m_ambientLight = new AmbientLight();
 	}
 	ForwardRenderer::~ForwardRenderer() {
-		delete m_ibo;
-		glDeleteBuffers(1, &m_vbo);
+		delete m_ambientLight;
 	}
-	void ForwardRenderer::Init() {
 
-		glGenVertexArrays(1, &m_vao);
-		glGenBuffers(1, &m_vbo);
-
-		glBindVertexArray(m_vao);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-		glBufferData(GL_ARRAY_BUFFER, RENDERER_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW);
-
-		glEnableVertexAttribArray(SHADER_VERTEX_INDEX);
-		glEnableVertexAttribArray(SHADER_TEX_INDEX);
-		glVertexAttribPointer(SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)0);
-		glVertexAttribPointer(SHADER_TEX_INDEX, 2, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)(3 * sizeof(GLfloat)));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-	void ForwardRenderer::Begin() {
-
-	}
-	void ForwardRenderer::End() {
-		
-	}
 	void ForwardRenderer::Submit(Renderable3d* renderable) {
-		m_vertexData.insert(m_vertexData.begin(), renderable->GetVertexData().begin(), renderable->GetVertexData().end());
+		m_renderables.push_back(renderable);
 	}
+
+	void ForwardRenderer::Submit(GameObject* gameobject) {
+		m_renderables.push_back(gameobject->GetModel());
+	}
+
+	void ForwardRenderer::SetUpDraw() {
+		GL_Call(glEnable(GL_BLEND));
+		GL_Call(glBlendFunc(GL_ONE, GL_ONE));
+		GL_Call(glDepthMask(false));
+		GL_Call(glDepthFunc(GL_EQUAL));
+	}
+
+	void ForwardRenderer::UnSetDraw() {
+		GL_Call(glDepthFunc(GL_LESS));
+		GL_Call(glDepthMask(true));
+		GL_Call(glDisable(GL_BLEND));
+	}
+	
 	void ForwardRenderer::Flush() {
-		
+		// SetUpDraw();
+		for(std::vector<Renderable3d*>::iterator it=m_renderables.begin(); it != m_renderables.end(); ++it) {
+			m_ambientLight->Bind((*it), m_mainCamera);
+			GL_Call(glDrawElements(GL_TRIANGLES, (*it)->GetIbo()->GetCount(), GL_UNSIGNED_INT, NULL));
+			m_ambientLight->Unbind();
+		}
+		// UnSetDraw();
 	}
 }

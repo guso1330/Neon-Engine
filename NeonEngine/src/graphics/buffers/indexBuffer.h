@@ -9,6 +9,7 @@
 namespace neon {
 	class IndexBuffer {
 		public:
+			IndexBuffer();
 			IndexBuffer(unsigned int* data, GLsizei count);
 			IndexBuffer(const std::vector<unsigned int> &data);
 			~IndexBuffer();

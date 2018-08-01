@@ -6,6 +6,7 @@
 namespace neon {
 	class Camera {
 		public: 
+			Camera() {};
 			Camera(const glm::vec3& pos, float fov, float aspect, float near, float far);
 			inline glm::mat4 GetViewProjection() const { return m_perspective * m_lookat; }
 			inline glm::mat4 GetViewMatrix() const { return m_lookat; }

@@ -2,6 +2,11 @@
 
 using namespace neon;
 
+VertexBuffer::VertexBuffer()
+	: m_componentCount(0) {
+	GL_Call(glGenBuffers(1, &m_vbo));
+}
+
 VertexBuffer::VertexBuffer(GLfloat* data, GLsizei count, GLuint componentCount)
 	: m_componentCount(componentCount) {
 	// Generate a new buffer

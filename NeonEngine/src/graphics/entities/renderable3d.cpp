@@ -1,6 +1,13 @@
 #include "renderable3d.h"
 
 namespace neon {
+	Renderable3d::Renderable3d() {
+		// Default values
+		m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+		isDataSent = false;
+		m_material = new Material();
+	}
+
 	Renderable3d::Renderable3d(Program* program) :
 		m_program(program)
 	{
@@ -11,10 +18,8 @@ namespace neon {
 
 		// Default values
 		m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-
 		// Set the flags
 		isDataSent = false;
-
 		m_material = new Material();
 	}
 
@@ -54,10 +59,6 @@ namespace neon {
 	}
 
 	void Renderable3d::SendVertexData() {
-
-		// printf("Size of m_vertexData: %lu bytes\n", m_vertexData.size() * sizeof(Vertex));
-		// printf("Size of m_indicies: %lu bytes\n\n", m_indices.size() * sizeof(unsigned int));
-
 		// Create VAO, VBO, and IBO
 		m_vao = new VertexArray();
 		m_vbo = new VertexBuffer(m_vertexData);

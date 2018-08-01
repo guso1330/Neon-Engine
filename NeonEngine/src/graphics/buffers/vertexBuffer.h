@@ -20,6 +20,7 @@ namespace neon {
 
 		public:
 			// Constructors
+			VertexBuffer();
 			VertexBuffer(GLfloat* data, GLsizei count, GLuint componentCount);
 			VertexBuffer(const std::vector<glm::vec3> &data);
 			VertexBuffer(const std::vector<glm::vec2> &data);

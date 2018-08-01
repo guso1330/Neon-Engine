@@ -30,6 +30,7 @@ namespace neon {
 	// TODO: make the RenderableCollection not a static buffer, but dynamic
 	void RenderableCollection::Init() {
 		m_modelMatrix = glm::mat4(1.0f);
+		
 		// TODO: error handling on the m_transformLoc!
 		m_transformLoc = m_program->GetAttributeLocation("transform");
 		m_vbo = new VertexBuffer(BUFFER_SIZE);

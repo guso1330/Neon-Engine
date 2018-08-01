@@ -51,16 +51,16 @@ namespace neon {
 	void tiny_obj_loader_load_obj(string inputfile, vector<vec3> &vertices, vector<unsigned int> &indices, vector<vec2> &uvs, vector<vec3> &normals, vector<Index> &Index_Obj);
 
 	//******************************************************************
-	//                                                                  
+	//
 	//  Function:   load_obj
 	//
 	//  * NOTE:		Currently, only tested with .obj files from autodesk
 	//				maya 2016.
-	//                                                                  
+	//
 	//  Purpose:    Given a .obj file, this function loads in objects
 	//				by parsing the file and pulling its vertex and
-	//				normal information.                             
-	//                                                                  
+	//				normal information.
+	//
 	//  Parameters: filename - the filename (location)
 	//				vertices - a vector to the hold the vertices of the obj
 	//				normals - a vector to hold the object normals
@@ -71,12 +71,12 @@ namespace neon {
 	void load_obj(const char* filename, vector<vec3> &vertices, vector<GLuint> &indices, vector<vec2> &uvs, vector<vec3> &normals);
 
 	//******************************************************************
-	//                                                                  
+	//
 	//  Function:   split_str
-	//                                                                  
+	//
 	//  Purpose:    This function takes a string and a delimiter and splits
 	//				the string into sections then inserts them into a vector<string>
-	//                                                                  
+	//
 	//  Parameters: s - a string that is to be splitted
 	//				delim - is the the string delimiter
 	//				v - is the vector to place the elements

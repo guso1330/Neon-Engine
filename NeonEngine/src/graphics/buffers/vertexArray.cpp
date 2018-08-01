@@ -22,8 +22,7 @@ void VertexArray::PushBuffer(const VertexBuffer *buffer, const VertexBufferLayou
 	Bind(); // bind vao
 	buffer->Bind(); // bind vbo
 
-	// NOTE: in renderableCollection::SetUpBufferData the buffer needs to be removed from m_buffers
-	// m_buffers.push_back(buffer); 
+	// NOTE: in renderableCollection::SetUpBufferData the buffer needs to be removed from m_buffers 
 	UpdateVertexAttribs(layout, start_index);
 }
 

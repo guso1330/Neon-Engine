@@ -2,6 +2,10 @@
 
 using namespace neon;
 
+IndexBuffer::IndexBuffer() {
+	GL_Call(glGenBuffers(1, &m_ibo));
+}
+
 IndexBuffer::IndexBuffer(unsigned int* data, GLsizei count)
 	: m_count(count) {
 	// Generate a new buffer

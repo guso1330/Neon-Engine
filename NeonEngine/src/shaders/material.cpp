@@ -17,6 +17,8 @@ namespace neon {
 	}
 
 	void Material::Bind(Program *program) const {
+		program->SetUniform3f("material.ambient", m_ambient);
+
 		if(m_diffuse != nullptr) {
 			m_diffuse->Bind(0);
 			program->SetUniform1i("material.diffuse", 0);

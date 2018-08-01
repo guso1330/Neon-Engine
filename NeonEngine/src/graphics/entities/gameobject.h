@@ -10,7 +10,8 @@ namespace neon {
 			GameObject(Model *model);
 			~GameObject();
 
-			const glm::mat4 &GetModelMatrix() const { return m_transform.GetModelMatrix(); }
+			inline const glm::mat4 &GetModelMatrix() const { return m_transform.GetModelMatrix(); }
+			inline Model* GetModel() const { return m_model; }
 
 			void SetPosition(const glm::vec3 &n_pos);
 			void SetScale(const glm::vec3 &n_scale);

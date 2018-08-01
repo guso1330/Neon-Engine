@@ -11,6 +11,7 @@
 #include "./graphics/entities/gameobject.h"
 #include "./graphics/entities/renderableCollection.h"
 #include "./graphics/entities/transform.h"
+#include "./graphics/renderers/forwardRenderer.h"
 #include "./utils/obj_loader/objloader.h"
 #include "./utils/debugging/debug.h"
 
@@ -60,6 +61,9 @@ int main() {
 	Scene myScene;
 	myScene.LoadSettings("./NeonEngine/src/res/settings/testSceneSettings.init");
 
+	ForwardRenderer renderer;
+	renderer.SetMainCamera(&camera);
+
 	/***********************
 		  Light Stuff
 	***********************/
@@ -81,17 +85,11 @@ int main() {
 	Shader *instancedVShader = new Shader("./NeonEngine/src/res/shaders/instancedVShader.glsl", GL_VERTEX_SHADER);
 	Shader *lightingFShader = new Shader("./NeonEngine/src/res/shaders/lightingFShader.glsl", GL_FRAGMENT_SHADER);
 
-	std::vector<Shader*> shaders, instancedShaders, simpleShaders;
-	shaders.push_back(vShader);
-	shaders.push_back(lightingFShader);
+	std::vector<Shader*> instancedShaders;
 	instancedShaders.push_back(instancedVShader);
 	instancedShaders.push_back(lightingFShader);
-	simpleShaders.push_back(simpleVShader);
-	simpleShaders.push_back(simpleFShader);
 
-	Program *instancedProgram = new Program(instancedShaders),
-			*program = new Program(shaders),
-			*simpleProgram = new Program(simpleShaders);
+	Program *instancedProgram = new Program(instancedShaders);
 
 	// Set up the instanced program
 	instancedProgram->Bind();
@@ -104,32 +102,15 @@ int main() {
 	instancedProgram->SetUniform3f("viewPos", camera.GetPosition());
 	instancedProgram->Unbind();
 
-	// Set up normal program
-	program->Bind();
-	program->SetUniformMat4("view_projection", view_projection);
-	program->SetUniform3f("light.position", lightPos);
-	program->SetUniform3f("light.ambient", lightAmbient);
-	program->SetUniform3f("light.diffuse", lightDiffuse);
-	program->SetUniform3f("light.specular", lightSpecular);
-
-	program->SetUniform3f("viewPos", camera.GetPosition());
-	program->Unbind();
-
-	// Set Up simple program
-	simpleProgram->Bind();
-	simpleProgram->SetUniformMat4("view_projection", view_projection);
-	simpleProgram->Unbind();
-
-	unsigned int instanced_light_pos_loc = instancedProgram->GetUniformLocation("light.position"),
-				 program_light_pos_loc = program->GetUniformLocation("light.position");
+	unsigned int instanced_light_pos_loc = instancedProgram->GetUniformLocation("light.position");
 	
 	/***************************
 		Setting up The Models
 	****************************/
-	Model plane("./NeonEngine/src/res/models/plane_5unit.obj", program);
-	Model cube("./NeonEngine/src/res/models/cube_5unit.obj", program);
+	Model plane("./NeonEngine/src/res/models/plane_5unit.obj");
+	Model cube("./NeonEngine/src/res/models/cube_5unit.obj");
 	Model plasmacannon("./NeonEngine/src/res/models/plasmacannon/plasma cannon.x", instancedProgram);
-	Model sphere_model("./NeonEngine/src/res/models/sphere.obj", simpleProgram);
+	Model sphere_model("./NeonEngine/src/res/models/sphere.obj");
 	/**********************************/
 	
 	/***************************
@@ -142,22 +123,29 @@ int main() {
 			crate_spec_tex("./NeonEngine/src/res/textures/wood_crate_spec.png", Specular);
 	/**********************************/
 
+	// PLANE
 	plane.SetTexture(&plane_tex, Diffuse);
 	glm::mat4 plane_model_matrix = model * glm::translate(glm::vec3(0, -2.5f, 0)) * glm::scale(glm::vec3(100.0f, 1.0f, 100.0f));
 	plane.GetTransform().SetModelMatrix(plane_model_matrix);
 
+	// CUBE
 	cube.SetTexture(&crate_diff_tex, Diffuse);
 	cube.SetTexture(&crate_spec_tex, Specular);
 
+	// PLASMACANNON
 	plasmacannon.SetTexture(&plasmacannon_diff_tex, Diffuse);
 	plasmacannon.SetTexture(&cube_spec_tex, Specular);
 
 	RenderableCollection instanced_cannons(&plasmacannon, instancedProgram);
 
+	// SPHERE
 	sphere_model.SetColor(glm::vec4(1.0f));
 	GameObject sphere(&sphere_model);
 	sphere.SetPosition(lightPos);
 
+	renderer.Submit(&plane);
+	renderer.Submit(&cube);
+	renderer.Submit(&sphere);
 
 	// Set transform rotation and position
 	std::vector<Transform> transforms(CUBE_COL * CUBE_ROW);
@@ -267,7 +255,6 @@ int main() {
 	//
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
-	glEnable (GL_BLEND);
 	glEnable(GL_CULL_FACE);
 	glClearDepth(1.0f);
 	glEnable(GL_MULTISAMPLE); // 4x MSAA is used in window.h
@@ -297,32 +284,22 @@ int main() {
 		if(lightPos.z <= -200.0f) { direction = 1; }
 		else if(lightPos.z >= 200.0f) { direction = -1; }
 
+		//
+		// Handle Camera Updates
+		//
 		MoveCameraFunc();
 		camera.Update();
 		view_projection = camera.GetViewProjection();
 
 		//
-		// Handle Camera Updates
+		// Update sphere (lamp)
 		//
-		program->Bind();
-		program->SetUniform3f(program_light_pos_loc, lightPos);
-		program->SetUniformMat4("view_projection", view_projection);
-		program->SetUniform3f("viewPos", camera.GetPosition());
+		sphere.SetPosition(lightPos);
 
 		//
 		// Draw the plane
 		//
-		plane.Draw();
-		// cube.Draw();
-
-		simpleProgram->Bind();
-		simpleProgram->SetUniformMat4("view_projection", view_projection);
-
-		//
-		// Draw sphere (lamp)
-		//
-		sphere.SetPosition(lightPos);
-		sphere.Draw();
+		renderer.Flush();
 
 		instancedProgram->Bind();
 		instancedProgram->SetUniform3f(instanced_light_pos_loc, lightPos);
@@ -332,8 +309,8 @@ int main() {
 		// Draw the cubes
 		//
 		Transform new_transform;
-		// new_transform.SetRotation((float)angle, glm::vec3(0, 1, 0));
-		// instanced_cannons.UpdateAllTransforms(transforms, new_transform);
+		new_transform.SetRotation((float)angle, glm::vec3(0, 1, 0));
+		instanced_cannons.UpdateAllTransforms(transforms, new_transform);
 		instanced_cannons.Draw();
 
 		window->Update();

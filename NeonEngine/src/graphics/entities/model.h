@@ -16,11 +16,14 @@ namespace neon {
 
 	class Model : public Renderable3d {
 	public:
+		Model(const char *filename, bool shouldSendData = true);
 		Model(const char *filename, Program* program, bool shouldSendData = true);
 		~Model();
 
 		// GETTERS
 		inline const std::vector<Mesh*> &GetMeshes() const { return m_meshes; }
+
+		void Init(const char *filename, bool shouldSendData);
 
 		// Assimp Model Loading functions
 		bool InitMeshes(const std::string &filename);

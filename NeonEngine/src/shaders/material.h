@@ -42,7 +42,7 @@ namespace neon {
 			void Unbind() const;
 
 		private:
-						//
+			//
 			// Variables
 			//
 			glm::vec3 m_ambient = glm::vec3(1.0, 1.0, 1.0);

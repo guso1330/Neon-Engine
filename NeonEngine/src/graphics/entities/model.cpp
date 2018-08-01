@@ -2,10 +2,19 @@
 
 
 namespace neon {
+	Model::Model(const char *filename, bool shouldSendData) {
+		Init(filename, shouldSendData);
+	}
 
 	Model::Model(const char *filename, Program* program, bool shouldSendData) : 
 		Renderable3d(program)
 	{
+		Init(filename, shouldSendData);
+	}
+
+	Model::~Model() {}
+
+	void Model::Init(const char *filename, bool shouldSendData) {
 		bool loaded_mesh = InitMeshes(filename);
 		if(!loaded_mesh) {
 			std::cout << "Error: " << filename << " was not loaded" << std::endl;
@@ -20,8 +29,6 @@ namespace neon {
 			SendVertexData();
 		}
 	}
-
-	Model::~Model() {}
 
 	bool Model::InitMeshes(const std::string &filename) {
 		Assimp::Importer importer;

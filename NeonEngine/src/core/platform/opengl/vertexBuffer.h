@@ -2,17 +2,18 @@
 
 #include "./GL_Error.h"
 #include "./bufferLayout.h"
+#include "./IBuffer.h"
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
 namespace neon {
-	class VertexBuffer : public IBuffer {
+	enum class BufferUsage
+	{
+		STATIC, DYNAMIC
+	};
 
-		enum class BufferUsage
-		{
-			STATIC, DYNAMIC
-		};
+	class VertexBuffer : public IBuffer {
 
 		static unsigned int GLBufferUsage(BufferUsage usage) {
 			switch(usage) {
@@ -29,22 +30,22 @@ namespace neon {
 			// Constructors
 			VertexBuffer();
 			VertexBuffer(BufferUsage usage);
-			VertexBuffer(BufferUsage usage, BufferLayout layout, const void* data, unsigned int size);
+			VertexBuffer(BufferUsage usage, BufferLayout layout, const void* data, size_t size);
 
 			// Destructor
 			~VertexBuffer() { glDeleteBuffers(1, &m_vbo); }
 
 			void Bind() const;
 			void Unbind() const;
-			void Resize(unsigned int size);
+			void Resize(size_t size);
 
 			void SetLayout(BufferLayout bufferLayout);
-			void SetBufferData(const void* data, unsigned int size) const;
+			void SetBufferData(const void* data, size_t size) const;
 
 		private:
 			BufferLayout m_layout;
 			BufferUsage m_usage;
-			unsigned int m_size;
+			size_t m_size;
 			unsigned int m_vbo;
 	};
 }

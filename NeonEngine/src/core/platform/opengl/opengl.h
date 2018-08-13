@@ -22,7 +22,7 @@ namespace neon {
 			void Clear() const;
 
 			// Get Methods
-			void CreateVao();
+			void CreateVao(const void* data, size_t size, BufferLayout layout);
 
 			// Set Methods
 			void SetClearColor(float r, float g, float b, float a);

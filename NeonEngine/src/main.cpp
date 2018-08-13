@@ -124,15 +124,6 @@ int main() {
 	// Todo: Test a callback that passes a variable to manipulate a variable
 	inputManager->BindEvent("CameraMoveAround", NEON_CURSOR_EVENT, Callback<>(MoveCameraAroundFunc));
 
-	//
-	// OpenGL Setting
-	//
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_CULL_FACE);
-	glClearDepth(1.0f);
-	glEnable(GL_MULTISAMPLE);
-
 	/**************************
 	** MAIN APPLICATION LOOP **
 	***************************/

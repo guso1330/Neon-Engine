@@ -23,12 +23,31 @@ namespace neon {
 		m_clearColor = glm::vec4(50.0f/255.0f, 78.0f/255.0f, 119.0f/255.0f, 1);
 		GL_Call(glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, m_clearColor.w));
 
+		//
+		// OpenGL Setting
+		//
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+		glEnable(GL_CULL_FACE);
+		glClearDepth(1.0f);
+		glEnable(GL_MULTISAMPLE);
+
 		return true;
 	}
 
 	void OpenGLContext::Clear() const {
 		GL_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 		GL_Call(glFlush());
+	}
+
+	void OpenGLContext::CreateVao(const void* data, size_t size, BufferLayout layout) {
+		VertexArray vao;
+		VertexBuffer vbo(BufferUsage::STATIC, layout, data, size);
+		IndexBuffer ibo;
+
+		vao.Bind();
+		vbo.Bind();
+		ibo.Bind();
 	}
 
 	void OpenGLContext::SetClearColor(float r, float g, float b, float a) {

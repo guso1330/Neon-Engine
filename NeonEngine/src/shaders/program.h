@@ -3,7 +3,7 @@
 	TODO: Only supports one program currently, should make support >= 1 shader
 */
 
-#include "../engine/GL_Error.h"
+#include "../core/platform/opengl/GL_Error.h"
 #include "./shader.h"
 
 #include <iostream>

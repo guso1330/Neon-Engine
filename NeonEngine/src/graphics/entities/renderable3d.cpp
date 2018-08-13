@@ -59,48 +59,48 @@ namespace neon {
 	}
 
 	void Renderable3d::SendVertexData() {
-		// Create VAO, VBO, and IBO
-		m_vao = new VertexArray();
-		m_vbo = new VertexBuffer(m_vertexData);
-		m_ibo = new IndexBuffer(m_indices);
+		// // Create VAO, VBO, and IBO
+		// m_vao = new VertexArray();
+		// m_vbo = new VertexBuffer();
+		// m_ibo = new IndexBuffer(m_indices);
 
-		m_vao->Bind();
-		m_vbo->Bind();
-		VertexBufferLayout layout;
-		layout.Push(VALUE_TYPE::VERTEX, 3, offsetof(struct Vertex, pos));
-		layout.Push(VALUE_TYPE::VERTEX, 2, offsetof(struct Vertex, uv));
-		layout.Push(VALUE_TYPE::VERTEX, 3, offsetof(struct Vertex, normal));
+		// m_vao->Bind();
+		// m_vbo->Bind();
+		// BufferLayout layout;
+		// layout.Push(VALUE_TYPE::VERTEX, 3, offsetof(struct Vertex, pos));
+		// layout.Push(VALUE_TYPE::VERTEX, 2, offsetof(struct Vertex, uv));
+		// layout.Push(VALUE_TYPE::VERTEX, 3, offsetof(struct Vertex, normal));
 
-		m_vao->PushBuffer(m_vbo, layout);
+		// m_vao->PushBuffer(m_vbo, layout);
 	}
 
 	void Renderable3d::SetUpDraw(const glm::mat4 &transform) const {
-		if(isDataSent) {
-			m_program->Bind();
-			m_vao->Bind();
-			m_ibo->Bind();
+		// if(isDataSent) {
+		// 	m_program->Bind();
+		// 	m_vao->Bind();
+		// 	m_ibo->Bind();
 
-			m_material->Bind(m_program);
+		// 	m_material->Bind(m_program);
 
-			m_program->SetUniform4f(m_colorLoc, m_color);
-			m_program->SetUniformMat4(m_modelLoc, transform);
-			m_program->SetUniformMat4(m_normalMatrixLoc, glm::transpose(glm::inverse(transform)));
-		}
+		// 	m_program->SetUniform4f(m_colorLoc, m_color);
+		// 	m_program->SetUniformMat4(m_modelLoc, transform);
+		// 	m_program->SetUniformMat4(m_normalMatrixLoc, glm::transpose(glm::inverse(transform)));
+		// }
 	}
 
 	void Renderable3d::UnSetDraw() const {
-		m_material->Unbind();
+		// m_material->Unbind();
 	}
 
 	void Renderable3d::Draw() const {
-		this->SetUpDraw(m_transform.GetModelMatrix());
-		GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
-		this->UnSetDraw();
+		// this->SetUpDraw(m_transform.GetModelMatrix());
+		// GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
+		// this->UnSetDraw();
 	}
 
 	void Renderable3d::Draw(const glm::mat4 &transform) const {
-		this->SetUpDraw(transform);
-		GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
-		this->UnSetDraw();
+		// this->SetUpDraw(transform);
+		// GL_Call(glDrawElements(GL_TRIANGLES, m_ibo->GetCount(), GL_UNSIGNED_INT, NULL));
+		// this->UnSetDraw();
 	}
 }

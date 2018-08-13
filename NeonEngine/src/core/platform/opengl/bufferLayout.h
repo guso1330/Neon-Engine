@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../engine/GL_Error.h"
-#include "../entities/vertex.h"
+#include "./GL_Error.h"
+#include "../../../graphics/entities/vertex.h"
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -19,7 +19,7 @@ namespace neon {
 		MAT4		  = 7
 	};
 
-	struct VertexBufferElement {
+	struct BufferElements {
 		unsigned int type;
 		unsigned int size;
 		unsigned int count;
@@ -27,12 +27,12 @@ namespace neon {
 		unsigned char normalized;
 	};
 
-	class VertexBufferLayout {
+	class BufferLayout {
 		private:
-			std::vector<VertexBufferElement> m_elements;
+			std::vector<BufferElements> m_layout;
 			unsigned int m_stride;
 			void Push(unsigned int type, unsigned int size, unsigned int count, unsigned int offset, unsigned char normalized) {
-				m_elements.push_back({
+				m_layout.push_back({
 					type,
 					size,
 					count,
@@ -42,12 +42,12 @@ namespace neon {
 				m_stride += count * size;
 			}
 		public:
-			VertexBufferLayout() :
+			BufferLayout() :
 				m_stride(0)
 			{}
 
 			void Push(VALUE_TYPE value, unsigned int count, unsigned int offset, unsigned int length = 1) {
-				switch(value) {				
+				switch(value) {
 					case VALUE_TYPE::FLOAT:
 						Push(GL_FLOAT, length * sizeof(float), count, offset, GL_FALSE);
 						break;
@@ -75,7 +75,7 @@ namespace neon {
 				}
 			}
 
-			inline const std::vector<VertexBufferElement> &GetElements() const { return m_elements; }
+			inline const std::vector<BufferElements> &GetLayout() const { return m_layout; }
 			inline const unsigned int GetStride() const { return m_stride; }
 	};
 }

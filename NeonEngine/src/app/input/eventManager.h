@@ -51,14 +51,9 @@ namespace neon {
 			// TODO: Understand this code haha
 			template <class... ArgTypes>
 			void Run(const char* name, ArgTypes... args) {
-				// Warning: just prints the name and function address
-				// for(EventsMap::iterator i = m_events.begin(); i != m_events.end(); ++i) {
-				// 	std::cout << (*i).first << ", " << (*i).second << std::endl;
-				// }
-				// std::cout << std::endl;
-
 				typedef Callback<ArgTypes...> CallbackType;
 				EventsMap::const_iterator it = m_events.find(name);
+				
 				if(it != m_events.end()) {
 					CallbackType* c = dynamic_cast<CallbackType*>(it->second.get());
 					if(c)

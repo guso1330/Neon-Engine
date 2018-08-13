@@ -72,19 +72,6 @@ namespace neon {
 		// Eliminate the frame cap
 		glfwSwapInterval(0.0);
 
-		/* Setting up glad and initializing it */
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-			std::cerr << "Failed to initialize GLAD" << std::endl;
-			return false;
-		}
-
-		/* Print Renderer and OpenGL info */
-		const GLubyte *renderer = glGetString(GL_RENDERER);
-		const GLubyte *version = glGetString(GL_VERSION);
-		std::cout << "Neon Engine - Version 0.1" << std::endl;
-		std::cout << "Renderer: " << renderer << std::endl;
-		std::cout << "OpenGL Version: " << version << std::endl;
-
 		return true;
 	}
 
@@ -92,19 +79,14 @@ namespace neon {
 		return glfwWindowShouldClose(m_window) == 1;
 	}
 
+	void Window::SetInputMode(int mode, int value) {
+		glfwSetInputMode(GetCurrentWindow(), mode, value);
+	}
+
 	void Window::Update() {
 		glfwGetFramebufferSize(m_window, &m_width, &m_height);
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();
-	}
-
-	void Window::Clear() const {
-		GL_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-		GL_Call(glFlush());
-	}
-
-	void Window::SetClearColor(float r, float g, float b, float a) {
-		GL_Call(glClearColor(r, g, b, a));
 	}
 
 	/*******************************
@@ -114,7 +96,7 @@ namespace neon {
 		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
 		Window *window = static_cast<Window *>(ptr_window);
 
-		GL_Call(glViewport(0, 0, width, height));
+		// GL_Call(glViewport(0, 0, width, height));
 	}
 
 	void key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {

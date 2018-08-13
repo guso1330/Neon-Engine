@@ -32,7 +32,7 @@ namespace neon {
 			inline unsigned int GetNormalsSize() const { return m_normals.size(); }
 
 			inline const unsigned int GetIndex() const { return m_index; }
-
+			
 			inline const Material* GetMaterial() const { return m_material; }
 
 			/********************

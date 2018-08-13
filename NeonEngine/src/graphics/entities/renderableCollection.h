@@ -4,8 +4,8 @@
 #include "./mesh.h"
 #include "./model.h"
 #include "../../shaders/program.h"
-#include "../buffers/vertexArray.h"
-#include "../buffers/vertexBuffer.h"
+#include "../../core/platform/opengl/vertexArray.h"
+#include "../../core/platform/opengl/vertexBuffer.h"
 
 #include <glad/glad.h>
 #include <vector>
@@ -44,7 +44,7 @@ namespace neon {
 
 			VertexArray *m_vao;
 			VertexBuffer *m_vbo;
-			VertexBufferLayout m_layout;
+			BufferLayout m_layout;
 
 			std::vector<glm::mat4> m_transforms;
 			glm::mat4 m_modelMatrix;

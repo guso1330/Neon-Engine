@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../engine/GL_Error.h"
+#include "../core/platform/opengl/GL_Error.h"
 
 #include <glad/glad.h>
 #include <string>

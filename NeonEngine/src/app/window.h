@@ -1,9 +1,8 @@
 #pragma once
 
-#include "../engine/GL_Error.h"
+#include "../core/platform/opengl/opengl.h"
 #include "./input/input.h"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 
@@ -15,14 +14,15 @@ namespace neon {
 
 		public:
 			bool isClosed() const;
-			void Clear() const;
+			void SetInputMode(int mode, int value);
 			void Update();
-			void SetClearColor(float r, float g, float b, float a);
 
 			/* GETTERS */
 			inline int GetWidth() const { return m_width; }
 			inline int GetHeight() const { return m_height; }
+			inline bool isFullscreen() const { return m_fullscreen; }
 			inline GLFWwindow* const GetGLFWwindow() const { return m_window; }
+			inline GLFWwindow* const GetCurrentWindow() const { return glfwGetCurrentContext(); }
 			inline Input* GetInput() const { return m_input; }
 
 		private:

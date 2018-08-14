@@ -3,6 +3,8 @@
 namespace neon {
 	VertexArray::VertexArray() {
 		GL_Call(glGenVertexArrays(1, &m_vao));
+		m_vbo = nullptr;
+		m_ibo = nullptr;
 	}
 
 	VertexArray::~VertexArray() {

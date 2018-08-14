@@ -16,12 +16,4 @@ namespace neon {
 	void VertexArray::Unbind() const {
 		GL_Call(glBindVertexArray(0));
 	}
-
-	void VertexArray::BindVbo(unsigned int index) const {
-		m_vbos[index]->Bind();
-	}
-
-	void VertexArray::PushBuffer(const VertexBuffer* vbo) {
-		m_vbos.push_back(vbo);
-	}
 }

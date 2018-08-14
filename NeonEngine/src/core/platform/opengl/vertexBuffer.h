@@ -31,7 +31,6 @@ namespace neon {
 			// Constructors
 			VertexBuffer();
 			VertexBuffer(BufferUsage usage);
-			VertexBuffer(const void* data, size_t size, BufferUsage usage, BufferLayout layout);
 
 			// Destructor
 			~VertexBuffer();

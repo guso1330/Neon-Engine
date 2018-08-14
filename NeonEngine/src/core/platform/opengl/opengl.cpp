@@ -45,22 +45,44 @@ namespace neon {
 	// TODO: For now this function will support one VBO and one IBO per VAO. This is to ensure that 
 	//		 it stays as simple as possible until necessary
 	unsigned int OpenGLContext::CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, BufferLayout layout, VertexBuffer::BufferUsage usage) {
+
 		VertexArray* vao = new VertexArray();
+		VertexBuffer* vbo = new VertexBuffer(usage);
+		IndexBuffer* ibo = new IndexBuffer();
+		unsigned int vao_id;
+
+		// Bind the VAO, VBO, IBO
 		vao->Bind();
-		VertexBuffer* vbo;
-		IndexBuffer* ibo;
 
-		vbo = new VertexBuffer(data, data_size, usage, layout);
-		vao->PushBuffer(vbo);
-		ibo = new IndexBuffer(indices, indices_count);
+		vbo->Bind();
+		vbo->SetBufferData(data, data_size);
+		vbo->SetLayout(layout);
 
-		unsigned int vao_id = vao->GetVao();
+		ibo->Bind();
+		ibo->SetBufferData(indices, indices_count);
+
+		vao_id = vao->GetVao();
 
 		// Increment and Handle VAO ID
-		m_vaoMap.insert(std::pair<unsigned int, VertexArray*> (vao_id, vao));
+		m_vaoMap.insert(std::make_pair(vao_id, vao));
 
 		return vao_id;
 	}
+
+	void OpenGLContext::Draw(unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode) {
+
+		// Grab the vao from the vaoMap
+		VertexMap::iterator vao_it = m_vaoMap.find(vao_id);
+
+		if(vao_it != m_vaoMap.end()) {
+			VertexArray* vao = (*vao_it).second;
+			vao->Bind();
+
+			GL_Call(glDrawElements(draw_mode, num_elements, GL_UNSIGNED_INT, NULL));
+		}
+
+	}
+
 
 	void OpenGLContext::SetClearColor(float r, float g, float b, float a) {
 		m_clearColor.x = r;

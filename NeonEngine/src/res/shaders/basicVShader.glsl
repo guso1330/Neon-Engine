@@ -10,7 +10,7 @@ uniform vec4 vcolor;
 
 
 void main() {
-	gl_Position =  model * vec4(vPosition, 1.0);
+	gl_Position = view_projection * model * vec4(vPosition, 1.0);
 
 	fcolor = vcolor;
 }

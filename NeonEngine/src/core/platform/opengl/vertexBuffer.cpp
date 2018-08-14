@@ -9,16 +9,6 @@ namespace neon {
 		GL_Call(glGenBuffers(1, &m_vbo));
 	}
 
-	VertexBuffer::VertexBuffer(const void* data, size_t size, BufferUsage usage, BufferLayout layout)
-		: m_usage(usage),
-		  m_layout(layout),
-		  m_size(size) {
-		GL_Call(glGenBuffers(1, &m_vbo));
-		Bind();
-		SetBufferData(data, size);
-		SetLayout(layout);
-	}
-
 	VertexBuffer::~VertexBuffer() { 
 		GL_Call(glDeleteBuffers(1, &m_vbo));
 	}
@@ -33,7 +23,6 @@ namespace neon {
 
 	void VertexBuffer::Resize(size_t size) {
 		m_size = size;
-		Bind();
 		GL_Call(glBufferData(GL_ARRAY_BUFFER, size, NULL, GLBufferUsage(m_usage)));
 	}
 
@@ -48,7 +37,6 @@ namespace neon {
 	}
 
 	void VertexBuffer::SetBufferData(const void* data, size_t size) const {
-		Bind();
 		GL_Call(glBufferData(GL_ARRAY_BUFFER, size, data, GLBufferUsage(m_usage)));
 	}
 }

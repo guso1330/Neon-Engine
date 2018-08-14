@@ -21,12 +21,10 @@ namespace neon {
 			void Bind() const;
 			void Unbind() const;
 
-			void BindVbo(unsigned int index) const;
-
-			void PushBuffer(const VertexBuffer *buffer);
+			void BindVbo(VertexBuffer* buffer);
+			void BindIbo(IndexBuffer* buffer);
 
 		private:
 			unsigned int m_vao;
-			std::vector<const VertexBuffer*> m_vbos;
 	};
 }

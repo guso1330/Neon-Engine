@@ -4,14 +4,14 @@
 
 
 # Configuration directories and files
-SourceDirectory: /Users/aroberd/Documents/Neon-Engine/Dependencies/assimp-4.1.0
-BuildDirectory: /Users/aroberd/Documents/Neon-Engine/Dependencies/assimp-4.1.0
+SourceDirectory: /Users/augustusoberdick/Documents/Neon-Engine/Dependencies/assimp-4.1.0
+BuildDirectory: /Users/augustusoberdick/Documents/Neon-Engine/Dependencies/assimp-4.1.0
 
 # Where to place the cost data store
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: AROBERD-MAC
+Site: Augustuss-MBP
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: Darwin-c++
@@ -36,8 +36,8 @@ ScpCommand: /usr/bin/scp
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/usr/local/Cellar/cmake/3.10.2/bin/cmake" "/Users/aroberd/Documents/Neon-Engine/Dependencies/assimp-4.1.0"
-MakeCommand: /usr/local/Cellar/cmake/3.10.2/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}" -- -i
+ConfigureCommand: "/usr/local/Cellar/cmake/3.12.0/bin/cmake" "/Users/augustusoberdick/Documents/Neon-Engine/Dependencies/assimp-4.1.0"
+MakeCommand: /usr/local/Cellar/cmake/3.12.0/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}" -- -i
 DefaultCTestConfigurationType: Release
 
 # version control
@@ -72,8 +72,8 @@ UpdateOptions:
 UpdateType: 
 
 # Compiler info
-Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++
-CompilerVersion: 9.0.0.9000039
+Compiler: /Library/Developer/CommandLineTools/usr/bin/c++
+CompilerVersion: 9.1.0.9020039
 
 # Dynamic analysis (MemCheck)
 PurifyCommand: 

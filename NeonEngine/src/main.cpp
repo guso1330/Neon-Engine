@@ -18,20 +18,20 @@
 using namespace neon;
 using namespace glm;
 
-const int WIDTH = 512,
-		  HEIGHT = 256;
+const int WIDTH = 1024,
+		  HEIGHT = 768;
 
 const float cube_vertices[] = {
 	// front
-	-1.0, -1.0,  1.0,
-	 1.0, -1.0,  1.0,
-	 1.0,  1.0,  1.0,
-	-1.0,  1.0,  1.0,
+	-0.5, -0.5,  0.5,
+	 0.5, -0.5,  0.5,
+	 0.5,  0.5,  0.5,
+	-0.5,  0.5,  0.5,
 	// back
-	-1.0, -1.0, -1.0,
-	 1.0, -1.0, -1.0,
-	 1.0,  1.0, -1.0,
-	-1.0,  1.0, -1.0,
+	-0.5, -0.5, -0.5,
+	 0.5, -0.5, -0.5,
+	 0.5,  0.5, -0.5,
+	-0.5,  0.5, -0.5,
 };
 
 const unsigned int cube_elements[] = {
@@ -81,7 +81,6 @@ int main() {
 
 	Program *simpleProgram = new Program(simpleShaders);
 	simpleProgram->Bind();
-	simpleProgram->SetUniformMat4("model", glm::mat4(1.0));
 	simpleProgram->SetUniform4f("vcolor", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
 
 	//
@@ -92,22 +91,22 @@ int main() {
 	float near = 0.1f;
 	float far = 1000.0f;
 
-	Camera camera(glm::vec3(1.0, 1.0f, -5.0f), fov, aspect_ratio, near, far);
-	float camera_rotate_speed = (M_PI/180) * 0.8;
+	Camera camera(glm::vec3(0.0, 0.0f, -5.0f), fov, aspect_ratio, near, far);
 	
 	//
 	// Timer variables
 	//
-	double elapsed_time;
-	elapsed_time = 0;
-	double last_time = glfwGetTime(), current_time = 0;
+	double elapsed_time = 0,
+		   last_time = glfwGetTime(),
+		   current_time = 0;
 
 	//
 	// Camera Variables
 	//
 	float camera_speed = 0.0f;
-	float camera_acceleration = 0.8f;
+	float camera_acceleration = 0.3f;
 	float camera_speed_limit = 2.0f;
+	float camera_rotate_speed = (M_PI / 180.0f) * 0.5;
 
 	//
 	// Input Callback Functions
@@ -174,9 +173,16 @@ int main() {
 		glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
 	};
 
+	// Disable the cursor
+	glfwSetInputMode(window->GetGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	// Todo: Test a callback that passes a variable to manipulate a variable
 	inputManager->BindEvent("CameraMoveAround", NEON_CURSOR_EVENT, Callback<>(MoveCameraAroundFunc));
 
+	float angle = 0.0f,
+		  speed = 2.0f;
+
+	glm::mat4 model_matrix(1.0f);
 	/**************************
 	** MAIN APPLICATION LOOP **
 	***************************/
@@ -188,6 +194,14 @@ int main() {
 		current_time = glfwGetTime();
 		elapsed_time = current_time - last_time;
 
+		angle += (elapsed_time * speed);
+		if (angle > 360.0) {
+			angle = 0;
+		}
+		model_matrix = glm::mat4(1.0);
+
+		model_matrix = model_matrix * glm::rotate(angle, glm::vec3(0.0, 1.0f, 0.0));
+
 		//
 		// Handle Camera Updates
 		//
@@ -195,10 +209,10 @@ int main() {
 		camera.Update();
 
 		// Set Up simple program
+		simpleProgram->SetUniformMat4("model", model_matrix);
 		simpleProgram->SetUniformMat4("view_projection", camera.GetViewProjection());
 
-		GL_Call(glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, NULL));
-
+		gl_context.Draw(cube_vao, 36, GL_TRIANGLES);
 
 		window->Update();
 

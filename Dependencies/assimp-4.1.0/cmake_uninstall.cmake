@@ -1,13 +1,13 @@
-IF(NOT EXISTS "/Users/aroberd/Documents/Neon-Engine/Dependencies/assimp-4.1.0/install_manifest.txt")
-  MESSAGE(FATAL_ERROR "Cannot find install manifest: \"/Users/aroberd/Documents/Neon-Engine/Dependencies/assimp-4.1.0/install_manifest.txt\"")
-ENDIF(NOT EXISTS "/Users/aroberd/Documents/Neon-Engine/Dependencies/assimp-4.1.0/install_manifest.txt")
+IF(NOT EXISTS "/Users/augustusoberdick/Documents/Neon-Engine/Dependencies/assimp-4.1.0/install_manifest.txt")
+  MESSAGE(FATAL_ERROR "Cannot find install manifest: \"/Users/augustusoberdick/Documents/Neon-Engine/Dependencies/assimp-4.1.0/install_manifest.txt\"")
+ENDIF(NOT EXISTS "/Users/augustusoberdick/Documents/Neon-Engine/Dependencies/assimp-4.1.0/install_manifest.txt")
 
-FILE(READ "/Users/aroberd/Documents/Neon-Engine/Dependencies/assimp-4.1.0/install_manifest.txt" files)
+FILE(READ "/Users/augustusoberdick/Documents/Neon-Engine/Dependencies/assimp-4.1.0/install_manifest.txt" files)
 STRING(REGEX REPLACE "\n" ";" files "${files}")
 FOREACH(file ${files})
   MESSAGE(STATUS "Uninstalling \"$ENV{DESTDIR}${file}\"")
   EXEC_PROGRAM(
-    "/usr/local/Cellar/cmake/3.10.2/bin/cmake" ARGS "-E remove \"$ENV{DESTDIR}${file}\""
+    "/usr/local/Cellar/cmake/3.12.0/bin/cmake" ARGS "-E remove \"$ENV{DESTDIR}${file}\""
     OUTPUT_VARIABLE rm_out
     RETURN_VALUE rm_retval
     )

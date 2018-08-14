@@ -1,8 +1,9 @@
 #pragma once
 
 #include "./GL_Error.h"
-#include "./IBuffer.h"
 #include "./bufferLayout.h"
+#include "./vertexBuffer.h"
+#include "./indexBuffer.h"
 
 #include <glad/glad.h>
 #include <vector>
@@ -15,16 +16,17 @@ namespace neon {
 			~VertexArray();
 
 			// Getters
-			const unsigned int &GetVao() const { return m_vao; }
+			const unsigned int GetVao() const { return m_vao; }
 
 			void Bind() const;
 			void Unbind() const;
 
-			void PushBuffer(const IBuffer *buffer);
+			void BindVbo(unsigned int index) const;
 
+			void PushBuffer(const VertexBuffer *buffer);
 
 		private:
 			unsigned int m_vao;
-			std::vector<const IBuffer*> m_buffers;
+			std::vector<const VertexBuffer*> m_vbos;
 	};
 }

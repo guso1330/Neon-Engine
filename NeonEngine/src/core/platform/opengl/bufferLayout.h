@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <vector>
+#include <iostream>
 
 namespace neon {
 	enum VALUE_TYPE {

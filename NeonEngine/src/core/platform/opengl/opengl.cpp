@@ -1,7 +1,9 @@
 #include "./opengl.h"
 
 namespace neon {
+
 	OpenGLContext::OpenGLContext() {
+
 		if(Init()) {
 			/* Print Renderer and OpenGL info */
 			const GLubyte *renderer = glGetString(GL_RENDERER);
@@ -40,14 +42,24 @@ namespace neon {
 		GL_Call(glFlush());
 	}
 
-	void OpenGLContext::CreateVao(const void* data, size_t size, BufferLayout layout) {
-		VertexArray vao;
-		VertexBuffer vbo(BufferUsage::STATIC, layout, data, size);
-		IndexBuffer ibo;
+	// TODO: For now this function will support one VBO and one IBO per VAO. This is to ensure that 
+	//		 it stays as simple as possible until necessary
+	unsigned int OpenGLContext::CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, BufferLayout layout, VertexBuffer::BufferUsage usage) {
+		VertexArray* vao = new VertexArray();
+		vao->Bind();
+		VertexBuffer* vbo;
+		IndexBuffer* ibo;
 
-		vao.Bind();
-		vbo.Bind();
-		ibo.Bind();
+		vbo = new VertexBuffer(data, data_size, usage, layout);
+		vao->PushBuffer(vbo);
+		ibo = new IndexBuffer(indices, indices_count);
+
+		unsigned int vao_id = vao->GetVao();
+
+		// Increment and Handle VAO ID
+		m_vaoMap.insert(std::pair<unsigned int, VertexArray*> (vao_id, vao));
+
+		return vao_id;
 	}
 
 	void OpenGLContext::SetClearColor(float r, float g, float b, float a) {

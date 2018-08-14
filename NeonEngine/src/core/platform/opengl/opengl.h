@@ -3,8 +3,6 @@
 #include "../../../app/window.h"
 #include "./GL_Error.h"
 #include "./vertexArray.h"
-#include "./vertexBuffer.h"
-#include "./indexBuffer.h"
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -22,7 +20,7 @@ namespace neon {
 			void Clear() const;
 
 			// Get Methods
-			void CreateVao(const void* data, size_t size, BufferLayout layout);
+			unsigned int CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, BufferLayout layout, VertexBuffer::BufferUsage usage);
 
 			// Set Methods
 			void SetClearColor(float r, float g, float b, float a);
@@ -30,6 +28,6 @@ namespace neon {
 		private:
 			glm::vec4 m_clearColor;
 
-			std::map<unsigned int, VertexArray> m_vaoMap;
+			std::map<unsigned int, VertexArray*> m_vaoMap;
 	};
 }

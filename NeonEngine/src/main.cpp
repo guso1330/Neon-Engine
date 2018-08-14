@@ -4,6 +4,8 @@
 #include "./app/input/eventManager.h"
 #include "./app/input/input.h"
 #include "./utils/debugging/debug.h"
+#include "./shaders/shader.h"
+#include "./shaders/program.h"
 
 #include <iostream>
 #include <vector>
@@ -19,6 +21,40 @@ using namespace glm;
 const int WIDTH = 512,
 		  HEIGHT = 256;
 
+const float cube_vertices[] = {
+	// front
+	-1.0, -1.0,  1.0,
+	 1.0, -1.0,  1.0,
+	 1.0,  1.0,  1.0,
+	-1.0,  1.0,  1.0,
+	// back
+	-1.0, -1.0, -1.0,
+	 1.0, -1.0, -1.0,
+	 1.0,  1.0, -1.0,
+	-1.0,  1.0, -1.0,
+};
+
+const unsigned int cube_elements[] = {
+	// front
+	0, 1, 2,
+	2, 3, 0,
+	// right
+	1, 5, 6,
+	6, 2, 1,
+	// back
+	7, 6, 5,
+	5, 4, 7,
+	// left
+	4, 0, 3,
+	3, 7, 4,
+	// bottom
+	4, 5, 1,
+	1, 0, 4,
+	// top
+	3, 2, 6,
+	6, 7, 3,
+};
+
 int main() {
 
 	srand (time(NULL));
@@ -28,8 +64,25 @@ int main() {
 	// GLAD/OpenGL initialized inside the OpenGL  
 	//
 	Window *window = new Window(WIDTH, HEIGHT, false, "Neon Engine");
-	OpenGLContext* gl_context = new OpenGLContext();
+	OpenGLContext gl_context;
 	Input* inputManager = window->GetInput();
+
+	// Create the VAO for 
+	BufferLayout cube_layout;
+	cube_layout.Push(VALUE_TYPE::FLOAT, 3, 0);
+	unsigned int cube_vao = gl_context.CreateVao(cube_vertices, 3 * 8 * sizeof(float), cube_elements, 36, cube_layout, VertexBuffer::BufferUsage::STATIC);
+
+	Shader *simpleVShader = new Shader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
+	Shader *simpleFShader = new Shader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
+	
+	std::vector<Shader*> simpleShaders;
+	simpleShaders.push_back(simpleVShader);
+	simpleShaders.push_back(simpleFShader);
+
+	Program *simpleProgram = new Program(simpleShaders);
+	simpleProgram->Bind();
+	simpleProgram->SetUniformMat4("model", glm::mat4(1.0));
+	simpleProgram->SetUniform4f("vcolor", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
 
 	//
 	// Initialize the camera
@@ -39,7 +92,7 @@ int main() {
 	float near = 0.1f;
 	float far = 1000.0f;
 
-	Camera camera(glm::vec3(0, 5.0f, -10.0f), fov, aspect_ratio, near, far);
+	Camera camera(glm::vec3(1.0, 1.0f, -5.0f), fov, aspect_ratio, near, far);
 	float camera_rotate_speed = (M_PI/180) * 0.8;
 	
 	//
@@ -129,19 +182,23 @@ int main() {
 	***************************/
 	while (!window->isClosed()) {
 		debug::calcFPS(window->GetGLFWwindow(), 1.0, "Neon Engine - Current FPS: ");
-		gl_context->Clear();
+		gl_context.Clear();
 
 		// Update timer
 		current_time = glfwGetTime();
 		elapsed_time = current_time - last_time;
-
-		
 
 		//
 		// Handle Camera Updates
 		//
 		MoveCameraFunc();
 		camera.Update();
+
+		// Set Up simple program
+		simpleProgram->SetUniformMat4("view_projection", camera.GetViewProjection());
+
+		GL_Call(glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, NULL));
+
 
 		window->Update();
 

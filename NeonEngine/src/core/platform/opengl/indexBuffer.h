@@ -10,7 +10,7 @@ namespace neon {
 	class IndexBuffer {
 		public:
 			IndexBuffer();
-			IndexBuffer(unsigned int* data, GLsizei count);
+			IndexBuffer(const unsigned int* data, size_t count);
 			IndexBuffer(const std::vector<unsigned int> &data);
 			~IndexBuffer();
 
@@ -20,6 +20,7 @@ namespace neon {
 			void Bind() const;
 			void Unbind() const;
 			inline unsigned int GetCount() { return m_count; }
+
 		private:
 			unsigned int m_count;
 			unsigned int m_ibo;

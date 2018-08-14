@@ -5,7 +5,7 @@ namespace neon {
 		GL_Call(glGenBuffers(1, &m_ibo));
 	}
 
-	IndexBuffer::IndexBuffer(unsigned int* data, GLsizei count)
+	IndexBuffer::IndexBuffer(const unsigned int* data, size_t count)
 		: m_count(count) {
 		// Generate a new buffer
 		GL_Call(glGenBuffers(1, &m_ibo));

@@ -1,7 +1,7 @@
 #include "shader.h"
 
 namespace neon {
-	Shader::Shader(const char* shaderFile, GLenum shaderType) :
+	Shader::Shader(const char* shaderFile, unsigned int shaderType) :
 		m_filename(shaderFile),
 		m_type(shaderType)
 	{
@@ -25,13 +25,14 @@ namespace neon {
 		GL_Call(glShaderSource(m_shaderID, 1, &m_source, NULL));
 		GL_Call(glCompileShader(m_shaderID));
 
-		GLint compiled;
+		int compiled;
 		GL_Call(glGetShaderiv(m_shaderID, GL_COMPILE_STATUS, &compiled));
+
 		// Get compile errors and log them
 		if (!compiled) {
 			std::cerr << "\n" << m_filename << " failed to compile: " << std::endl;
 			
-			GLint logSize;
+			int logSize;
 
 			GL_Call(glGetShaderiv(m_shaderID, GL_INFO_LOG_LENGTH, &logSize));
 			char* logMsg = (char*)alloca(logSize * sizeof(char));

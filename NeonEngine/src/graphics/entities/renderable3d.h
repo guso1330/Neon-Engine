@@ -12,7 +12,7 @@
 #include "../../core/platform/opengl/vertexArray.h"
 #include "../../core/platform/opengl/vertexBuffer.h"
 #include "../../core/platform/opengl/indexBuffer.h"
-#include "../../shaders/program.h"
+#include "../../core/platform/opengl/program.h"
 #include "../../shaders/material.h"
 #include "./transform.h"
 

@@ -4,8 +4,8 @@
 #include "./app/input/eventManager.h"
 #include "./app/input/input.h"
 #include "./utils/debugging/debug.h"
-#include "./shaders/shader.h"
-#include "./shaders/program.h"
+#include "./core/platform/opengl/shader.h"
+#include "./core/platform/opengl/program.h"
 
 #include <iostream>
 #include <vector>
@@ -18,8 +18,8 @@
 using namespace neon;
 using namespace glm;
 
-const int WIDTH = 1024,
-		  HEIGHT = 768;
+const int WIDTH = 512,
+		  HEIGHT = 264;
 
 const float cube_vertices[] = {
 	// front
@@ -67,27 +67,28 @@ int main() {
 	OpenGLContext gl_context;
 	Input* inputManager = window->GetInput();
 
-	// Create the VAO for 
+	// Create the VAO for cube 
 	BufferLayout cube_layout;
 	cube_layout.Push(VALUE_TYPE::FLOAT, 3, 0);
 	unsigned int cube_vao = gl_context.CreateVao(cube_vertices, 3 * 8 * sizeof(float), cube_elements, 36, cube_layout, VertexBuffer::BufferUsage::STATIC);
 
-	Shader *simpleVShader = new Shader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER);
-	Shader *simpleFShader = new Shader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER);
-	
-	std::vector<Shader*> simpleShaders;
-	simpleShaders.push_back(simpleVShader);
-	simpleShaders.push_back(simpleFShader);
+	// Create the shaders and the program
+	const unsigned int shaders[2] = {
+		gl_context.CreateShader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER),
+		gl_context.CreateShader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER)
+	};
 
-	Program *simpleProgram = new Program(simpleShaders);
-	simpleProgram->Bind();
-	simpleProgram->SetUniform4f("vcolor", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
+	unsigned int program_id = gl_context.CreateProgram(shaders, 2);
+	Program* program = gl_context.GetProgram(program_id);
+
+	program->Bind();
+	program->SetUniform4f("vcolor", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
 
 	//
 	// Initialize the camera
 	//
 	float aspect_ratio = (float)WIDTH / (float)HEIGHT;
-	float fov = 70.0f;
+	float fov = 90.0f;
 	float near = 0.1f;
 	float far = 1000.0f;
 
@@ -209,8 +210,8 @@ int main() {
 		camera.Update();
 
 		// Set Up simple program
-		simpleProgram->SetUniformMat4("model", model_matrix);
-		simpleProgram->SetUniformMat4("view_projection", camera.GetViewProjection());
+		program->SetUniformMat4("model", model_matrix);
+		program->SetUniformMat4("view_projection", camera.GetViewProjection());
 
 		gl_context.Draw(cube_vao, 36, GL_TRIANGLES);
 

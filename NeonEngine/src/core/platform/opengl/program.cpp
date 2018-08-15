@@ -15,23 +15,23 @@ namespace neon {
 	void Program::Init() {
 		m_programID = glCreateProgram();
 		for(int i=0; i<m_shaders.size(); ++i) {
-			GL_Call(glAttachShader(m_programID, m_shaders[i]->GetShaderID()));
+			GL_Call(glAttachShader(m_programID, m_shaders[i]->GetShaderId()));
 		}
 		GL_Call(glLinkProgram(m_programID));
 
-		GLint linkStatus;
+		int linkStatus;
 		GL_Call(glGetProgramiv(m_programID, GL_LINK_STATUS, &linkStatus));
 		if (linkStatus != GL_TRUE) {
-			GLint logLength;
+			int logLength;
 			GL_Call(glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &logLength));
 
-			GLchar *linkerLog = new GLchar[logLength + 1];
+			char *linkerLog = new char[logLength + 1];
 			GL_Call(glGetProgramInfoLog(m_programID, logLength + 1, NULL, linkerLog));
 
 			std::cerr << "Program failed to link: " << linkerLog << std::endl;
 			system("PAUSE");
 		} else {
-			std::cout << "Program " << this->GetProgramID() << " was created" << std::endl;
+			std::cout << "Program " << this->GetProgramId() << " was created" << std::endl;
 		}
 	}
 
@@ -39,9 +39,9 @@ namespace neon {
 		if(m_uniformLocationCache.find(name) != m_uniformLocationCache.end())
 			return m_uniformLocationCache[name];
 
-		GLint loc = glGetUniformLocation(m_programID, name);
+		int loc = glGetUniformLocation(m_programID, name);
 		if (loc == -1) {
-			std::cerr << "Program " << this->GetProgramID() << " glGetUniformLocation Error: Could not locate the the uniform " << name << std::endl;
+			std::cerr << "Program " << this->GetProgramId() << " glGetUniformLocation Error: Could not locate the the uniform " << name << std::endl;
 		}
 
 		m_uniformLocationCache[name] = loc;
@@ -52,7 +52,7 @@ namespace neon {
 		if(m_attributeLocationCache.find(name) != m_attributeLocationCache.end())
 			return m_attributeLocationCache[name];
 
-		GLint loc = glGetAttribLocation(m_programID, name);
+		int loc = glGetAttribLocation(m_programID, name);
 		if (loc == -1) {
 			std::cerr << "glGetAttribLocation Error: Could not locate the the attribute " << name << std::endl;
 		}
@@ -66,7 +66,7 @@ namespace neon {
 		GL_Call(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 	}
 
-	void Program::SetUniformMat4(GLuint loc, const glm::mat4& matrix) {
+	void Program::SetUniformMat4(unsigned int loc, const glm::mat4& matrix) {
 		GL_Call(glUniformMatrix4fv(loc, 1, GL_FALSE, &matrix[0][0]));
 	}
 
@@ -74,12 +74,12 @@ namespace neon {
 		GL_Call(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 	}
 
-	void Program::SetUniformMat3(GLuint loc, const glm::mat3& matrix) {
+	void Program::SetUniformMat3(unsigned int loc, const glm::mat3& matrix) {
 		GL_Call(glUniformMatrix3fv(loc, 1, GL_FALSE, &matrix[0][0]));
 	}
 
 	// Vec4
-	void Program::SetUniform4f(GLuint loc, const glm::vec4& v4) {
+	void Program::SetUniform4f(unsigned int loc, const glm::vec4& v4) {
 		GL_Call(glUniform4f(loc, v4.x, v4.y, v4.z, v4.w));
 	}
 
@@ -88,7 +88,7 @@ namespace neon {
 	}
 
 	// Vec3
-	void Program::SetUniform3f(GLuint loc, const glm::vec3& v3) {
+	void Program::SetUniform3f(unsigned int loc, const glm::vec3& v3) {
 		GL_Call(glUniform3f(loc, v3.x, v3.y, v3.z));
 	}
 
@@ -97,11 +97,11 @@ namespace neon {
 	}
 
 	// Float
-	void Program::SetUniform1f(const char* name, GLfloat v0) {
+	void Program::SetUniform1f(const char* name, float v0) {
 		GL_Call(glUniform1f(GetUniformLocation(name), v0));
 	}
 
-	void Program::SetUniform1i(const char* name, GLint v0) {
+	void Program::SetUniform1i(const char* name, int v0) {
 		GL_Call(glUniform1i(GetUniformLocation(name), v0));
 	}
 

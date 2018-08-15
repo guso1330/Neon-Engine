@@ -175,6 +175,7 @@ int main() {
 	};
 
 	// Disable the cursor
+	glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
 	glfwSetInputMode(window->GetGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// Todo: Test a callback that passes a variable to manipulate a variable

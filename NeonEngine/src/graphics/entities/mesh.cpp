@@ -7,7 +7,8 @@ namespace neon {
 
 	// Parametric Constructor
 	Mesh::Mesh(std::vector<Vertex> &vertex_data, std::vector<unsigned int> &indices) :
-		m_indices(indices)
+		m_indices(indices),
+		m_material(nullptr)
 	{
 		for(std::vector<Vertex>::iterator it = vertex_data.begin(); it != vertex_data.end(); ++it) {
 			m_vertices.push_back((*it).pos);

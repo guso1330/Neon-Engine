@@ -2,43 +2,30 @@
 
 
 namespace neon {
-	Model::Model(const char *filename, bool shouldSendData) {
-		Init(filename, shouldSendData);
-	}
-
-	Model::Model(const char *filename, Program* program, bool shouldSendData) : 
-		Renderable3d(program)
-	{
-		Init(filename, shouldSendData);
+	Model::Model(const char* filename) {
+		Init(filename);
 	}
 
 	Model::~Model() {}
 
-	void Model::Init(const char *filename, bool shouldSendData) {
+	void Model::Init(const char* filename) {
 		bool loaded_mesh = InitMeshes(filename);
 		if(!loaded_mesh) {
 			std::cout << "Error: " << filename << " was not loaded" << std::endl;
 		} else {
 			std::string mesh_word = m_meshes.size() > 1 ? "meshes" : "mesh";
 			std::cout << filename << " loaded succesfully with " << m_meshes.size() << " " << mesh_word << " loaded" << std::endl;
-			std::cout << "Materials loaded: " << m_materials.size() << std::endl;
-		}
-
-		isDataSent = shouldSendData;
-		if(shouldSendData) {
-			SendVertexData();
 		}
 	}
 
-	bool Model::InitMeshes(const std::string &filename) {
+	bool Model::InitMeshes(const char* filename) {
 		Assimp::Importer importer;
+		std::string filename_string = (std::string)filename;
 
-		std::cout << "\nAssimp Loading: " << filename << std::endl;
+		std::cout << "\nAssimp Loading: " << filename_string << std::endl;
 
 		// Load the scene
-		const aiScene* scene = importer.ReadFile( 
-			filename,
-			aiProcessPreset_TargetRealtime_Quality);
+		const aiScene* scene = importer.ReadFile(filename_string, aiProcessPreset_TargetRealtime_Quality);
 
 		// Check if there was errors with 
 		if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -47,7 +34,7 @@ namespace neon {
 			return false;
 		}
 
-		m_directory = filename.substr(0, filename.find_last_of('/'));
+		m_directory = filename_string.substr(0, filename_string.find_last_of('/'));
 
 		AssimpProcessNode(scene->mRootNode, scene);
 
@@ -68,7 +55,8 @@ namespace neon {
 
 	Mesh* Model::AssimpProcessMesh(aiMesh *mesh, const aiScene *scene) {
 		Material *n_material = new Material();
-		unsigned int mesh_index = m_vertexData.size();
+		std::vector<Vertex> vertex_data;
+		std::vector<unsigned int> indices;
 
 		for(unsigned int i = 0; i < mesh->mNumVertices; ++i)
 		{
@@ -97,7 +85,7 @@ namespace neon {
 			//
 			// TODO: Handle tangent and bittangent
 			//
-			m_vertexData.push_back(vertex);
+			vertex_data.push_back(vertex);
 		}
 
 		// process indices
@@ -106,7 +94,7 @@ namespace neon {
 			aiFace face = mesh->mFaces[i];
 
 			for(unsigned int j = 0; j < face.mNumIndices; j++) {
-				m_indices.push_back(face.mIndices[j]);
+				indices.push_back(face.mIndices[j]);
 			}
 		}
 
@@ -127,64 +115,10 @@ namespace neon {
 				std::string diffuse_path = m_directory + "/" + std::string(filename.C_Str());
 				n_material->SetSpecular(new Texture(diffuse_path, Specular));
 			}
-
-			// Todo: Probably can remove the m_materials vector, because I don't need to store the materials
-			m_materials.push_back(n_material);
 		}
 
-		Mesh *n_mesh = new Mesh(m_vertexData, m_indices, n_material);
-		n_mesh->SetIndex(mesh_index);
+		Mesh *n_mesh = new Mesh(vertex_data, indices, n_material);
 
 		return n_mesh;
-	}
-
-	void Model::DrawInit() const {
-		m_program->Bind();
-		m_vao->Bind();
-		m_ibo->Bind();
-	}
-
-	void Model::SetUpDraw(const glm::mat4 &transform, Mesh *mesh) const {
-		if(mesh->GetMaterial()->GetDiffuse() != nullptr) {
-			mesh->GetMaterial()->Bind(m_program);
-		} else {
-			m_material->Bind(m_program);
-		}
-
-		m_program->SetUniform4f(m_colorLoc, m_color);
-		m_program->SetUniformMat4(m_modelLoc, transform);
-		m_program->SetUniformMat4(m_normalMatrixLoc, glm::transpose(glm::inverse(transform)));
-	}
-
-	void Model::UnSetDraw(Mesh *mesh) const {
-		if(mesh->GetMaterial()->GetDiffuse() != nullptr) {
-			mesh->GetMaterial()->Unbind();
-		} else {
-			m_material->Unbind();
-		}
-	}
-
-	// TODO: Better way of determining if a material is set or not.
-	//		 Adjust to make sure that the code duplication between
-	//		 these two versions of the model::draw functions and the
-	//		 Renderable3d::draw versions from aren't overlapping.
-	void Model::Draw() const {
-		this->DrawInit();
-
-		for(int i=0; i < m_meshes.size(); ++i) {
-			this->SetUpDraw(m_transform.GetModelMatrix(), m_meshes[i]);
-			GL_Call(glDrawElementsBaseVertex(GL_TRIANGLES, m_meshes[i]->GetIndicesSize(), GL_UNSIGNED_INT, NULL, m_meshes[i]->GetIndex()));
-			this->UnSetDraw(m_meshes[i]);
-		}
-	}
-
-	void Model::Draw(const glm::mat4 &transform) const {
-		this->DrawInit();
-
-		for(int i=0; i < m_meshes.size(); ++i) {
-			this->SetUpDraw(transform, m_meshes[i]);
-			GL_Call(glDrawElementsBaseVertex(GL_TRIANGLES, m_meshes[i]->GetIndicesSize(), GL_UNSIGNED_INT, NULL, m_meshes[i]->GetIndex()));
-			this->UnSetDraw(m_meshes[i]);
-		}
 	}
 }

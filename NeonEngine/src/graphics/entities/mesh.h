@@ -30,15 +30,12 @@ namespace neon {
 			
 			inline const std::vector<glm::vec3>& GetNormals() const { return m_normals; }
 			inline unsigned int GetNormalsSize() const { return m_normals.size(); }
-
-			inline const unsigned int GetIndex() const { return m_index; }
 			
 			inline const Material* GetMaterial() const { return m_material; }
 
 			/********************
 			*  Setter functions *
 			********************/
-			inline void SetIndex(unsigned int n_index) { m_index = n_index; }
 			inline void SetMaterial(Material *n_material) { m_material = n_material; }
 
 		private:
@@ -47,7 +44,6 @@ namespace neon {
 			std::vector<glm::vec2> m_uvs;
 			std::vector<glm::vec3> m_normals;
 
-			unsigned int m_index;
 			Material* m_material;
 	};
 }

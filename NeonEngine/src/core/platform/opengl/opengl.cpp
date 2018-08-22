@@ -99,7 +99,6 @@ namespace neon {
 			shaders.push_back(m_shaderMap[shader_ids[i]]);
 		}
 
-
 		Program* program = new Program(shaders);
 		unsigned int program_id = program->GetProgramId();
 

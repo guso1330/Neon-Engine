@@ -8,7 +8,7 @@ namespace neon {
 
 	{
 		m_model = nullptr;
-		m_vao = m_renderable->GetVao();
+		// m_vao = m_renderable->GetVao();
 
 		Init();
 	}
@@ -18,7 +18,7 @@ namespace neon {
 		m_program(program)
 	{
 		m_renderable = nullptr;
-		m_vao = m_model->GetVao();
+		// m_vao = m_model->GetVao();
 
 		Init();
 	}

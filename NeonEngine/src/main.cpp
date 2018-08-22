@@ -6,6 +6,7 @@
 #include "./utils/debugging/debug.h"
 #include "./core/platform/opengl/shader.h"
 #include "./core/platform/opengl/program.h"
+#include "./graphics/entities/model.h"
 
 #include <iostream>
 #include <vector>
@@ -21,40 +22,6 @@ using namespace glm;
 const int WIDTH = 512,
 		  HEIGHT = 264;
 
-const float cube_vertices[] = {
-	// front
-	-0.5, -0.5,  0.5,
-	 0.5, -0.5,  0.5,
-	 0.5,  0.5,  0.5,
-	-0.5,  0.5,  0.5,
-	// back
-	-0.5, -0.5, -0.5,
-	 0.5, -0.5, -0.5,
-	 0.5,  0.5, -0.5,
-	-0.5,  0.5, -0.5,
-};
-
-const unsigned int cube_elements[] = {
-	// front
-	0, 1, 2,
-	2, 3, 0,
-	// right
-	1, 5, 6,
-	6, 2, 1,
-	// back
-	7, 6, 5,
-	5, 4, 7,
-	// left
-	4, 0, 3,
-	3, 7, 4,
-	// bottom
-	4, 5, 1,
-	1, 0, 4,
-	// top
-	3, 2, 6,
-	6, 7, 3,
-};
-
 int main() {
 
 	srand (time(NULL));
@@ -67,12 +34,43 @@ int main() {
 	OpenGLContext gl_context;
 	Input* inputManager = window->GetInput();
 
-	// Create the VAO for cube 
-	BufferLayout cube_layout;
-	cube_layout.Push(VALUE_TYPE::FLOAT, 3, 0);
-	unsigned int cube_vao = gl_context.CreateVao(cube_vertices, 3 * 8 * sizeof(float), cube_elements, 36, cube_layout, VertexBuffer::BufferUsage::STATIC);
+	//
+	// Initialize the camera
+	//
+	float aspect_ratio = (float)WIDTH / (float)HEIGHT;
+	float fov = 90.0f;
+	float near = 0.1f;
+	float far = 1000.0f;
+	Camera camera(glm::vec3(0.0, 0.0f, -5.0f), fov, aspect_ratio, near, far);
 
+	//
+	// Create the VAO for cube
+	//
+	Model model("./NeonEngine/src/res/models/cube.obj");
+
+	std::map<unsigned int, std::pair<unsigned int, unsigned int> > vaos;
+	std::vector<Mesh*> meshes = model.GetMeshes();
+	BufferLayout model_layout;
+	model_layout.Push(VALUE_TYPE::VEC3, 3, 0);
+
+	std::cout << "Mesh Size: " << meshes.size() << std::endl;
+	std::cout << "Vertices Size: " << meshes[0]->GetVerticesSize() << std::endl;
+	std::cout << "Indices Size: " << meshes[0]->GetIndicesSize() << std::endl;
+
+	for(std::vector<Mesh*>::iterator it=meshes.begin(); it != meshes.end(); ++it) {
+		unsigned int c_vao = gl_context.CreateVao(&((*it)->GetVertices()), (*it)->GetVerticesSize() * sizeof(glm::vec3), &(((*it)->GetIndices())[0]), (*it)->GetIndicesSize(), model_layout, VertexBuffer::BufferUsage::STATIC);
+
+		debug::print_vector_vec3((*it)->GetVertices());
+		debug::print_vector_uint((*it)->GetIndices());
+		
+		vaos.insert(std::make_pair(c_vao, std::make_pair(c_vao, (*it)->GetIndicesSize())));
+	}
+
+
+
+	//
 	// Create the shaders and the program
+	//
 	const unsigned int shaders[2] = {
 		gl_context.CreateShader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER),
 		gl_context.CreateShader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER)
@@ -83,31 +81,22 @@ int main() {
 
 	program->Bind();
 	program->SetUniform4f("vcolor", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
-
-	//
-	// Initialize the camera
-	//
-	float aspect_ratio = (float)WIDTH / (float)HEIGHT;
-	float fov = 90.0f;
-	float near = 0.1f;
-	float far = 1000.0f;
-
-	Camera camera(glm::vec3(0.0, 0.0f, -5.0f), fov, aspect_ratio, near, far);
 	
-	//
 	// Timer variables
-	//
 	double elapsed_time = 0,
 		   last_time = glfwGetTime(),
 		   current_time = 0;
 
-	//
 	// Camera Variables
-	//
 	float camera_speed = 0.0f;
 	float camera_acceleration = 0.3f;
 	float camera_speed_limit = 2.0f;
 	float camera_rotate_speed = (M_PI / 180.0f) * 0.5;
+
+	float angle = 0.0f,
+		  speed = 2.0f;
+
+	glm::mat4 model_matrix(1.0f);
 
 	//
 	// Input Callback Functions
@@ -180,11 +169,7 @@ int main() {
 
 	// Todo: Test a callback that passes a variable to manipulate a variable
 	inputManager->BindEvent("CameraMoveAround", NEON_CURSOR_EVENT, Callback<>(MoveCameraAroundFunc));
-
-	float angle = 0.0f,
-		  speed = 2.0f;
-
-	glm::mat4 model_matrix(1.0f);
+	
 	/**************************
 	** MAIN APPLICATION LOOP **
 	***************************/
@@ -202,7 +187,7 @@ int main() {
 		}
 
 		model_matrix = glm::mat4(1.0);
-		model_matrix = model_matrix * glm::rotate(angle, glm::vec3(0.0, 1.0f, 0.0));
+		// model_matrix = model_matrix * glm::rotate(angle, glm::vec3(0.0, 1.0f, 0.0));
 
 		//
 		// Handle Camera Updates
@@ -213,8 +198,7 @@ int main() {
 		// Set Up simple program
 		program->SetUniformMat4("model", model_matrix);
 		program->SetUniformMat4("view_projection", camera.GetViewProjection());
-
-		gl_context.Draw(cube_vao, 36, GL_TRIANGLES);
+		gl_context.Draw(vaos[1].first, vaos[1].second, GL_TRIANGLES);
 
 		window->Update();
 

@@ -30,7 +30,7 @@ namespace neon {
 
 	void GameObject::Draw() {
 		if(m_model != nullptr) {
-			m_model->Draw(m_transform.GetModelMatrix());
+			// m_model->Draw(m_transform.GetModelMatrix());
 		}
 	}
 }

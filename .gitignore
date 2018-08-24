@@ -19,6 +19,7 @@ Makefile*
 lib/
 bin/
 Dependencies/*
+Dependencies/**/*.*
 *.dylib
 
 # Cmake exclude files

@@ -39,34 +39,32 @@ int main() {
 	//
 	float aspect_ratio = (float)WIDTH / (float)HEIGHT;
 	float fov = 90.0f;
-	float near = 0.1f;
+	float near = 0.01f;
 	float far = 1000.0f;
 	Camera camera(glm::vec3(0.0, 0.0f, -5.0f), fov, aspect_ratio, near, far);
 
 	//
 	// Create the VAO for cube
 	//
-	Model model("./NeonEngine/src/res/models/cube.obj");
+	Model model("./NeonEngine/src/res/models/cube_basic.obj");
 
 	std::map<unsigned int, std::pair<unsigned int, unsigned int> > vaos;
 	std::vector<Mesh*> meshes = model.GetMeshes();
 	BufferLayout model_layout;
 	model_layout.Push(VALUE_TYPE::VEC3, 3, 0);
 
-	std::cout << "Mesh Size: " << meshes.size() << std::endl;
-	std::cout << "Vertices Size: " << meshes[0]->GetVerticesSize() << std::endl;
-	std::cout << "Indices Size: " << meshes[0]->GetIndicesSize() << std::endl;
-
 	for(std::vector<Mesh*>::iterator it=meshes.begin(); it != meshes.end(); ++it) {
-		unsigned int c_vao = gl_context.CreateVao(&((*it)->GetVertices()), (*it)->GetVerticesSize() * sizeof(glm::vec3), &(((*it)->GetIndices())[0]), (*it)->GetIndicesSize(), model_layout, VertexBuffer::BufferUsage::STATIC);
+		std::vector<glm::vec3> c_verts = (*it)->GetVertices();
+		std::vector<unsigned int> c_inds = (*it)->GetIndices();
+		unsigned int c_vao = gl_context.CreateVao(&c_verts.front(), c_verts.size() * sizeof(glm::vec3), &c_inds.front(), c_inds.size(), model_layout, VertexBuffer::BufferUsage::STATIC);
 
-		debug::print_vector_vec3((*it)->GetVertices());
-		debug::print_vector_uint((*it)->GetIndices());
+		std::cout << "new vao created: " << c_vao << std::endl;
+
+		debug::print_vector_vec3(c_verts);
+		debug::print_vector_uint(c_inds);
 		
 		vaos.insert(std::make_pair(c_vao, std::make_pair(c_vao, (*it)->GetIndicesSize())));
 	}
-
-
 
 	//
 	// Create the shaders and the program
@@ -187,7 +185,7 @@ int main() {
 		}
 
 		model_matrix = glm::mat4(1.0);
-		// model_matrix = model_matrix * glm::rotate(angle, glm::vec3(0.0, 1.0f, 0.0));
+		model_matrix = model_matrix * glm::rotate(angle, glm::vec3(0.0, 1.0f, 0.0));
 
 		//
 		// Handle Camera Updates

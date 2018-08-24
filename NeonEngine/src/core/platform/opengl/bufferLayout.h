@@ -62,13 +62,13 @@ namespace neon {
 						Push(GL_FLOAT, length * sizeof(Vertex), count, offset, GL_FALSE);
 						break;
 					case VALUE_TYPE::VEC2:
-						Push(GL_FLOAT, length * sizeof(glm::vec2), count, offset, GL_FALSE);
+						Push(GL_FLOAT, length * sizeof(float), count, offset, GL_FALSE);
 						break;
 					case VALUE_TYPE::VEC3:
-						Push(GL_FLOAT, length * sizeof(glm::vec3), count, offset, GL_FALSE);
+						Push(GL_FLOAT, length * sizeof(float), count, offset, GL_FALSE);
 						break;
 					case VALUE_TYPE::VEC4:
-						Push(GL_FLOAT, length * sizeof(glm::vec4), count, offset, GL_FALSE);
+						Push(GL_FLOAT, length * sizeof(float), count, offset, GL_FALSE);
 						break;
 					case VALUE_TYPE::MAT4:
 						Push(GL_FLOAT, length * sizeof(glm::mat4), count, offset, GL_FALSE);

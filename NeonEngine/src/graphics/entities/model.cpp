@@ -25,7 +25,7 @@ namespace neon {
 		std::cout << "\nAssimp Loading: " << filename_string << std::endl;
 
 		// Load the scene
-		const aiScene* scene = importer.ReadFile(filename_string, aiProcessPreset_TargetRealtime_Quality);
+		const aiScene* scene = importer.ReadFile(filename_string, aiProcessPreset_TargetRealtime_MaxQuality);
 
 		// Check if there was errors with 
 		if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)

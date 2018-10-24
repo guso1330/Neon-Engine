@@ -7,6 +7,7 @@ namespace neon {
 
 	// Parametric Constructor
 	Mesh::Mesh(std::vector<Vertex> &vertex_data, std::vector<unsigned int> &indices) :
+		m_vertexData(vertex_data),
 		m_indices(indices),
 		m_material(nullptr)
 	{
@@ -18,6 +19,7 @@ namespace neon {
 	}
 
 	Mesh::Mesh(std::vector<Vertex> &vertex_data, std::vector<unsigned int> &indices, Material* n_material) :
+		m_vertexData(vertex_data),
 		m_indices(indices),
 		m_material(n_material)
 	{

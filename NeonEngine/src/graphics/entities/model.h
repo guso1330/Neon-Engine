@@ -8,7 +8,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "../../shaders/texture.h"
+#include "../../core/platform/opengl/texture.h"
 #include "./mesh.h"
 #include "./renderable3d.h"
 

@@ -14,7 +14,7 @@ namespace neon {
 			std::cout << "Error: " << filename << " was not loaded" << std::endl;
 		} else {
 			std::string mesh_word = m_meshes.size() > 1 ? "meshes" : "mesh";
-			std::cout << filename << " loaded succesfully with " << m_meshes.size() << " " << mesh_word << " loaded" << std::endl;
+			std::cout << "Mesh: " << filename << " loaded succesfully with " << m_meshes.size() << " " << mesh_word << " loaded" << std::endl;
 		}
 	}
 

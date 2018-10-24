@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../core/platform/opengl/GL_Error.h"
+#include "./GL_Error.h"
 
 #include <glad/glad.h>
 #include <string>
@@ -26,7 +26,7 @@ namespace neon {
 
 		public:
 			// GETTERS	
-			inline const GLuint& GetID() const { return m_texID; }
+			inline const unsigned int& GetId() const { return m_texId; }
 			inline const std::string GetFilename() const { return m_filename; }
 			inline const int GetWidth() const { return m_width; }
 			inline const int GetHeight() const { return m_height; }
@@ -34,7 +34,7 @@ namespace neon {
 
 		private:
 
-			GLuint m_texID;
+			unsigned int m_texId;
 			std::string m_filename;
 			int m_width, m_height;
 			TextureType m_type;

@@ -31,7 +31,6 @@ namespace neon {
 		const auto& layout = m_layout.GetLayout();
 		for(size_t i = 0; i < layout.size(); ++i) {
 			const auto& element = layout[i];
-			std::cout << "Layout " << i << ": " << element.count << ", " << element.type << ", " << element.normalized << ", " << m_layout.GetStride() << ", " << element.offset << std::endl;
 			GL_Call(glEnableVertexAttribArray(i));
 			GL_Call(glVertexAttribPointer(i, element.count, element.type, element.normalized, m_layout.GetStride(), (const void*)(element.offset)));
 		}

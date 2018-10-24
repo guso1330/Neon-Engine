@@ -22,8 +22,8 @@ namespace neon {
 			return;
 		}
 		
-		GL_Call(glGenTextures(1, &m_texID)); // Generate space for the texture
-		GL_Call(glBindTexture(GL_TEXTURE_2D, m_texID));
+		GL_Call(glGenTextures(1, &m_texId)); // Generate space for the texture
+		GL_Call(glBindTexture(GL_TEXTURE_2D, m_texId));
 
 		GL_Call(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data));
 		
@@ -39,13 +39,13 @@ namespace neon {
 	}
 
 	Texture::~Texture() {
-		GL_Call(glDeleteTextures(1, &m_texID)); // delete the texture
+		GL_Call(glDeleteTextures(1, &m_texId)); // delete the texture
 	}
 
 	void Texture::Bind(unsigned int unit) const {
 		assert(unit >= 0 && unit <= 31);
 		GL_Call(glActiveTexture(GL_TEXTURE0 + unit));
-		GL_Call(glBindTexture(GL_TEXTURE_2D, m_texID));
+		GL_Call(glBindTexture(GL_TEXTURE_2D, m_texId));
 	}
 
 	void Texture::Unbind(unsigned int unit) const {

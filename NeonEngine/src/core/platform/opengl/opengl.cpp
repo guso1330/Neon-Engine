@@ -24,7 +24,7 @@ namespace neon {
 		// Set all default values
 		m_clearColor = glm::vec4(50.0f/255.0f, 78.0f/255.0f, 119.0f/255.0f, 1);
 		GL_Call(glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, m_clearColor.w));
-		m_currentProgram = NULL;
+		m_currentProgram = 0;
 
 		//
 		// OpenGL Setting
@@ -41,15 +41,15 @@ namespace neon {
 	void OpenGLContext::Draw(const unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode) {
 
 		// Grab the vao from the vaoMap
-		VertexMap::iterator vao_it = m_vaoMap.find(vao_id);
+		VertexArrayMap::iterator vao_it = m_vaoMap.find(vao_id);
+
+		BindProgram(m_currentProgram);
 
 		if(vao_it != m_vaoMap.end()) {
-			VertexArray* vao = (*vao_it).second;
-			vao->Bind();
+			(*vao_it).second->Bind();
 
 			GL_Call(glDrawElements(draw_mode, num_elements, GL_UNSIGNED_INT, NULL));
 		}
-
 	}
 
 	void OpenGLContext::Clear() const {
@@ -64,6 +64,7 @@ namespace neon {
 		VertexArray* vao = new VertexArray();
 		VertexBuffer* vbo = new VertexBuffer(usage);
 		IndexBuffer* ibo = new IndexBuffer();
+
 		unsigned int vao_id;
 
 		// Bind the VAO, VBO, IBO
@@ -77,6 +78,9 @@ namespace neon {
 		ibo->SetBufferData(indices, indices_count);
 
 		vao_id = vao->GetVao();
+		m_currentVao = vao_id;
+
+		vao->Unbind();
 
 		// Increment and Handle VAO ID
 		m_vaoMap.insert(std::make_pair(vao_id, vao));
@@ -84,8 +88,8 @@ namespace neon {
 		return vao_id;
 	}
 
-	unsigned int OpenGLContext::CreateShader(const char* filename, unsigned int shaderType) {
-		Shader* shader = new Shader(filename, shaderType);
+	unsigned int OpenGLContext::CreateShader(const std::string& filename, unsigned int shader_type) {
+		Shader* shader = new Shader(filename.c_str(), shader_type);
 		unsigned int shader_id = shader->GetShaderId();
 		
 		m_shaderMap.insert(std::make_pair(shader_id, shader));
@@ -104,10 +108,16 @@ namespace neon {
 
 		m_programMap.insert(std::make_pair(program_id, program));
 
-		// Set the current program
-		SetProgram(program_id);
-
 		return program_id;
+	}
+
+	unsigned int OpenGLContext::CreateTexture(const std::string& filename, TextureType type, unsigned int unit) {
+		Texture* texture = new Texture(filename, type);
+
+		texture->Bind(unit);
+		m_textureMap.insert(std::make_pair(texture->GetId(), texture));
+
+		return texture->GetId();
 	}
 
 	void OpenGLContext::SetClearColor(float r, float g, float b, float a) {
@@ -118,13 +128,35 @@ namespace neon {
 		GL_Call(glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, m_clearColor.w));
 	}
 
-	void OpenGLContext::SetProgram(unsigned int program_id) {
-		if(program_id == m_currentProgram) {
+	void OpenGLContext::BindTexture(unsigned int tex_id, unsigned int unit) {
+		TextureMap::iterator texture_it = m_textureMap.find(tex_id);
+		if(texture_it != m_textureMap.end()) {
+			(*texture_it).second->Bind(unit);
+		}
+	}
+
+	void OpenGLContext::BindVao(unsigned int vao_id) {
+		if(vao_id == m_currentVao) {
 			return;
 		}
 
-		m_currentProgram = program_id;
+		VertexArrayMap::iterator vao_it = m_vaoMap.find(vao_id);
+		if(vao_it != m_vaoMap.end()) {
+			m_currentVao = vao_id;
+			(*vao_it).second->Bind();
+		}
+	}
+
+	void OpenGLContext::BindProgram(unsigned int program_id) {
+		if(program_id == m_currentProgram) {
+			return;
+		}
 		
-		m_programMap[program_id]->Bind(); // Bind the program
+		// Check if the program exists
+		ProgramMap::iterator program_it = m_programMap.find(program_id);
+		if(program_it != m_programMap.end()) {
+			m_currentProgram = program_id;
+			(*program_it).second->Bind(); // Bind the program
+		}
 	}
 }

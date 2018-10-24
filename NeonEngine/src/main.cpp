@@ -1,12 +1,12 @@
 #include "./app/window.h"
 #include "./core/platform/opengl/opengl.h"
 #include "./graphics/cameras/camera.h"
-#include "./app/input/eventManager.h"
 #include "./app/input/input.h"
-#include "./utils/debugging/debug.h"
 #include "./core/platform/opengl/shader.h"
 #include "./core/platform/opengl/program.h"
 #include "./graphics/entities/model.h"
+
+#include "./utils/debugging/debug.h"
 
 #include <iostream>
 #include <vector>
@@ -41,7 +41,7 @@ int main() {
 	float fov = 90.0f;
 	float near = 0.01f;
 	float far = 1000.0f;
-	Camera camera(glm::vec3(0.0, 0.0f, -5.0f), fov, aspect_ratio, near, far);
+	Camera camera(glm::vec3(0.0f, 0.0f, -5.0f), fov, aspect_ratio, near, far);
 
 	//
 	// Create the VAO for cube
@@ -51,18 +51,16 @@ int main() {
 	std::map<unsigned int, std::pair<unsigned int, unsigned int> > vaos;
 	std::vector<Mesh*> meshes = model.GetMeshes();
 	BufferLayout model_layout;
-	model_layout.Push(VALUE_TYPE::VEC3, 3, 0);
+	model_layout.Push(VALUE_TYPE::FLOAT, 3, offsetof(struct Vertex, pos));
+	model_layout.Push(VALUE_TYPE::FLOAT, 2, offsetof(struct Vertex, uv));
+	model_layout.Push(VALUE_TYPE::FLOAT, 3, offsetof(struct Vertex, normal));
 
 	for(std::vector<Mesh*>::iterator it=meshes.begin(); it != meshes.end(); ++it) {
-		std::vector<glm::vec3> c_verts = (*it)->GetVertices();
+		std::vector<Vertex> c_verts = (*it)->GetVertexData();
 		std::vector<unsigned int> c_inds = (*it)->GetIndices();
-		unsigned int c_vao = gl_context.CreateVao(&c_verts.front(), c_verts.size() * sizeof(glm::vec3), &c_inds.front(), c_inds.size(), model_layout, VertexBuffer::BufferUsage::STATIC);
 
-		std::cout << "new vao created: " << c_vao << std::endl;
+		unsigned int c_vao = gl_context.CreateVao(&c_verts.front(), c_verts.size() * sizeof(Vertex), &c_inds.front(), c_inds.size(), model_layout, VertexBuffer::BufferUsage::STATIC);
 
-		debug::print_vector_vec3(c_verts);
-		debug::print_vector_uint(c_inds);
-		
 		vaos.insert(std::make_pair(c_vao, std::make_pair(c_vao, (*it)->GetIndicesSize())));
 	}
 
@@ -70,16 +68,23 @@ int main() {
 	// Create the shaders and the program
 	//
 	const unsigned int shaders[2] = {
-		gl_context.CreateShader("./NeonEngine/src/res/shaders/basicVShader.glsl", GL_VERTEX_SHADER),
-		gl_context.CreateShader("./NeonEngine/src/res/shaders/basicFShader.glsl", GL_FRAGMENT_SHADER)
+		gl_context.CreateShader("./NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER),
+		gl_context.CreateShader("./NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER)
 	};
+	
+	const char* texture_file_path = "./NeonEngine/src/res/textures/wood_crate.png";
+	const unsigned int texture_id = gl_context.CreateTexture(texture_file_path, Diffuse, 0);
 
 	unsigned int program_id = gl_context.CreateProgram(shaders, 2);
+	gl_context.BindProgram(program_id);
 	Program* program = gl_context.GetProgram(program_id);
 
-	program->Bind();
-	program->SetUniform4f("vcolor", glm::vec4(1.0f, 0.0, 0.0, 1.0f));
-	
+	glm::mat4 model_matrix(1.0f);
+
+	program->SetUniform4f("vcolor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	std::cout << "Texture: " << texture_file_path << " was created" << std::endl;
+
 	// Timer variables
 	double elapsed_time = 0,
 		   last_time = glfwGetTime(),
@@ -93,8 +98,6 @@ int main() {
 
 	float angle = 0.0f,
 		  speed = 2.0f;
-
-	glm::mat4 model_matrix(1.0f);
 
 	//
 	// Input Callback Functions
@@ -167,7 +170,7 @@ int main() {
 
 	// Todo: Test a callback that passes a variable to manipulate a variable
 	inputManager->BindEvent("CameraMoveAround", NEON_CURSOR_EVENT, Callback<>(MoveCameraAroundFunc));
-	
+
 	/**************************
 	** MAIN APPLICATION LOOP **
 	***************************/
@@ -196,7 +199,9 @@ int main() {
 		// Set Up simple program
 		program->SetUniformMat4("model", model_matrix);
 		program->SetUniformMat4("view_projection", camera.GetViewProjection());
-		gl_context.Draw(vaos[1].first, vaos[1].second, GL_TRIANGLES);
+		for(int i=0; i < vaos.size(); ++i) {
+			gl_context.Draw(vaos[i].first, vaos[i].second, GL_TRIANGLES);
+		}
 
 		window->Update();
 

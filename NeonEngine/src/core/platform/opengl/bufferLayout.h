@@ -13,7 +13,6 @@ namespace neon {
 		FLOAT 		  = 0,
 		UNSIGNED_INT  = 1,
 		UNSIGNED_BYTE = 2,
-		VERTEX 		  = 3,
 		VEC2		  = 4,
 		VEC3		  = 5,
 		VEC4		  = 6,
@@ -57,9 +56,6 @@ namespace neon {
 						break;
 					case VALUE_TYPE::UNSIGNED_BYTE:
 						Push(GL_UNSIGNED_BYTE, length * sizeof(unsigned char), count, offset, GL_TRUE);
-						break;
-					case VALUE_TYPE::VERTEX:
-						Push(GL_FLOAT, length * sizeof(Vertex), count, offset, GL_FALSE);
 						break;
 					case VALUE_TYPE::VEC2:
 						Push(GL_FLOAT, length * sizeof(float), count, offset, GL_FALSE);

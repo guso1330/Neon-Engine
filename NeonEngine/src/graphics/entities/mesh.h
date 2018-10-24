@@ -20,16 +20,19 @@ namespace neon {
 			*  Getter functions *
 			********************/
 			inline const std::vector<glm::vec3>& GetVertices() const { return m_vertices; }
-			inline unsigned int GetVerticesSize() const { return m_vertices.size(); }
+			inline const unsigned int GetVerticesSize() const { return m_vertices.size(); }
 
 			inline const std::vector<unsigned int>& GetIndices() const { return m_indices; }
-			inline unsigned int GetIndicesSize() const { return m_indices.size(); }
+			inline const unsigned int GetIndicesSize() const { return m_indices.size(); }
 			
 			inline const std::vector<glm::vec2>& GetUVs() const { return m_uvs; }
-			inline unsigned int GetUVsSize() const { return m_uvs.size(); }
+			inline const unsigned int GetUVsSize() const { return m_uvs.size(); }
 			
 			inline const std::vector<glm::vec3>& GetNormals() const { return m_normals; }
-			inline unsigned int GetNormalsSize() const { return m_normals.size(); }
+			inline const unsigned int GetNormalsSize() const { return m_normals.size(); }
+
+			inline const std::vector<Vertex>& GetVertexData() const { return m_vertexData; }
+			inline const unsigned int GetVertexDataSize() const { return m_vertexData.size(); }
 			
 			inline const Material* GetMaterial() const { return m_material; }
 
@@ -43,6 +46,7 @@ namespace neon {
 			std::vector<unsigned int> m_indices;
 			std::vector<glm::vec2> m_uvs;
 			std::vector<glm::vec3> m_normals;
+			std::vector<Vertex> m_vertexData;
 
 			Material* m_material;
 	};

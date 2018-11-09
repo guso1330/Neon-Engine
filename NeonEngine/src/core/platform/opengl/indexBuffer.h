@@ -13,7 +13,7 @@ namespace neon {
 			~IndexBuffer();
 
 			// Getters
-			inline const unsigned int &GetIbo() { return m_ibo; }
+			inline const unsigned int GetId() { return m_ibo; }
 			inline unsigned int GetCount() { return m_count; }
 
 			void Bind() const;

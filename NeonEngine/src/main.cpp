@@ -1,9 +1,7 @@
-#include "./app/window.h"
 #include "./core/platform/opengl/opengl.h"
-#include "./graphics/cameras/camera.h"
+#include "./app/window.h"
 #include "./app/input/input.h"
-#include "./core/platform/opengl/shader.h"
-#include "./core/platform/opengl/program.h"
+#include "./graphics/cameras/camera.h"
 #include "./graphics/entities/model.h"
 
 #include "./utils/debugging/debug.h"
@@ -46,20 +44,21 @@ int main() {
 	//
 	// Create the VAO for cube
 	//
-	Model model("./NeonEngine/src/res/models/cube_basic.obj");
-
 	std::map<unsigned int, std::pair<unsigned int, unsigned int> > vaos;
-	std::vector<Mesh*> meshes = model.GetMeshes();
+
 	BufferLayout model_layout;
 	model_layout.Push(VALUE_TYPE::FLOAT, 3, offsetof(struct Vertex, pos));
 	model_layout.Push(VALUE_TYPE::FLOAT, 2, offsetof(struct Vertex, uv));
 	model_layout.Push(VALUE_TYPE::FLOAT, 3, offsetof(struct Vertex, normal));
 
+	Model model("./NeonEngine/src/res/models/cube_basic.obj");
+	std::vector<Mesh*> meshes = model.GetMeshes();
+
 	for(std::vector<Mesh*>::iterator it=meshes.begin(); it != meshes.end(); ++it) {
 		std::vector<Vertex> c_verts = (*it)->GetVertexData();
 		std::vector<unsigned int> c_inds = (*it)->GetIndices();
 
-		unsigned int c_vao = gl_context.CreateVao(&c_verts.front(), c_verts.size() * sizeof(Vertex), &c_inds.front(), c_inds.size(), model_layout, VertexBuffer::BufferUsage::STATIC);
+		unsigned int c_vao = gl_context.CreateVao(&c_verts.front(), c_verts.size() * sizeof(Vertex), &c_inds.front(), c_inds.size(), model_layout, BufferUsage::STATIC);
 
 		vaos.insert(std::make_pair(c_vao, std::make_pair(c_vao, (*it)->GetIndicesSize())));
 	}
@@ -78,12 +77,6 @@ int main() {
 	unsigned int program_id = gl_context.CreateProgram(shaders, 2);
 	gl_context.BindProgram(program_id);
 	Program* program = gl_context.GetProgram(program_id);
-
-	glm::mat4 model_matrix(1.0f);
-
-	program->SetUniform4f("vcolor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
-	std::cout << "Texture: " << texture_file_path << " was created" << std::endl;
 
 	// Timer variables
 	double elapsed_time = 0,
@@ -168,12 +161,18 @@ int main() {
 	glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
 	glfwSetInputMode(window->GetGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	// Todo: Test a callback that passes a variable to manipulate a variable
+	// TODO: Test a callback that passes a variable to manipulate a variable
 	inputManager->BindEvent("CameraMoveAround", NEON_CURSOR_EVENT, Callback<>(MoveCameraAroundFunc));
 
 	/**************************
 	** MAIN APPLICATION LOOP **
 	***************************/
+	glm::mat4 model_matrix(1.0f);
+	
+	// TODO: Needs to be manually set at the moment...
+	program->SetUniform4f("vcolor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	
+	// Main game loop
 	while (!window->isClosed()) {
 		debug::calcFPS(window->GetGLFWwindow(), 1.0, "Neon Engine - Current FPS: ");
 		gl_context.Clear();
@@ -199,6 +198,7 @@ int main() {
 		// Set Up simple program
 		program->SetUniformMat4("model", model_matrix);
 		program->SetUniformMat4("view_projection", camera.GetViewProjection());
+
 		for(int i=0; i < vaos.size(); ++i) {
 			gl_context.Draw(vaos[i].first, vaos[i].second, GL_TRIANGLES);
 		}

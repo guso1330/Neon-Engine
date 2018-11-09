@@ -1,6 +1,7 @@
 #include "./indexBuffer.h"
 
 namespace neon {
+
 	IndexBuffer::IndexBuffer() {
 		GL_Call(glGenBuffers(1, &m_ibo));
 	}

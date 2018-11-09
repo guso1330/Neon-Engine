@@ -10,30 +10,14 @@ namespace neon {
 
 	class VertexBuffer {
 		public:
-			enum class BufferUsage
-			{
-				STATIC, DYNAMIC
-			};
-
-		private:
-			static unsigned int GLBufferUsage(BufferUsage usage) {
-				switch(usage) {
-					case BufferUsage::STATIC:
-						return GL_STATIC_DRAW;
-					case BufferUsage::DYNAMIC:
-						return GL_DYNAMIC_DRAW;
-					default: break;
-				}
-				return 0;
-			}
-
-		public:
 			// Constructors
 			VertexBuffer();
-			VertexBuffer(BufferUsage usage);
+			VertexBuffer(unsigned int usage);
 
 			// Destructor
 			~VertexBuffer();
+
+			inline const unsigned int GetId() { return m_vbo; }
 
 			void Bind() const;
 			void Unbind() const;
@@ -44,7 +28,7 @@ namespace neon {
 
 		private:
 			BufferLayout m_layout;
-			BufferUsage m_usage;
+			unsigned int m_usage;
 			size_t m_size;
 			unsigned int m_vbo;
 	};

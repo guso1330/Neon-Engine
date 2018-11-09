@@ -2,8 +2,6 @@
 
 #include "./GL_Error.h"
 #include "./bufferLayout.h"
-#include "./vertexBuffer.h"
-#include "./indexBuffer.h"
 
 #include <glad/glad.h>
 #include <vector>
@@ -20,9 +18,6 @@ namespace neon {
 
 			void Bind() const;
 			void Unbind() const;
-
-			void BindVbo(VertexBuffer* buffer);
-			void BindIbo(IndexBuffer* buffer);
 
 		private:
 			unsigned int m_vao;

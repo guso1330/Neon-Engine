@@ -105,6 +105,11 @@ namespace neon {
 		GL_Call(glUniform1i(GetUniformLocation(name), v0));
 	}
 
+
+	void Program::SaveUniform(unsigned int block, std::string uniformBlockName) {
+		
+	}
+
 	void Program::Bind() {
 		GL_Call(glUseProgram(m_programID));
 	}

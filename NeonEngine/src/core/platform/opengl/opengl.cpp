@@ -2,6 +2,8 @@
 
 namespace neon {
 
+	static unsigned int GL_BufferUsage(BufferUsage usage);
+
 	OpenGLContext::OpenGLContext() {
 
 		if(Init()) {
@@ -57,12 +59,15 @@ namespace neon {
 		GL_Call(glFlush());
 	}
 
+	/********************/
+	/* CREATE FUNCTIONS */
+	/********************/
 	// TODO: For now this function will support one VBO and one IBO per VAO. This is to ensure that 
 	//		 it stays as simple as possible until necessary
-	unsigned int OpenGLContext::CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, BufferLayout layout, VertexBuffer::BufferUsage usage) {
+	unsigned int OpenGLContext::CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, BufferLayout layout, BufferUsage usage) {
 
 		VertexArray* vao = new VertexArray();
-		VertexBuffer* vbo = new VertexBuffer(usage);
+		VertexBuffer* vbo = new VertexBuffer(GL_BufferUsage(usage));
 		IndexBuffer* ibo = new IndexBuffer();
 
 		unsigned int vao_id;
@@ -97,6 +102,7 @@ namespace neon {
 		return shader_id;
 	}
 
+	/* TODO: This API is some what weird. Why input an array and require the size to be passed in? Is this necessary or could it be simplified? */
 	unsigned int OpenGLContext::CreateProgram(const unsigned int shader_ids[], unsigned int size) {
 		std::vector<Shader*> shaders;
 		for(int i=0; i < size; ++i) {
@@ -120,14 +126,18 @@ namespace neon {
 		return texture->GetId();
 	}
 
-	void OpenGLContext::SetClearColor(float r, float g, float b, float a) {
-		m_clearColor.x = r;
-		m_clearColor.y = g;
-		m_clearColor.z = b;
-		m_clearColor.w = a;
-		GL_Call(glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, m_clearColor.w));
+	unsigned int OpenGLContext::CreateUniformBuffer(const void* data, size_t data_size, BufferUsage usage) {
+		UniformBuffer* ubo = new UniformBuffer();
+		unsigned int ubo_id = ubo->GetUbo();
+
+		m_uniformBufferMap.insert(std::make_pair(ubo_id, ubo));
+
+		return ubo_id;
 	}
 
+	/******************/
+	/* Bind Functions */
+	/******************/
 	void OpenGLContext::BindTexture(unsigned int tex_id, unsigned int unit) {
 		TextureMap::iterator texture_it = m_textureMap.find(tex_id);
 		if(texture_it != m_textureMap.end()) {
@@ -157,6 +167,115 @@ namespace neon {
 		if(program_it != m_programMap.end()) {
 			m_currentProgram = program_id;
 			(*program_it).second->Bind(); // Bind the program
+			std::cout << "Program " << program_id << " was bound" << std::endl;
+			return;
+		}
+
+		std::cout << "WARNING: Program " << program_id << " could not be bound" << std::endl;
+	}
+
+	/*****************/
+	/* GET FUNCTIONS */
+	/*****************/
+	void OpenGLContext::GetActiveAttributes() const {
+		int i;
+		int count;
+
+		int size; // size of the variable
+		GLenum type; // type of the variable (float, vec3 or mat4, etc)
+
+		const int bufSize = 16; // maximum name length
+		char name[bufSize]; // variable name in GLSL
+		int length; // name length
+
+		GL_Call(glGetProgramiv(m_currentProgram, GL_ACTIVE_ATTRIBUTES, &count));
+		printf("Active Attributes: %d\n", count);
+
+		for (i = 0; i < count; i++)
+		{
+			glGetActiveAttrib(m_currentProgram, (unsigned int)i, bufSize, &length, &size, &type, name);
+
+			printf("Attribute #%d Type: %u Name: %s\n", i, type, name);
 		}
 	}
+
+	void OpenGLContext::GetActiveUniforms() {
+		int num_block;
+
+		GL_Call(glGetProgramiv(m_currentProgram, GL_ACTIVE_UNIFORM_BLOCKS, &num_block));
+
+		Program* current_program = GetProgram(m_currentProgram);
+
+		// Get and save the Uniform Blocks
+		for(int block = 0; block < num_block; ++block) {
+			int name_len;
+
+			// Get name length
+			GL_Call(glGetActiveUniformBlockiv(current_program->GetProgramId(), block, GL_UNIFORM_BLOCK_NAME_LENGTH, &name_len));
+
+			// Get name
+			char name[name_len];
+			GL_Call(glGetActiveUniformBlockName(current_program->GetProgramId(), block, name_len, NULL, &name[0]));
+			std::string uniform_block_name((char*)&name[0], name_len-1);
+			
+			// Save name to the uniformMap
+			unsigned int block_index = glGetUniformBlockIndex(current_program->GetProgramId(), &name[0]);
+			current_program->SaveUniform(block_index, uniform_block_name);
+
+			std::cout << "uniformBlock " << uniform_block_name << ": " << " at " << block_index
+			 << std::endl;
+		}
+
+		// Get and save the Uniform Variables
+		int count;
+
+		int size; // size of the variable
+		GLenum type; // type of the variable (float, vec3 or mat4, etc)
+
+		const int bufSize = 16; // maximum name length
+		char name[bufSize]; // variable name in GLSL
+		int length; // name length
+
+		GL_Call(glGetProgramiv(m_currentProgram, GL_ACTIVE_UNIFORMS, &count));
+		printf("Active Uniforms: %d\n", count);
+
+		for (int i = 0; i < count; i++)
+		{
+			GL_Call(glGetActiveUniform(m_currentProgram, (unsigned int)i, bufSize, &length, &size, &type, name));
+
+			printf("Uniform #%d Type: %u Name: %s\n", i, type, name);
+		}
+	}
+
+	void OpenGLContext::UpdateUbo(unsigned int ubo_id, const void* data, size_t data_size) {
+		UniformBufferMap::iterator ubo_it = m_uniformBufferMap.find(ubo_id);
+		if(ubo_it != m_uniformBufferMap.end()) {
+			(*ubo_it).second->Bind();
+			void* dest = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
+			memcpy(dest, data, data_size);
+			(*ubo_it).second->Unbind();
+		}
+	}
+
+	/*****************/
+	/* SET FUNCTIONS */
+	/*****************/
+	void OpenGLContext::SetClearColor(float r, float g, float b, float a) {
+		m_clearColor.x = r;
+		m_clearColor.y = g;
+		m_clearColor.z = b;
+		m_clearColor.w = a;
+		GL_Call(glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, m_clearColor.w));
+	}
+
+	static unsigned int GL_BufferUsage(BufferUsage usage) {
+		switch(usage) {
+			case BufferUsage::STATIC:
+				return GL_STATIC_DRAW;
+			case BufferUsage::DYNAMIC:
+				return GL_DYNAMIC_DRAW;
+			default: break;
+		}
+		return 0;
+	}	
 }

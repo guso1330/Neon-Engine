@@ -3,6 +3,9 @@
 #include "../../../app/window.h"
 #include "./GL_Error.h"
 #include "./vertexArray.h"
+#include "./vertexBuffer.h"
+#include "./indexBuffer.h"
+#include "./uniformBuffer.h"
 #include "./shader.h"
 #include "./program.h"
 #include "./texture.h"
@@ -13,14 +16,21 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <cstdio>
 
 namespace neon {
-	typedef std::unordered_map<unsigned int, VertexArray*> VertexArrayMap;
-	typedef std::unordered_map<unsigned int, Shader*> ShaderMap;
-	typedef std::unordered_map<unsigned int, Program*> ProgramMap;
-	typedef std::unordered_map<unsigned int, Texture*> TextureMap;
+	enum class BufferUsage
+	{
+		STATIC, DYNAMIC
+	};
 
 	class OpenGLContext {
+		typedef std::unordered_map<unsigned int, VertexArray*> VertexArrayMap;
+		typedef std::unordered_map<unsigned int, UniformBuffer*> UniformBufferMap;
+		typedef std::unordered_map<unsigned int, Shader*> ShaderMap;
+		typedef std::unordered_map<unsigned int, Program*> ProgramMap;
+		typedef std::unordered_map<unsigned int, Texture*> TextureMap;
+
 		public:
 			// Constructor
 			OpenGLContext();
@@ -34,10 +44,18 @@ namespace neon {
 			//
 			// Create methods
 			//
-			unsigned int CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, BufferLayout layout, VertexBuffer::BufferUsage usage);
+			unsigned int CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, BufferLayout layout, BufferUsage usage);
 			unsigned int CreateShader(const std::string& filename, unsigned int shader_type);
 			unsigned int CreateProgram(const unsigned int shader_ids[], unsigned int size);
 			unsigned int CreateTexture(const std::string& filename, TextureType type, unsigned int unit);
+			unsigned int CreateUniformBuffer(const void* data, size_t data_size, BufferUsage usage);
+
+			//
+			// Binding Methods
+			//
+			void BindTexture(unsigned int tex_id, unsigned int unit);
+			void BindVao(unsigned int vao_id);
+			void BindProgram(unsigned int program_id);
 
 			//
 			// Get Program
@@ -49,13 +67,10 @@ namespace neon {
 			//
 			void SetClearColor(float r, float g, float b, float a);
 
-			//
-			// Binding Methods
-			//
-			void BindTexture(unsigned int tex_id, unsigned int unit);
-			void BindVao(unsigned int vao_id);
-			void BindProgram(unsigned int program_id);
+			void GetActiveUniforms();
+			void GetActiveAttributes() const;
 
+			void UpdateUbo(unsigned int ubo_id, const void* data, size_t data_size);
 
 		//
 		// Private Methods
@@ -77,5 +92,6 @@ namespace neon {
 			ShaderMap m_shaderMap;
 			ProgramMap m_programMap;
 			TextureMap m_textureMap;
+			UniformBufferMap m_uniformBufferMap;
 	};
 }

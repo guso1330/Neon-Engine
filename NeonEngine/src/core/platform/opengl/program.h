@@ -1,36 +1,40 @@
 #pragma once
 /*
-	TODO: Only supports one program currently, should make support >= 1 shader
+	TODO
+		1. Only supports one program currently, should make support >= 1 shader (Oct. 30 - Is this still a true TODO?)
+		2. Convert the const char* data types to string
 */
 
 #include "./GL_Error.h"
 #include "./shader.h"
 
-#include <iostream>
-#include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <vector>
 #include <unordered_map>
+#include <string>
+#include <iostream>
 
 namespace neon {
+
+
 	class Program {
+		typedef std::unordered_map<const char*, int> LocationCache;
+		typedef std::pair<std::string, unsigned int> AttributeUniformBlock;
+
 		public:
 			Program(std::vector<Shader*> shaders);
 			~Program();
-
-		public:
-			// GETTERS
-			const unsigned int GetProgramId() const { return m_programID; }
-
-			// SETTERS
 
 		public:
 			/****************************
 			*	GLSL - Shader attribute *
 			*	getters and setters		*
 			****************************/
+			// Get Functions
 			int GetUniformLocation(const char* name);
 			int GetAttributeLocation(const char* name);
+			const unsigned int GetProgramId() const { return m_programID; }
 
 			// Set Functions
 			void SetUniformMat4(const char* name, const glm::mat4& matrix);
@@ -44,6 +48,8 @@ namespace neon {
 			void SetUniform1f(const char* name, GLfloat v0);
 			void SetUniform1i(const char* name, GLint v0);
 
+			void SaveUniform(unsigned int block, std::string uniformBlockName);
+
 			void Bind();
 			void Unbind();
 
@@ -54,7 +60,7 @@ namespace neon {
 			std::vector<Shader*> m_shaders;
 			unsigned int m_programID;
 
-			std::unordered_map<const char*, int> m_uniformLocationCache;
-			std::unordered_map<const char*, int> m_attributeLocationCache;
+			LocationCache m_uniformLocationCache;
+			LocationCache m_attributeLocationCache;
 	};
 }

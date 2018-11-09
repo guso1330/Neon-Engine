@@ -1,7 +1,6 @@
 #version 330 core
 in vec4 fcolor;
 in vec2 texFrag;
-in vec3 normal;
 in vec3 fragPos;
 
 // Values that stay constant for the whole mesh.

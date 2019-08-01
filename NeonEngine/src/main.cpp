@@ -36,7 +36,7 @@ int main() {
 	// Initialize the camera
 	//
 	float aspect_ratio = (float)WIDTH / (float)HEIGHT;
-	float fov = 90.0f;
+	float fov = 70.0f;
 	float near = 0.01f;
 	float far = 1000.0f;
 	Camera camera(glm::vec3(0.0f, 0.0f, -5.0f), fov, aspect_ratio, near, far);
@@ -170,7 +170,7 @@ int main() {
 	glm::mat4 model_matrix(1.0f);
 	
 	// TODO: Needs to be manually set at the moment...
-	program->SetUniform4f("vcolor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	program->SetUniform4f("vcolor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 	
 	// Main game loop
 	while (!window->isClosed()) {
@@ -197,7 +197,7 @@ int main() {
 
 		// Set Up simple program
 		program->SetUniformMat4("model", model_matrix);
-		program->SetUniformMat4("view_projection", camera.GetViewProjection());
+		program->SetUniformMat4("matrices.view_projection", camera.GetViewProjection());
 
 		for(int i=0; i < vaos.size(); ++i) {
 			gl_context.Draw(vaos[i].first, vaos[i].second, GL_TRIANGLES);

@@ -1,0 +1,15 @@
+[submodule "NeonEngine/dependencies/GLFW"]
+	path = NeonEngine/dependencies/GLFW
+	url = https://github.com/glfw/glfw.git
+[submodule "NeonEngine/dependencies/glm"]
+	path = NeonEngine/dependencies/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "NeonEngine/dependencies/stb_image"]
+	path = NeonEngine/dependencies/stb_image
+	url = https://github.com/nothings/stb.git
+[submodule "assimp"]
+	path = assimp
+	url = https://github.com/assimp/assimp.git
+[submodule "NeonEngine/dependencies/assimp"]
+	path = NeonEngine/dependencies/assimp
+	url = https://github.com/assimp/assimp.git

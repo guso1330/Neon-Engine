@@ -1,6 +1,11 @@
 #include "window.h"
 
-// TODO: figure out a way to do better input that can be defined outside of the window class
+/*
+	TODO: 
+ 	- figure out a way to do better input that can be defined outside of the window class
+ 	- Abstract out GLFW from this class to make more generic
+*/
+
 
 namespace neon {
 

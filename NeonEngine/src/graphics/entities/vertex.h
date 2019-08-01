@@ -1,7 +1,8 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/ext.hpp>
+#include <glm/glm.hpp>
 
 #include <iostream>
 #include <unordered_set>

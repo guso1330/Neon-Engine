@@ -25,7 +25,7 @@ namespace neon {
 			~Input();
 
 			template<class T>
-			void BindEvent(const char* name, EventType event_type,const T &callback) {
+			void BindEvent(const char* name, EventType event_type, const T &callback) {
 				if(m_eventManager->Register(name, callback)) {
 					std::cout << "InputManager: '" << name << "' was registered" << std::endl;
 				} else {

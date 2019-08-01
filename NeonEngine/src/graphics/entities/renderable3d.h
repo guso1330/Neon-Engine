@@ -22,7 +22,6 @@
 namespace neon {
 
 	class Renderable3d {
-
 		public:
 			Renderable3d();
 			Renderable3d(Program* program);
@@ -51,9 +50,6 @@ namespace neon {
 			virtual ~Renderable3d();
 			void SendVertexData();
 
-			// NOTE: you must build m_indices and m_vertexData,
-			// because they're used in SendVertexData()
-			// virtual void BuildVertexData() = 0;
 		protected:
 			VertexBuffer *m_vbo;
 			IndexBuffer *m_ibo;
@@ -62,6 +58,7 @@ namespace neon {
 			GLuint m_modelLoc;
 			GLuint m_normalMatrixLoc;
 			GLuint m_colorLoc;
+
 			glm::vec4 m_color;
 
 			Program *m_program;

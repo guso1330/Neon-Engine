@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../app/window.h"
+#include "../../../app/window.h" // Todo: can this be removed?
 #include "./GL_Error.h"
 #include "./vertexArray.h"
 #include "./vertexBuffer.h"

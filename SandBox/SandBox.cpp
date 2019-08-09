@@ -1,10 +1,4 @@
-#include "./core/platform/opengl/opengl.h"
-#include "./app/window.h"
-#include "./app/input/input.h"
-#include "./graphics/cameras/camera.h"
-#include "./graphics/entities/model.h"
-
-#include "./utils/debugging/debug.h"
+#include "NeonEngine/NeonEngine.h"
 
 #include <iostream>
 #include <vector>
@@ -51,7 +45,7 @@ int main() {
 	model_layout.Push(VALUE_TYPE::FLOAT, 2, offsetof(struct Vertex, uv));
 	model_layout.Push(VALUE_TYPE::FLOAT, 3, offsetof(struct Vertex, normal));
 
-	Model model("./NeonEngine/src/res/models/cube_basic.obj");
+	Model model("./SandBox/res/models/cube_basic.obj");
 	std::vector<Mesh*> meshes = model.GetMeshes();
 
 	for(std::vector<Mesh*>::iterator it=meshes.begin(); it != meshes.end(); ++it) {
@@ -67,11 +61,11 @@ int main() {
 	// Create the shaders and the program
 	//
 	const unsigned int shaders[2] = {
-		gl_context.CreateShader("./NeonEngine/src/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER),
-		gl_context.CreateShader("./NeonEngine/src/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER)
+		gl_context.CreateShader("./SandBox/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER),
+		gl_context.CreateShader("./SandBox/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER)
 	};
 	
-	const char* texture_file_path = "./NeonEngine/src/res/textures/wood_crate.png";
+	const char* texture_file_path = "./SandBox/res/textures/wood_crate.png";
 	const unsigned int texture_id = gl_context.CreateTexture(texture_file_path, Diffuse, 0);
 
 	unsigned int program_id = gl_context.CreateProgram(shaders, 2);
@@ -170,7 +164,7 @@ int main() {
 	glm::mat4 model_matrix(1.0f);
 	
 	// TODO: Needs to be manually set at the moment...
-	program->SetUniform4f("vcolor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+	program->SetUniform4f("vcolor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	
 	// Main game loop
 	while (!window->isClosed()) {

@@ -1,7 +1,6 @@
 # Neon-Engine
-2D and 3D game engine
+Simple 2D and 3D game engine
 
-Todo:
-	- VAO, VBO, EBO: one per mesh vs. one giant
-	- Program Class
-		- Tied to the mesh.h class
+## Notes:
+- Currently only supports OpenGL, but will eventually support DirectX
+- Only tested on mac, windows solution out of date (8/9/19)

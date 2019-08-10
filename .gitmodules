@@ -13,3 +13,6 @@
 [submodule "NeonEngine/dependencies/assimp"]
 	path = NeonEngine/dependencies/assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "NeonEngine/dependencies/spdlog"]
+	path = NeonEngine/dependencies/spdlog
+	url = https://github.com/gabime/spdlog.git

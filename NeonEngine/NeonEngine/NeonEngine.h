@@ -1,5 +1,10 @@
 #pragma once
 
+/* Utils */
+#include "utils/logging/logger.h"
+#include "utils/logging/debug.h"
+#include "utils/fileUtils/fileUtils.h"
+
 /* App */
 #include "app/app.h"
 #include "app/input/input.h"
@@ -18,7 +23,3 @@
 
 /* Shaders */
 #include "shaders/material.h"
-
-/* Utils */
-#include "utils/debugging/debug.h"
-#include "utils/fileUtils/fileUtils.h"

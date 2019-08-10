@@ -65,7 +65,7 @@ int main() {
 		gl_context.CreateShader("./SandBox/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER)
 	};
 	
-	const char* texture_file_path = "./SandBox/res/textures/wood_crate.png";
+	const char* texture_file_path = "./SandBox/res/textures/checkered_colored.jpg";
 	const unsigned int texture_id = gl_context.CreateTexture(texture_file_path, Diffuse, 0);
 
 	unsigned int program_id = gl_context.CreateProgram(shaders, 2);

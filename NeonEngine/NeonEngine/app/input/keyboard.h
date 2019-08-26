@@ -7,7 +7,7 @@
 #include <iostream>
 #include <algorithm>
 
-namespace neon {
+namespace Neon {
 
 	enum KeyEvents {
 		NEON_KEY_UP,

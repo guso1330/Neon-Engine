@@ -1,20 +1,16 @@
 #include "NeonEngine/NeonEngine.h"
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <algorithm>
-#include <time.h>
-
-#include <glm/glm.hpp>
-
-using namespace neon;
-using namespace glm;
-
 const int WIDTH = 512,
 		  HEIGHT = 264;
 
+// Main instance for engine
+Neon::NeonEngine ne_Instance;
+
 int main() {
+
+	// WARNING: NOTE THIS NEEDS TO BE CALLED VERY FIRST
+	// TODO: This should probably be updated so that the NeonEngine handles it's own entry point, similar to how the hazel engine operates
+	ne_Instance.Init();
 
 	srand (time(NULL));
 
@@ -22,9 +18,9 @@ int main() {
 	// GLFW is initialized within the window
 	// GLAD/OpenGL initialized inside the OpenGL  
 	//
-	Window *window = new Window(WIDTH, HEIGHT, false, "Neon Engine");
-	OpenGLContext gl_context;
-	Input* inputManager = window->GetInput();
+	Neon::Window *window = new Neon::Window(WIDTH, HEIGHT, false, "Neon Engine");
+	Neon::OpenGLContext gl_context;
+	Neon::Input* inputManager = window->GetInput();
 
 	//
 	// Initialize the camera
@@ -33,26 +29,26 @@ int main() {
 	float fov = 70.0f;
 	float near = 0.01f;
 	float far = 1000.0f;
-	Camera camera(glm::vec3(0.0f, 0.0f, -5.0f), fov, aspect_ratio, near, far);
+	Neon::Camera camera(glm::vec3(0.0f, 0.0f, -5.0f), fov, aspect_ratio, near, far);
 
 	//
 	// Create the VAO for cube
 	//
 	std::map<unsigned int, std::pair<unsigned int, unsigned int> > vaos;
 
-	BufferLayout model_layout;
-	model_layout.Push(VALUE_TYPE::FLOAT, 3, offsetof(struct Vertex, pos));
-	model_layout.Push(VALUE_TYPE::FLOAT, 2, offsetof(struct Vertex, uv));
-	model_layout.Push(VALUE_TYPE::FLOAT, 3, offsetof(struct Vertex, normal));
+	Neon::BufferLayout model_layout;
+	model_layout.Push(Neon::VALUE_TYPE::FLOAT, 3, offsetof(struct Neon::Vertex, pos));
+	model_layout.Push(Neon::VALUE_TYPE::FLOAT, 2, offsetof(struct Neon::Vertex, uv));
+	model_layout.Push(Neon::VALUE_TYPE::FLOAT, 3, offsetof(struct Neon::Vertex, normal));
 
-	Model model("./SandBox/res/models/cube_basic.obj");
-	std::vector<Mesh*> meshes = model.GetMeshes();
+	Neon::Model model("./SandBox/res/models/cube_basic.obj");
+	std::vector<Neon::Mesh*> meshes = model.GetMeshes();
 
-	for(std::vector<Mesh*>::iterator it=meshes.begin(); it != meshes.end(); ++it) {
-		std::vector<Vertex> c_verts = (*it)->GetVertexData();
+	for(std::vector<Neon::Mesh*>::iterator it=meshes.begin(); it != meshes.end(); ++it) {
+		std::vector<Neon::Vertex> c_verts = (*it)->GetVertexData();
 		std::vector<unsigned int> c_inds = (*it)->GetIndices();
 
-		unsigned int c_vao = gl_context.CreateVao(&c_verts.front(), c_verts.size() * sizeof(Vertex), &c_inds.front(), c_inds.size(), model_layout, BufferUsage::STATIC);
+		unsigned int c_vao = gl_context.CreateVao(&c_verts.front(), c_verts.size() * sizeof(Neon::Vertex), &c_inds.front(), c_inds.size(), model_layout, Neon::BufferUsage::STATIC);
 
 		vaos.insert(std::make_pair(c_vao, std::make_pair(c_vao, (*it)->GetIndicesSize())));
 	}
@@ -66,11 +62,11 @@ int main() {
 	};
 	
 	const char* texture_file_path = "./SandBox/res/textures/checkered_colored.jpg";
-	const unsigned int texture_id = gl_context.CreateTexture(texture_file_path, Diffuse, 0);
+	const unsigned int texture_id = gl_context.CreateTexture(texture_file_path, Neon::Diffuse, 0);
 
 	unsigned int program_id = gl_context.CreateProgram(shaders, 2);
 	gl_context.BindProgram(program_id);
-	Program* program = gl_context.GetProgram(program_id);
+	Neon::Program* program = gl_context.GetProgram(program_id);
 
 	// Timer variables
 	double elapsed_time = 0,
@@ -156,7 +152,7 @@ int main() {
 	glfwSetInputMode(window->GetGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// TODO: Test a callback that passes a variable to manipulate a variable
-	inputManager->BindEvent("CameraMoveAround", NEON_CURSOR_EVENT, Callback<>(MoveCameraAroundFunc));
+	inputManager->BindEvent("CameraMoveAround", Neon::NEON_CURSOR_EVENT, Neon::Callback<>(MoveCameraAroundFunc));
 
 	/**************************
 	** MAIN APPLICATION LOOP **
@@ -168,7 +164,7 @@ int main() {
 	
 	// Main game loop
 	while (!window->isClosed()) {
-		debug::calcFPS(window->GetGLFWwindow(), 1.0, "Neon Engine - Current FPS: ");
+		Neon::Debug::calcFPS(window->GetGLFWwindow(), 1.0, "Neon Engine - Current FPS: ");
 		gl_context.Clear();
 
 		// Update timer

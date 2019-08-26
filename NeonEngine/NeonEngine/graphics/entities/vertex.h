@@ -10,7 +10,7 @@
 #include <set>
 #include <ctime>
 
-namespace neon {
+namespace Neon {
 	struct Vertex {
 		glm::vec3 pos;
 		glm::vec2 uv;

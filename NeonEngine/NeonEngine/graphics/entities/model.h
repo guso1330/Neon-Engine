@@ -1,18 +1,14 @@
 #pragma once
 
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <vector>
+#include "../../core/platform/opengl/texture.h"
+#include "./mesh.h"
+#include "./renderable3d.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "../../core/platform/opengl/texture.h"
-#include "./mesh.h"
-#include "./renderable3d.h"
-
-namespace neon {
+namespace Neon {
 
 	class Model {
 	public:

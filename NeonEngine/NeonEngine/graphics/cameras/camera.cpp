@@ -1,6 +1,6 @@
 #include "./camera.h"
 
-namespace neon {
+namespace Neon {
 	Camera::Camera(const glm::vec3& pos, float fov, float aspect, float near, float far) {
 		m_perspective = glm::perspective(glm::radians(fov), aspect, near, far);
 		m_pos = pos;

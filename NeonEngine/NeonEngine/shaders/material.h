@@ -5,7 +5,7 @@
 
 #include <glm/glm.hpp>
 
-namespace neon {
+namespace Neon {
 
 	class Material {
 		public:

@@ -1,6 +1,6 @@
 #include "shader.h"
 
-namespace neon {
+namespace Neon {
 	Shader::Shader(const char* shaderFile, unsigned int shaderType) :
 		m_filename(shaderFile),
 		m_type(shaderType)

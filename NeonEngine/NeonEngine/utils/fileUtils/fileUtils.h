@@ -4,6 +4,6 @@
 #include <string>
 #include <fstream>
 
-namespace neon {
+namespace Neon {
 	std::string read_file(const char* filepath);
 }

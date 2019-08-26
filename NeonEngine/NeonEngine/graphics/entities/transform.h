@@ -4,7 +4,7 @@
 #include <glm/ext.hpp>
 #include <glm/glm.hpp>
 
-namespace neon {
+namespace Neon {
 	class Transform {
 		public:
 			Transform();

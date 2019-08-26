@@ -7,7 +7,7 @@
 
 #include "../../../utils/fileUtils/fileUtils.h"
 
-namespace neon {
+namespace Neon {
 
 	class Shader {
 		public:

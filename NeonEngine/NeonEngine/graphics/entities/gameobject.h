@@ -3,7 +3,7 @@
 #include "./model.h"
 #include "./transform.h"
 
-namespace neon {
+namespace Neon {
 	class GameObject {
 		public: 
 			GameObject();

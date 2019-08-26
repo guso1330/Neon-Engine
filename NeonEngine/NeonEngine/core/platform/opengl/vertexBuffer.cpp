@@ -1,6 +1,6 @@
 #include "./vertexBuffer.h"
 
-namespace neon {
+namespace Neon {
 	VertexBuffer::VertexBuffer() {}
 
 	VertexBuffer::VertexBuffer(unsigned int usage)

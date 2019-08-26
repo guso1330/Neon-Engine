@@ -5,7 +5,7 @@
 #define STB_IMAGE_IMPLEMENTATION // needed to use the stb_image library
 #include <stb_image.h>
 
-namespace neon {
+namespace Neon {
 	Texture::Texture(const std::string& filename, TextureType type) :
 		m_type(type)
 	{

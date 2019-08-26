@@ -9,7 +9,7 @@ file(GLOB_RECURSE SRC_FILES "${PROJECT_SOURCE_DIR}/NeonEngine/*.cpp")
 add_library(${PROJECT_NAME} ${SRC_FILES})
 
 # Executable definition and properties
-target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/NeonEngine)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
 
 # assimp

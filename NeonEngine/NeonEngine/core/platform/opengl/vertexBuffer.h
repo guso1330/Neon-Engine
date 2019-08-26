@@ -6,7 +6,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-namespace neon {
+namespace Neon {
 
 	class VertexBuffer {
 		public:

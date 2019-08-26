@@ -1,6 +1,6 @@
 #include "./ambientLight.h"
 
-namespace neon {
+namespace Neon {
 	AmbientLight::AmbientLight() {
 		m_shaders.push_back(new Shader("./NeonEngine/src/res/shaders/lightShaders/ambientLightVShader.glsl", GL_VERTEX_SHADER));
 		m_shaders.push_back(new Shader("./NeonEngine/src/res/shaders/lightShaders/ambientLightFShader.glsl", GL_FRAGMENT_SHADER));

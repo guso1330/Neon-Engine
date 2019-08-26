@@ -12,13 +12,15 @@ target_link_libraries(${PROJECT_NAME}
 	NeonEngine_lib
 )
 
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/NeonEngine")
+
 set(RES_DIR "${PROJECT_SOURCE_DIR}/res")
 set(RES_DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/res")
 add_custom_command(
- TARGET ${PROJECT_NAME} POST_BUILD
- COMMAND ${CMAKE_COMMAND} -E create_symlink ${RES_DIR} ${RES_DEST_DIR} 
- DEPENDS ${RES_DEST_DIR}
- COMMENT "Symbolic link for res folder from ${RES_DIR} => ${RES_DEST_DIR}"
+	TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E create_symlink ${RES_DIR} ${RES_DEST_DIR} 
+	DEPENDS ${RES_DEST_DIR}
+	COMMENT "Symbolic link for res folder from ${RES_DIR} => ${RES_DEST_DIR}"
 )
 
 # Printing

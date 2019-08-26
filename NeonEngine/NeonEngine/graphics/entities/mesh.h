@@ -6,7 +6,7 @@
 #include "./vertex.h"
 #include "../../shaders/material.h"
 
-namespace neon {
+namespace Neon {
 	class Mesh {
 		public:
 			/***************

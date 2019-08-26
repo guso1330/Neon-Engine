@@ -5,7 +5,7 @@
 
 #include <vector>
 
-namespace neon {
+namespace Neon {
 	class Light {
 		public:
 			Light(){}

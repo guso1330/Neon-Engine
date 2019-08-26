@@ -1,6 +1,8 @@
+#include "nepch.h"
+
 #include "./program.h"
 
-namespace neon {
+namespace Neon {
 	Program::Program(std::vector<Shader*> shaders) :
 		m_shaders(shaders)
 	{
@@ -28,10 +30,10 @@ namespace neon {
 			char *linkerLog = new char[logLength + 1];
 			GL_Call(glGetProgramInfoLog(m_programID, logLength + 1, NULL, linkerLog));
 
-			std::cerr << "Program failed to link: " << linkerLog << std::endl;
+			NE_CORE_ERROR("Program failed to link: {}", linkerLog);
 			system("PAUSE");
 		} else {
-			std::cout << "Program " << this->GetProgramId() << " was created" << std::endl;
+			NE_CORE_INFO("Program {} was created", this->GetProgramId());
 		}
 	}
 
@@ -41,7 +43,7 @@ namespace neon {
 
 		int loc = glGetUniformLocation(m_programID, name);
 		if (loc == -1) {
-			std::cerr << "Program " << this->GetProgramId() << " glGetUniformLocation Error: Could not locate the the uniform " << name << std::endl;
+			NE_CORE_WARN("Program {} glGetUniformLocation Error: could no locate the uniform {}", this->GetProgramId(), name);
 		}
 
 		m_uniformLocationCache[name] = loc;
@@ -54,7 +56,7 @@ namespace neon {
 
 		int loc = glGetAttribLocation(m_programID, name);
 		if (loc == -1) {
-			std::cerr << "glGetAttribLocation Error: Could not locate the the attribute " << name << std::endl;
+			NE_CORE_WARN("glGetAttribLocation Error: Could not locate the attribute {}", name);
 		}
 
 		m_attributeLocationCache[name] = loc;

@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-namespace neon {
+namespace Neon {
 	class IndexBuffer {
 		public:
 			IndexBuffer();

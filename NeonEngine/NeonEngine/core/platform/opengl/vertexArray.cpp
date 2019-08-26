@@ -1,6 +1,6 @@
 #include "./vertexArray.h"
 
-namespace neon {
+namespace Neon {
 	VertexArray::VertexArray() {
 		GL_Call(glGenVertexArrays(1, &m_vao));
 	}

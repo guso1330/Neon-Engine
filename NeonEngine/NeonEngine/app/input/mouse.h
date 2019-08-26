@@ -8,7 +8,7 @@
 #include <string>
 #include <algorithm>
 
-namespace neon {
+namespace Neon {
 
 	enum ButtonEvents {
 		NEON_BUTTON_UP,

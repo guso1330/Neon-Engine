@@ -1,6 +1,6 @@
 #include "material.h"
 
-namespace neon {
+namespace Neon {
 	Material::Material(glm::vec3 &n_ambient,
 					   Texture *n_diffuse,
 					   Texture *n_specular,

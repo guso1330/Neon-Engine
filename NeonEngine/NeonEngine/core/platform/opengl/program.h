@@ -15,7 +15,7 @@
 #include <string>
 #include <iostream>
 
-namespace neon {
+namespace Neon {
 
 
 	class Program {

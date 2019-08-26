@@ -1,16 +1,11 @@
 #pragma once
 
+
 #include "eventManager.h"
 #include "keyboard.h"
 #include "mouse.h"
 
-#include <vector>
-#include <iterator>
-#include <tuple>
-#include <typeinfo>
-#include <iostream>
-
-namespace neon {
+namespace Neon {
 
 	enum EventType {
 		NEON_KEY_EVENT,
@@ -27,9 +22,9 @@ namespace neon {
 			template<class T>
 			void BindEvent(const char* name, EventType event_type, const T &callback) {
 				if(m_eventManager->Register(name, callback)) {
-					std::cout << "InputManager: '" << name << "' was registered" << std::endl;
+					NE_CORE_INFO("InputManager: '{}' was registered", name);
 				} else {
-					std::cout << "InputManager: '" << name << "' was not registered and already exists" << std::endl;
+					NE_CORE_WARN("InputManager: '{}' was not registered and already exists");
 				}
 				switch(event_type) {
 					case NEON_KEY_EVENT:
@@ -51,9 +46,7 @@ namespace neon {
 			void FlushCursorEvents() const;
 
 			void KeyboardEvent(const int key, const int action, const int mods);
-
 			void MouseEvent(const int button, const int action, const int mods);
-
 			void MouseCursorEvent(int x, int y);
 
 			// 

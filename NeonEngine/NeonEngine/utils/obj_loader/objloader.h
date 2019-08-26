@@ -17,7 +17,7 @@
 // using namespace std;
 // using namespace glm;
 
-// namespace neon {
+// namespace Neon {
 
 // 	// TODO: figure out a better way of doing this.
 // 	// 		 Storing so much for just a mesh might

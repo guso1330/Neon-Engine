@@ -1,6 +1,6 @@
 #include "./gameobject.h"
 
-namespace neon {
+namespace Neon {
 	GameObject::GameObject() { 
 		m_model = nullptr;
 	}

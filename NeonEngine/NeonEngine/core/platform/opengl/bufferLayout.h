@@ -8,7 +8,7 @@
 #include <vector>
 #include <iostream>
 
-namespace neon {
+namespace Neon {
 	enum VALUE_TYPE {
 		FLOAT 		  = 0,
 		UNSIGNED_INT  = 1,

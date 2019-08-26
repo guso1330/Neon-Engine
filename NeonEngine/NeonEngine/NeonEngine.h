@@ -1,17 +1,13 @@
 #pragma once
 
 /* Utils */
-#include "utils/logging/logger.h"
-#include "utils/logging/debug.h"
+#include "utils/debug/logger.hpp"
+#include "utils/debug/debug.h"
 #include "utils/fileUtils/fileUtils.h"
 
-/* App */
-#include "app/app.h"
-#include "app/input/input.h"
-
 /* Core */
-#include "core/ecs/ecs.h"
 #include "core/platform/opengl/opengl.h"
+#include "core/ecs/ecs.h"
 
 /* Graphics */
 #include "graphics/cameras/camera.h"
@@ -23,3 +19,16 @@
 
 /* Shaders */
 #include "shaders/material.h"
+
+/* App */
+#include "app/application.h"
+#include "app/input/input.h"
+
+namespace Neon {
+	class NeonEngine {
+		public:
+			static void Init();
+		private:
+			static Application s_Application;
+	};
+}

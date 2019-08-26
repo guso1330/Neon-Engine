@@ -18,7 +18,7 @@
 /*
 	Class that utilizes instanced rendering
 */
-namespace neon {
+namespace Neon {
 
 	class RenderableCollection {
 		public:

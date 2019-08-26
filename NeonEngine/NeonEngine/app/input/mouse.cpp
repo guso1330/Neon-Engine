@@ -1,6 +1,6 @@
 #include "mouse.h"
 
-namespace neon {
+namespace Neon {
 	Mouse::Mouse() {
 		for(int i=0; i < MAX_BUTTONS; ++i) {
 			m_buttons[i] = false;

@@ -10,7 +10,7 @@
 #include <tuple>
 #include <memory>
 
-namespace neon {
+namespace Neon {
 
 	class BaseCallback {
 		public:

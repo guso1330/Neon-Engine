@@ -1,7 +1,8 @@
+#include "nepch.h"
+
 #include "model.h"
 
-
-namespace neon {
+namespace Neon {
 	Model::Model(const char* filename) {
 		Init(filename);
 	}
@@ -11,10 +12,10 @@ namespace neon {
 	void Model::Init(const char* filename) {
 		bool loaded_mesh = InitMeshes(filename);
 		if(!loaded_mesh) {
-			std::cout << "Error: " << filename << " was not loaded" << std::endl;
+			NE_CORE_ERROR("{} was not loaded", filename);
 		} else {
 			std::string mesh_word = m_meshes.size() > 1 ? "meshes" : "mesh";
-			std::cout << "Mesh: " << filename << " loaded succesfully with " << m_meshes.size() << " " << mesh_word << " loaded" << std::endl;
+			NE_CORE_INFO("Mesh: {} loaded successfully with {} {} loaded", filename, m_meshes.size(), mesh_word);
 		}
 	}
 
@@ -22,7 +23,7 @@ namespace neon {
 		Assimp::Importer importer;
 		std::string filename_string = (std::string)filename;
 
-		std::cout << "\nAssimp Loading: " << filename_string << std::endl;
+		NE_CORE_INFO("Assimp Loading: {}", filename_string);
 
 		// Load the scene
 		const aiScene* scene = importer.ReadFile(filename_string, aiProcessPreset_TargetRealtime_MaxQuality);
@@ -108,10 +109,10 @@ namespace neon {
 			if(aiReturn_SUCCESS == ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &filename))
 			{
 				std::string diffuse_path = m_directory + "/" + std::string(filename.C_Str());
-				std::cout << "Diffuse Texture Path: " << diffuse_path << std::endl;
+				NE_CORE_INFO("Diffuse Texture Path: {}", diffuse_path);
 				n_material->SetDiffuse(new Texture(diffuse_path, Diffuse));
 			} else if (aiReturn_SUCCESS == ai_material->GetTexture(aiTextureType_SPECULAR, 0, &filename)) {
-				std::cout << "Specular Texture Path: " << filename.C_Str() << std::endl;
+				NE_CORE_INFO("Specular Texture Path: {}", filename.C_Str());
 				std::string diffuse_path = m_directory + "/" + std::string(filename.C_Str());
 				n_material->SetSpecular(new Texture(diffuse_path, Specular));
 			}

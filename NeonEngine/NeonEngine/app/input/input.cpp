@@ -1,6 +1,8 @@
+#include "nepch.h"
+
 #include "input.h"
 
-namespace neon {
+namespace Neon {
 	// Input Class
 	Input::Input() {
 		m_eventManager = new EventManager();

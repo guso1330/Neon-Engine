@@ -4,18 +4,12 @@
 #include "./input/input.h"
 
 #include <GLFW/glfw3.h>
-#include <iostream>
 
-namespace neon {
+namespace Neon {
 	class Window {
 		public:
-			Window(unsigned int width, unsigned int height, bool fullscreen, const char* title);
+			Window(unsigned int width = 1280, unsigned int height = 720, bool fullscreen = false, const char* title = "");
 			~Window();
-
-		public:
-			bool isClosed() const;
-			void SetInputMode(int mode, int value);
-			void Update();
 
 			/* GETTERS */
 			inline int GetWidth() const { return m_width; }
@@ -24,6 +18,13 @@ namespace neon {
 			inline GLFWwindow* const GetGLFWwindow() const { return m_window; }
 			inline GLFWwindow* const GetCurrentWindow() const { return glfwGetCurrentContext(); }
 			inline Input* GetInput() const { return m_input; }
+
+			/* SETTERS */
+			void SetSize(unsigned int width, unsigned int height);
+			void SetInputMode(int mode, int value);
+
+			bool isClosed() const;
+			void Update();
 
 		private:
 			bool Init();

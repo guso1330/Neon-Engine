@@ -7,7 +7,7 @@
 #include <vector>
 #include <iostream>
 
-namespace neon {
+namespace Neon {
 	class VertexArray {
 		public:
 			VertexArray();

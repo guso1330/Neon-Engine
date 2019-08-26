@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../../../app/window.h" // Todo: can this be removed?
 #include "./GL_Error.h"
 #include "./vertexArray.h"
 #include "./vertexBuffer.h"
@@ -12,13 +11,9 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-#include <unordered_map>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <cstdio>
+#include <GLFW/glfw3.h>
 
-namespace neon {
+namespace Neon {
 	enum class BufferUsage
 	{
 		STATIC, DYNAMIC

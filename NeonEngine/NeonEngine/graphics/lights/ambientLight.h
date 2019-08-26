@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-namespace neon {
+namespace Neon {
 	class AmbientLight : public Light {
 		public:
 			AmbientLight();

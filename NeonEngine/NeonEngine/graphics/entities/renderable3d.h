@@ -19,7 +19,7 @@
 #include <vector>
 #include <iostream>
 
-namespace neon {
+namespace Neon {
 
 	class Renderable3d {
 		public:

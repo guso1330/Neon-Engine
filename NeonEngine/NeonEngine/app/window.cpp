@@ -1,3 +1,5 @@
+#include "nepch.h"
+
 #include "window.h"
 
 /*
@@ -6,8 +8,7 @@
  	- Abstract out GLFW from this class to make more generic
 */
 
-
-namespace neon {
+namespace Neon {
 
 	static void window_resize_callback(GLFWwindow *glfwWindow, int width, int height);
 	static void key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods);
@@ -15,14 +16,13 @@ namespace neon {
 	static void mouse_button_callback (GLFWwindow *glfwWindow, int button, int action, int mods);
 	static void scroll_callback(GLFWwindow* glfwWindow, double xoffset, double yoffset);
 
-	Window::Window(unsigned int width, unsigned int height, bool fullscreen, const char* title) :
-		m_width(width),
-		m_height(height),
-		m_fullscreen(fullscreen),
-		m_title(title) {
-
+	Window::Window(unsigned int width, unsigned int height, bool fullscreen, const char* title) {
+		m_width = width;
+		m_height = height;
+		m_fullscreen = fullscreen;
+		m_title = title;
 		if (!Init()) {
-			std::cerr << "Error: window did not initialize" << std::endl;
+			NE_CORE_ERROR("Window did not initialize");
 			glfwTerminate();
 		}
 	}
@@ -35,7 +35,7 @@ namespace neon {
 
 	bool Window::Init() {
 		if (!glfwInit()) {
-			std::cerr << "Failed to initalize GLFW" << std::endl;
+			NE_CORE_ERROR("Failed to initalize GLFW");
 			return false;
 		}
 
@@ -43,7 +43,7 @@ namespace neon {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         #ifdef __APPLE__ // handle mac compatibility
-            std::cout << "Setting MacOS forward compatibility" << std::endl;
+        	NE_CORE_WARN("Setting MacOS forward compatibility");
             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         #endif
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -54,7 +54,7 @@ namespace neon {
 
 		/* Check if the window has opened */
 		if (m_window == nullptr) {
-			std::cerr << "Failed to create GLFW window" << std::endl;
+			NE_CORE_ERROR("Failed to create GLFW window");
 			return false;
 		}
 
@@ -80,12 +80,18 @@ namespace neon {
 		return true;
 	}
 
-	bool Window::isClosed() const {
-		return glfwWindowShouldClose(m_window) == 1;
-	}
-
 	void Window::SetInputMode(int mode, int value) {
 		glfwSetInputMode(GetCurrentWindow(), mode, value);
+	}
+
+	void Window::SetSize(unsigned int width, unsigned int height) {
+		GLFWwindow* window = GetCurrentWindow();
+		glfwSetWindowSize(window, width, height);
+		glfwGetWindowSize(window, &m_width, &m_height);
+	}
+
+	bool Window::isClosed() const {
+		return glfwWindowShouldClose(m_window) == 1;
 	}
 
 	void Window::Update() {
@@ -101,6 +107,7 @@ namespace neon {
 		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
 		Window *window = static_cast<Window *>(ptr_window);
 
+		// TODO: Figure out how to get the Open Context into here
 		// GL_Call(glViewport(0, 0, width, height));
 	}
 

@@ -1,7 +1,7 @@
 #include "renderableCollection.h"
 #include <math.h>
 
-namespace neon {
+namespace Neon {
 	RenderableCollection::RenderableCollection(Renderable3d *renderable, Program *program) :
 		m_renderable(renderable),
 		m_program(program)

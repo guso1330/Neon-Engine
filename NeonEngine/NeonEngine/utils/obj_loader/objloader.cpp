@@ -6,7 +6,7 @@
 
 // using namespace std;
 
-// namespace neon {
+// namespace Neon {
 
 // 	void tiny_obj_loader_load_obj(std::string inputfile, vector<vec3> &vertices, vector<unsigned int> &indices, vector<vec2> &uvs, vector<vec3> &normals, vector<Index> &Index_Obj) {
 // 		clock_t begin = clock();

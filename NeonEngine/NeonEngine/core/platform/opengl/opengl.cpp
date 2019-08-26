@@ -1,6 +1,8 @@
+#include "nepch.h"
+
 #include "./opengl.h"
 
-namespace neon {
+namespace Neon {
 
 	static unsigned int GL_BufferUsage(BufferUsage usage);
 
@@ -10,16 +12,15 @@ namespace neon {
 			/* Print Renderer and OpenGL info */
 			const GLubyte *renderer = glGetString(GL_RENDERER);
 			const GLubyte *version = glGetString(GL_VERSION);
-			std::cout << "Neon Engine - Version 0.1" << std::endl;
-			std::cout << "Renderer: " << renderer << std::endl;
-			std::cout << "OpenGL Version: " << version << std::endl;
+			NE_CORE_INFO("Renderer: {}", renderer);
+			NE_CORE_INFO("OpenGL Version: {}", version);
 		}
 	}
 
 	bool OpenGLContext::Init() {
 		// Setting up glad and initializing it
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-			std::cerr << "Failed to initialize GLAD" << std::endl;
+			NE_CORE_ERROR("Failed to initialize GLAD");
 			return false;
 		}
 
@@ -167,11 +168,11 @@ namespace neon {
 		if(program_it != m_programMap.end()) {
 			m_currentProgram = program_id;
 			(*program_it).second->Bind(); // Bind the program
-			std::cout << "Program " << program_id << " was bound" << std::endl;
+			NE_CORE_INFO("Program {} was bound", program_id);
 			return;
 		}
 
-		std::cout << "WARNING: Program " << program_id << " could not be bound" << std::endl;
+		NE_CORE_WARN("Program {} could not be bound");
 	}
 
 	/*****************/
@@ -189,13 +190,12 @@ namespace neon {
 		int length; // name length
 
 		GL_Call(glGetProgramiv(m_currentProgram, GL_ACTIVE_ATTRIBUTES, &count));
-		printf("Active Attributes: %d\n", count);
+		NE_CORE_INFO("Active Attributes: {}", count);
 
 		for (i = 0; i < count; i++)
 		{
 			glGetActiveAttrib(m_currentProgram, (unsigned int)i, bufSize, &length, &size, &type, name);
-
-			printf("Attribute #%d Type: %u Name: %s\n", i, type, name);
+			NE_CORE_INFO("Attribute #{} Type: {} Name: {}", i, type, name);
 		}
 	}
 
@@ -222,8 +222,7 @@ namespace neon {
 			unsigned int block_index = glGetUniformBlockIndex(current_program->GetProgramId(), &name[0]);
 			current_program->SaveUniform(block_index, uniform_block_name);
 
-			std::cout << "uniformBlock " << uniform_block_name << ": " << " at " << block_index
-			 << std::endl;
+			NE_CORE_INFO("uniformBlock {}: at {}", uniform_block_name, block_index);
 		}
 
 		// Get and save the Uniform Variables
@@ -237,13 +236,12 @@ namespace neon {
 		int length; // name length
 
 		GL_Call(glGetProgramiv(m_currentProgram, GL_ACTIVE_UNIFORMS, &count));
-		printf("Active Uniforms: %d\n", count);
+		NE_CORE_INFO("Active Uniforms {}", count);
 
 		for (int i = 0; i < count; i++)
 		{
 			GL_Call(glGetActiveUniform(m_currentProgram, (unsigned int)i, bufSize, &length, &size, &type, name));
-
-			printf("Uniform #%d Type: %u Name: %s\n", i, type, name);
+			NE_CORE_INFO("Uniform #{} Type: {} Name: {}", i, type, name);
 		}
 	}
 

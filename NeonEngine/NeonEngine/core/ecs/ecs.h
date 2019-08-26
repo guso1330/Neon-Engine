@@ -1,5 +1,5 @@
 #pragma once
 
-namespace neon { namespace ecs {
+namespace Neon { namespace ecs {
 
 }}

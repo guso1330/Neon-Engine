@@ -1,6 +1,6 @@
 #include "renderable3d.h"
 
-namespace neon {
+namespace Neon {
 	Renderable3d::Renderable3d() {
 		// Default values
 		m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);

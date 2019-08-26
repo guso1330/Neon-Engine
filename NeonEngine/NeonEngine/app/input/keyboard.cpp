@@ -1,6 +1,6 @@
 #include "keyboard.h"
 
-namespace neon {
+namespace Neon {
 	Keyboard::Keyboard() {
 		for(int i=0; i < MAX_KEYS; ++i) {
 			m_keys[i] = false;

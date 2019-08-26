@@ -1,7 +1,7 @@
 // Implementation file for the Mesh Class
 #include "./mesh.h"
 
-namespace neon {
+namespace Neon {
 	// Default
 	Mesh::Mesh() {}
 

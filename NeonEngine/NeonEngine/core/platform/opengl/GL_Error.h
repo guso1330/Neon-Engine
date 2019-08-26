@@ -17,7 +17,7 @@
 	x;\
 	NEON_ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 
-namespace neon {
+namespace Neon {
 	static void GLClearError() {
 		while (glGetError() != GL_NO_ERROR);
 	}

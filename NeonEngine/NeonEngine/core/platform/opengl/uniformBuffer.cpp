@@ -1,6 +1,6 @@
 #include "./uniformBuffer.h"
 
-namespace neon {
+namespace Neon {
 	UniformBuffer::UniformBuffer() {
 		GL_Call(glGenBuffers(1, &m_ubo));
 	}

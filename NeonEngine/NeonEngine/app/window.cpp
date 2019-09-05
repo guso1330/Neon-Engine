@@ -21,16 +21,30 @@ namespace Neon {
 		m_height = height;
 		m_fullscreen = fullscreen;
 		m_title = title;
-		if (!Init()) {
-			NE_CORE_ERROR("Window did not initialize");
-			glfwTerminate();
-		}
+		
+		RunInit();
+	}
+
+	Window::Window(const WindowSettings &settings) {
+		m_width = settings.width;
+		m_height = settings.height;
+		m_fullscreen = settings.fullscreen;
+		m_title = settings.title;
+		
+		RunInit();
 	}
 
 	Window::~Window() {
 		delete m_input;
 		glfwDestroyWindow(m_window);
 		glfwTerminate();
+	}
+
+	void Window::RunInit() {
+		if (!Init()) {
+			NE_CORE_ERROR("Window did not initialize");
+			glfwTerminate();
+		}
 	}
 
 	bool Window::Init() {
@@ -117,7 +131,7 @@ namespace Neon {
 
 		// TODO: Pass arguments from the window object ot this
 		//		 event function
-		window->m_input->KeyboardEvent(key, action, mods);
+		window->GetInput()->KeyboardEvent(key, action, mods);
 
 		// Close the window
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -129,7 +143,7 @@ namespace Neon {
 		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
 		Window *window = static_cast<Window *>(ptr_window);
 
-		window->m_input->MouseCursorEvent(x_pos, y_pos);
+		window->GetInput()->MouseCursorEvent(x_pos, y_pos);
 	}
 
 	void mouse_button_callback(GLFWwindow *glfwWindow, int button, int action, int mods) {
@@ -138,12 +152,11 @@ namespace Neon {
 
 		// TODO: Pass arguments from the window object ot this
 		//		 event function
-		window->m_input->MouseEvent(button, action, mods);
+		window->GetInput()->MouseEvent(button, action, mods);
 	}
 
 	void scroll_callback(GLFWwindow *glfwWindow, double xoffset, double yoffset) {
 		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
 		Window *window = static_cast<Window *>(ptr_window);
-
 	}
 }

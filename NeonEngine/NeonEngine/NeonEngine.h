@@ -2,7 +2,6 @@
 
 /* Utils */
 #include "utils/debug/logger.hpp"
-#include "utils/debug/debug.h"
 #include "utils/fileUtils/fileUtils.h"
 
 /* Core */
@@ -21,14 +20,8 @@
 #include "shaders/material.h"
 
 /* App */
-#include "app/application.h"
 #include "app/input/input.h"
+#include "app/application.h"
 
-namespace Neon {
-	class NeonEngine {
-		public:
-			static void Init();
-		private:
-			static Application s_Application;
-	};
-}
+/* Main - entry point */
+#include "main.h"

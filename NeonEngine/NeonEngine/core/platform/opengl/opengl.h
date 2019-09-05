@@ -19,6 +19,7 @@ namespace Neon {
 		STATIC, DYNAMIC
 	};
 
+
 	class OpenGLContext {
 		typedef std::unordered_map<unsigned int, VertexArray*> VertexArrayMap;
 		typedef std::unordered_map<unsigned int, UniformBuffer*> UniformBufferMap;
@@ -28,65 +29,67 @@ namespace Neon {
 
 		public:
 			// Constructor
-			OpenGLContext();
+			OpenGLContext() {};
+			~OpenGLContext() {};
 
 			//
 			// Public Functional Methods
 			//
 			void Clear() const;
-			void Draw(unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode);
+			static void Draw(unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode);
 
 			//
 			// Create methods
 			//
-			unsigned int CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, BufferLayout layout, BufferUsage usage);
-			unsigned int CreateShader(const std::string& filename, unsigned int shader_type);
-			unsigned int CreateProgram(const unsigned int shader_ids[], unsigned int size);
-			unsigned int CreateTexture(const std::string& filename, TextureType type, unsigned int unit);
-			unsigned int CreateUniformBuffer(const void* data, size_t data_size, BufferUsage usage);
+			static void CreateContext();
+			static unsigned int CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, BufferLayout layout, BufferUsage usage);
+			static unsigned int CreateShader(const std::string& filename, unsigned int shader_type);
+			static unsigned int CreateProgram(const unsigned int shader_ids[], unsigned int size);
+			static unsigned int CreateTexture(const std::string& filename, TextureType type, unsigned int unit);
+			static unsigned int CreateUniformBuffer(const void* data, size_t data_size, BufferUsage usage);
 
 			//
 			// Binding Methods
 			//
-			void BindTexture(unsigned int tex_id, unsigned int unit);
-			void BindVao(unsigned int vao_id);
-			void BindProgram(unsigned int program_id);
+			static void BindTexture(unsigned int tex_id, unsigned int unit);
+			static void BindVao(unsigned int vao_id);
+			static void BindProgram(unsigned int program_id);
 
 			//
 			// Get Program
 			//
-			inline Program* GetProgram(unsigned int program_id) { return m_programMap[program_id]; }
+			inline Program* GetProgram(unsigned int program_id) { return s_programMap[program_id]; }
 
 			//
 			// Set Methods
 			//
-			void SetClearColor(float r, float g, float b, float a);
+			static void SetClearColor(float r, float g, float b, float a);
 
 			void GetActiveUniforms();
 			void GetActiveAttributes() const;
 
-			void UpdateUbo(unsigned int ubo_id, const void* data, size_t data_size);
+			static void UpdateUbo(unsigned int ubo_id, const void* data, size_t data_size);
 
 		//
 		// Private Methods
 		//
 		private:
-			bool Init();
+			static bool Init();
 
 		//
 		// Private Variables
 		//
 		private:
-			glm::vec4 m_clearColor;
-			unsigned int m_currentVao;
-			unsigned int m_currentProgram;
+			static glm::vec4 s_clearColor;
+			static unsigned int s_currentVao;
+			static unsigned int s_currentProgram;
 
 		// Private Structures/Containers
 		private:
-			VertexArrayMap m_vaoMap;
-			ShaderMap m_shaderMap;
-			ProgramMap m_programMap;
-			TextureMap m_textureMap;
-			UniformBufferMap m_uniformBufferMap;
+			static VertexArrayMap s_vaoMap;
+			static ShaderMap s_shaderMap;
+			static ProgramMap s_programMap;
+			static TextureMap s_textureMap;
+			static UniformBufferMap s_uniformBufferMap;
 	};
 }

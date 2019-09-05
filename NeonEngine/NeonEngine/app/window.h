@@ -6,9 +6,17 @@
 #include <GLFW/glfw3.h>
 
 namespace Neon {
+	struct WindowSettings {
+		unsigned int width = 1280;
+		unsigned int height = 720;
+		bool fullscreen = false;
+		const char* title = "";
+	};
+
 	class Window {
 		public:
 			Window(unsigned int width = 1280, unsigned int height = 720, bool fullscreen = false, const char* title = "");
+			Window(const WindowSettings &settings);
 			~Window();
 
 			/* GETTERS */
@@ -18,6 +26,7 @@ namespace Neon {
 			inline GLFWwindow* const GetGLFWwindow() const { return m_window; }
 			inline GLFWwindow* const GetCurrentWindow() const { return glfwGetCurrentContext(); }
 			inline Input* GetInput() const { return m_input; }
+			inline float GetTime() const { return glfwGetTime(); }
 
 			/* SETTERS */
 			void SetSize(unsigned int width, unsigned int height);
@@ -28,6 +37,7 @@ namespace Neon {
 
 		private:
 			bool Init();
+			void RunInit();
 
 		private:
 			int m_width, m_height;
@@ -35,8 +45,6 @@ namespace Neon {
 			
 			const char* m_title;
 			GLFWwindow *m_window;
-
-		public:
-			Input *m_input;
+			Input *m_input; // should be static?
 	};
 }

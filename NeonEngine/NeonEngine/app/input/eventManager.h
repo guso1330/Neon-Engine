@@ -50,7 +50,7 @@ namespace Neon {
 
 			// TODO: Understand this code haha
 			template <class... ArgTypes>
-			void Run(const char* name, ArgTypes... args) {
+			void Run(const char* name, ArgTypes... args) const {
 				typedef Callback<ArgTypes...> CallbackType;
 				EventsMap::const_iterator it = m_events.find(name);
 				
@@ -68,9 +68,12 @@ namespace Neon {
 			}
 
 			// DEBUG FUNCTION
-			void PrintAllEvents() {
+			void PrintEvents() {
+				unsigned short event_num = 0;
+				NE_CORE_WARN("EventManager: contains {} events", m_events.size());
 				for(EventsMap::iterator it = m_events.begin(); it != m_events.end(); ++it) {
-					std::cout << (*it).first << std::endl;
+					NE_CORE_WARN("EventManager: {}, event {}", (*it).first, event_num);
+					++event_num;
 				}
 			}
 

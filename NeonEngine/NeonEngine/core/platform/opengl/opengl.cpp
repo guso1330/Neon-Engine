@@ -3,11 +3,20 @@
 #include "./opengl.h"
 
 namespace Neon {
-
+	
 	static unsigned int GL_BufferUsage(BufferUsage usage);
 
-	OpenGLContext::OpenGLContext() {
+	glm::vec4 OpenGLContext::s_clearColor;
+	unsigned int OpenGLContext::s_currentVao;
+	unsigned int OpenGLContext::s_currentProgram;
+	OpenGLContext::VertexArrayMap OpenGLContext::s_vaoMap;
+	OpenGLContext::ShaderMap OpenGLContext::s_shaderMap;
+	OpenGLContext::ProgramMap OpenGLContext::s_programMap;
+	OpenGLContext::TextureMap OpenGLContext::s_textureMap;
+	OpenGLContext::UniformBufferMap OpenGLContext::s_uniformBufferMap;
 
+
+	void OpenGLContext::CreateContext() {
 		if(Init()) {
 			/* Print Renderer and OpenGL info */
 			const GLubyte *renderer = glGetString(GL_RENDERER);
@@ -25,9 +34,9 @@ namespace Neon {
 		}
 
 		// Set all default values
-		m_clearColor = glm::vec4(50.0f/255.0f, 78.0f/255.0f, 119.0f/255.0f, 1);
-		GL_Call(glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, m_clearColor.w));
-		m_currentProgram = 0;
+		s_clearColor = glm::vec4(50.0f/255.0f, 78.0f/255.0f, 119.0f/255.0f, 1);
+		GL_Call(glClearColor(s_clearColor.x, s_clearColor.y, s_clearColor.z, s_clearColor.w));
+		s_currentProgram = 0;
 
 		//
 		// OpenGL Setting
@@ -44,11 +53,11 @@ namespace Neon {
 	void OpenGLContext::Draw(const unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode) {
 
 		// Grab the vao from the vaoMap
-		VertexArrayMap::iterator vao_it = m_vaoMap.find(vao_id);
+		VertexArrayMap::iterator vao_it = s_vaoMap.find(vao_id);
 
-		BindProgram(m_currentProgram);
+		BindProgram(s_currentProgram);
 
-		if(vao_it != m_vaoMap.end()) {
+		if(vao_it != s_vaoMap.end()) {
 			(*vao_it).second->Bind();
 
 			GL_Call(glDrawElements(draw_mode, num_elements, GL_UNSIGNED_INT, NULL));
@@ -84,12 +93,12 @@ namespace Neon {
 		ibo->SetBufferData(indices, indices_count);
 
 		vao_id = vao->GetVao();
-		m_currentVao = vao_id;
+		s_currentVao = vao_id;
 
 		vao->Unbind();
 
 		// Increment and Handle VAO ID
-		m_vaoMap.insert(std::make_pair(vao_id, vao));
+		s_vaoMap.insert(std::make_pair(vao_id, vao));
 
 		return vao_id;
 	}
@@ -98,7 +107,7 @@ namespace Neon {
 		Shader* shader = new Shader(filename.c_str(), shader_type);
 		unsigned int shader_id = shader->GetShaderId();
 		
-		m_shaderMap.insert(std::make_pair(shader_id, shader));
+		s_shaderMap.insert(std::make_pair(shader_id, shader));
 
 		return shader_id;
 	}
@@ -107,13 +116,13 @@ namespace Neon {
 	unsigned int OpenGLContext::CreateProgram(const unsigned int shader_ids[], unsigned int size) {
 		std::vector<Shader*> shaders;
 		for(int i=0; i < size; ++i) {
-			shaders.push_back(m_shaderMap[shader_ids[i]]);
+			shaders.push_back(s_shaderMap[shader_ids[i]]);
 		}
 
 		Program* program = new Program(shaders);
 		unsigned int program_id = program->GetProgramId();
 
-		m_programMap.insert(std::make_pair(program_id, program));
+		s_programMap.insert(std::make_pair(program_id, program));
 
 		return program_id;
 	}
@@ -122,7 +131,7 @@ namespace Neon {
 		Texture* texture = new Texture(filename, type);
 
 		texture->Bind(unit);
-		m_textureMap.insert(std::make_pair(texture->GetId(), texture));
+		s_textureMap.insert(std::make_pair(texture->GetId(), texture));
 
 		return texture->GetId();
 	}
@@ -131,7 +140,7 @@ namespace Neon {
 		UniformBuffer* ubo = new UniformBuffer();
 		unsigned int ubo_id = ubo->GetUbo();
 
-		m_uniformBufferMap.insert(std::make_pair(ubo_id, ubo));
+		s_uniformBufferMap.insert(std::make_pair(ubo_id, ubo));
 
 		return ubo_id;
 	}
@@ -140,33 +149,33 @@ namespace Neon {
 	/* Bind Functions */
 	/******************/
 	void OpenGLContext::BindTexture(unsigned int tex_id, unsigned int unit) {
-		TextureMap::iterator texture_it = m_textureMap.find(tex_id);
-		if(texture_it != m_textureMap.end()) {
+		TextureMap::iterator texture_it = s_textureMap.find(tex_id);
+		if(texture_it != s_textureMap.end()) {
 			(*texture_it).second->Bind(unit);
 		}
 	}
 
 	void OpenGLContext::BindVao(unsigned int vao_id) {
-		if(vao_id == m_currentVao) {
+		if(vao_id == s_currentVao) {
 			return;
 		}
 
-		VertexArrayMap::iterator vao_it = m_vaoMap.find(vao_id);
-		if(vao_it != m_vaoMap.end()) {
-			m_currentVao = vao_id;
+		VertexArrayMap::iterator vao_it = s_vaoMap.find(vao_id);
+		if(vao_it != s_vaoMap.end()) {
+			s_currentVao = vao_id;
 			(*vao_it).second->Bind();
 		}
 	}
 
 	void OpenGLContext::BindProgram(unsigned int program_id) {
-		if(program_id == m_currentProgram) {
+		if(program_id == s_currentProgram) {
 			return;
 		}
 		
 		// Check if the program exists
-		ProgramMap::iterator program_it = m_programMap.find(program_id);
-		if(program_it != m_programMap.end()) {
-			m_currentProgram = program_id;
+		ProgramMap::iterator program_it = s_programMap.find(program_id);
+		if(program_it != s_programMap.end()) {
+			s_currentProgram = program_id;
 			(*program_it).second->Bind(); // Bind the program
 			NE_CORE_INFO("Program {} was bound", program_id);
 			return;
@@ -189,12 +198,12 @@ namespace Neon {
 		char name[bufSize]; // variable name in GLSL
 		int length; // name length
 
-		GL_Call(glGetProgramiv(m_currentProgram, GL_ACTIVE_ATTRIBUTES, &count));
+		GL_Call(glGetProgramiv(s_currentProgram, GL_ACTIVE_ATTRIBUTES, &count));
 		NE_CORE_INFO("Active Attributes: {}", count);
 
 		for (i = 0; i < count; i++)
 		{
-			glGetActiveAttrib(m_currentProgram, (unsigned int)i, bufSize, &length, &size, &type, name);
+			glGetActiveAttrib(s_currentProgram, (unsigned int)i, bufSize, &length, &size, &type, name);
 			NE_CORE_INFO("Attribute #{} Type: {} Name: {}", i, type, name);
 		}
 	}
@@ -202,9 +211,9 @@ namespace Neon {
 	void OpenGLContext::GetActiveUniforms() {
 		int num_block;
 
-		GL_Call(glGetProgramiv(m_currentProgram, GL_ACTIVE_UNIFORM_BLOCKS, &num_block));
+		GL_Call(glGetProgramiv(s_currentProgram, GL_ACTIVE_UNIFORM_BLOCKS, &num_block));
 
-		Program* current_program = GetProgram(m_currentProgram);
+		Program* current_program = GetProgram(s_currentProgram);
 
 		// Get and save the Uniform Blocks
 		for(int block = 0; block < num_block; ++block) {
@@ -235,19 +244,19 @@ namespace Neon {
 		char name[bufSize]; // variable name in GLSL
 		int length; // name length
 
-		GL_Call(glGetProgramiv(m_currentProgram, GL_ACTIVE_UNIFORMS, &count));
+		GL_Call(glGetProgramiv(s_currentProgram, GL_ACTIVE_UNIFORMS, &count));
 		NE_CORE_INFO("Active Uniforms {}", count);
 
 		for (int i = 0; i < count; i++)
 		{
-			GL_Call(glGetActiveUniform(m_currentProgram, (unsigned int)i, bufSize, &length, &size, &type, name));
+			GL_Call(glGetActiveUniform(s_currentProgram, (unsigned int)i, bufSize, &length, &size, &type, name));
 			NE_CORE_INFO("Uniform #{} Type: {} Name: {}", i, type, name);
 		}
 	}
 
 	void OpenGLContext::UpdateUbo(unsigned int ubo_id, const void* data, size_t data_size) {
-		UniformBufferMap::iterator ubo_it = m_uniformBufferMap.find(ubo_id);
-		if(ubo_it != m_uniformBufferMap.end()) {
+		UniformBufferMap::iterator ubo_it = s_uniformBufferMap.find(ubo_id);
+		if(ubo_it != s_uniformBufferMap.end()) {
 			(*ubo_it).second->Bind();
 			void* dest = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
 			memcpy(dest, data, data_size);
@@ -259,11 +268,11 @@ namespace Neon {
 	/* SET FUNCTIONS */
 	/*****************/
 	void OpenGLContext::SetClearColor(float r, float g, float b, float a) {
-		m_clearColor.x = r;
-		m_clearColor.y = g;
-		m_clearColor.z = b;
-		m_clearColor.w = a;
-		GL_Call(glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, m_clearColor.w));
+		s_clearColor.x = r;
+		s_clearColor.y = g;
+		s_clearColor.z = b;
+		s_clearColor.w = a;
+		GL_Call(glClearColor(s_clearColor.x, s_clearColor.y, s_clearColor.z, s_clearColor.w));
 	}
 
 	static unsigned int GL_BufferUsage(BufferUsage usage) {

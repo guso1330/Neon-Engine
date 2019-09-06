@@ -4,6 +4,8 @@ Simple 2D and 3D game engine
 ## Installation
 - Mac & Linux
 ```
+git submodule init && git submodule update
+
 mkdir build && cd build
 cmake ..
 make

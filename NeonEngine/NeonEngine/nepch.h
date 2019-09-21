@@ -19,3 +19,5 @@
 
 #include "utils/debug/utils.h"
 #include "utils/debug/logger.hpp"
+
+#define NEON_ENGINE_VERSION "0.0.1"

@@ -7,9 +7,10 @@ namespace Neon {
 	OpenGLContext Application::s_GLContext;
 
 	Application::Application() :
+		m_EventManager(new EventManager()),
 		m_Window(new Window())
 	{
-		NE_CORE_INFO("Neon Engine - Version 0.1");
+		NE_CORE_INFO("Neon Engine - Version {}", NEON_ENGINE_VERSION);
 		m_isRunning = false;
 
 		s_Instance = this;
@@ -17,9 +18,10 @@ namespace Neon {
 	}
 
 	Application::Application(const WindowSettings &settings) :
+		m_EventManager(new EventManager()),
 		m_Window(new Window(settings))
 	{
-		NE_CORE_INFO("Neon Engine - Version 0.1");
+		NE_CORE_INFO("Neon Engine - Version {}", NEON_ENGINE_VERSION);
 		m_isRunning = false;
 
 		s_Instance = this;
@@ -32,8 +34,10 @@ namespace Neon {
 			  current_time = 0;
 
 		m_isRunning = true;
-		m_Window->GetInput()->PrintEvents(); // NOTE: temporary
-		while (m_isRunning) {
+
+		m_EventManager->PrintEvents();
+		
+		while (m_isRunning && !m_Window->isClosed()) {
 			Neon::Debug::Utils::calcFPS(m_Window->GetGLFWwindow(), 1.0, "Neon Engine - Current FPS: ");
 
 			// TODO: remove this from the application and abstract out the Rendering platform

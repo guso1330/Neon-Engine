@@ -4,12 +4,13 @@ project(NeonEngine_lib VERSION 0.0.1 DESCRIPTION "NeonEngine library")
 
 # Source files
 set(LIB_DIR "${PROJECT_SOURCE_DIR}/dependencies")
-file(GLOB_RECURSE SRC_FILES "${PROJECT_SOURCE_DIR}/NeonEngine/*.cpp")
+file(GLOB_RECURSE SRC_FILES "${PROJECT_SOURCE_DIR}/NeonEngine/**.cpp")
+file(GLOB_RECURSE HEADER_FILES "${PROJECT_SOURCE_DIR}/NeonEngine/**.h*")
 
-add_library(${PROJECT_NAME} ${SRC_FILES})
+add_library(${PROJECT_NAME} ${SRC_FILES}) # TODO: Add header files to add_library?
 
 # Executable definition and properties
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/NeonEngine)
+target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_SOURCE_DIR}/NeonEngine")
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
 
 # assimp
@@ -64,4 +65,7 @@ MESSAGE( STATUS "SPDLOG_DIR: "   ${SPDLOG_DIR} )
 MESSAGE( STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}" )
 foreach(file ${SRC_FILES})
 	MESSAGE( STATUS "SOURCE FILE: " ${file} )
+endforeach(file)
+foreach(file ${HEADER_FILES})
+	MESSAGE( STATUS "HEADER FILE: " ${file} )
 endforeach(file)

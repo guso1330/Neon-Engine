@@ -1,5 +1,3 @@
-#include "nepch.h"
-
 #include "window.h"
 
 /*
@@ -9,34 +7,35 @@
 */
 
 namespace Neon {
-
 	static void window_resize_callback(GLFWwindow *glfwWindow, int width, int height);
 	static void key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods);
 	static void mouse_cursor_position_callback(GLFWwindow *glfwWindow, double x_pos, double y_pos);
 	static void mouse_button_callback (GLFWwindow *glfwWindow, int button, int action, int mods);
 	static void scroll_callback(GLFWwindow* glfwWindow, double xoffset, double yoffset);
 
-	Window::Window(unsigned int width, unsigned int height, bool fullscreen, const char* title) {
-		m_width = width;
-		m_height = height;
-		m_fullscreen = fullscreen;
-		m_title = title;
-		
+	Window::Window(unsigned int width, unsigned int height, bool fullscreen, const char* title) :
+		m_width(width),
+		m_height(height),
+		m_fullscreen(fullscreen),
+		m_title(title),
+		m_Input(new Input())
+	{
 		RunInit();
 	}
 
-	Window::Window(const WindowSettings &settings) {
+	Window::Window(const WindowSettings &settings) :
+		m_Input(new Input())
+	{
 		m_width = settings.width;
 		m_height = settings.height;
 		m_fullscreen = settings.fullscreen;
 		m_title = settings.title;
-		
+
 		RunInit();
 	}
 
 	Window::~Window() {
-		delete m_input;
-		glfwDestroyWindow(m_window);
+		glfwDestroyWindow(m_Window);
 		glfwTerminate();
 	}
 
@@ -56,42 +55,54 @@ namespace Neon {
 		/* Setting meta data for the window properties */
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        #ifdef __APPLE__ // handle mac compatibility
-        	NE_CORE_WARN("Setting MacOS forward compatibility");
-            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        #endif
+		#ifdef __APPLE__ // handle mac compatibility
+			NE_CORE_WARN("Setting MacOS forward compatibility");
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		#endif
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_SAMPLES, 4);
 
 		/* Create variable to store the window */
-		m_window = glfwCreateWindow(m_width, m_height, m_title, nullptr, nullptr);
+		m_Window = glfwCreateWindow(m_width, m_height, m_title, nullptr, nullptr);
 
 		/* Check if the window has opened */
-		if (m_window == nullptr) {
+		if (m_Window == nullptr) {
 			NE_CORE_ERROR("Failed to create GLFW window");
 			return false;
 		}
 
 		// Assign the user pointer to this
-		glfwSetWindowUserPointer(m_window, this);
+		glfwSetWindowUserPointer(m_Window, this);
 
 		/* Set the newly created window to the current context */
-		glfwMakeContextCurrent(m_window);
+		glfwMakeContextCurrent(m_Window);
+
+		/* Initialize all events */
+		InitEvents();
 
 		/* Set all callbacks */
-		glfwSetWindowSizeCallback(m_window, window_resize_callback);
-		glfwSetKeyCallback(m_window, key_callback);
-		glfwSetCursorPosCallback(m_window, mouse_cursor_position_callback);
-		glfwSetMouseButtonCallback(m_window, mouse_button_callback);
-		glfwSetScrollCallback(m_window, scroll_callback);
-
-		m_input = new Input();
+		glfwSetWindowSizeCallback(m_Window, window_resize_callback);
+		glfwSetKeyCallback(m_Window, key_callback);
+		glfwSetCursorPosCallback(m_Window, mouse_cursor_position_callback);
+		glfwSetMouseButtonCallback(m_Window, mouse_button_callback);
+		glfwSetScrollCallback(m_Window, scroll_callback);
 
 		// WARNING
-		// Eliminate the frame cap
+		// TODO: Eliminate the frame cap
 		glfwSwapInterval(0.0);
 
 		return true;
+	}
+
+	void Window::InitEvents() {
+		/* WindowResize Event */
+		EventManager::AddEvent(NEON_EVENT_WINDOW_RESIZE, EventPtr(new WindowResizeEvent()));
+		EventManager::AddEventHandler(NEON_EVENT_WINDOW_RESIZE, WindowResizeCallback(
+			// TODO replace this function with a more meaningful resize function
+			[](int width, int height) {
+				// NE_CORE_INFO("WindowResize Event 1: Resize occurred {}, {}", width, height);
+			}
+		));
 	}
 
 	void Window::SetInputMode(int mode, int value) {
@@ -105,13 +116,17 @@ namespace Neon {
 	}
 
 	bool Window::isClosed() const {
-		return glfwWindowShouldClose(m_window) == 1;
+		return glfwWindowShouldClose(m_Window) == 1;
 	}
 
 	void Window::Update() {
-		glfwGetFramebufferSize(m_window, &m_width, &m_height);
-		glfwSwapBuffers(m_window);
+		glfwGetFramebufferSize(m_Window, &m_width, &m_height);
+		glfwSwapBuffers(m_Window);
 		glfwPollEvents();
+	}
+
+	void Window::Close() {
+		glfwSetWindowShouldClose(m_Window, GLFW_TRUE);
 	}
 
 	/*******************************
@@ -121,8 +136,7 @@ namespace Neon {
 		void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
 		Window *window = static_cast<Window *>(ptr_window);
 
-		// TODO: Figure out how to get the Open Context into here
-		// GL_Call(glViewport(0, 0, width, height));
+		EventManager::DispatchEvent(NEON_EVENT_WINDOW_RESIZE, width, height);
 	}
 
 	void key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
@@ -132,11 +146,6 @@ namespace Neon {
 		// TODO: Pass arguments from the window object ot this
 		//		 event function
 		window->GetInput()->KeyboardEvent(key, action, mods);
-
-		// Close the window
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-			glfwSetWindowShouldClose(glfwWindow, GLFW_TRUE);
-		}
 	}
 
 	void mouse_cursor_position_callback(GLFWwindow *glfwWindow, double x_pos, double y_pos) {
@@ -152,7 +161,7 @@ namespace Neon {
 
 		// TODO: Pass arguments from the window object ot this
 		//		 event function
-		window->GetInput()->MouseEvent(button, action, mods);
+		window->GetInput()->MousePressEvent(button, action, mods);
 	}
 
 	void scroll_callback(GLFWwindow *glfwWindow, double xoffset, double yoffset) {

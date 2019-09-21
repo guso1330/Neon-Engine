@@ -1,13 +1,14 @@
 #include "nepch.h"
 
 #include "input.h"
+#include "../eventManager.h"
+#include "../eventTypes.h"
 
 namespace Neon {
-
 	// Input Class
-	Input::Input() {}
-
-	Input::~Input() {}
+	Input::Input() {
+		InitEvents();
+	}
 
 	void Input::KeyboardEvent(const int key, const int action, const int mods) {
 		if(action != NEON_KEY_UP) {
@@ -16,38 +17,30 @@ namespace Neon {
 			m_keyboard.SetKey(key, false);
 		}
 
-		FlushKeyboardEvents();
+		EventManager::DispatchEvent(NEON_EVENT_KEY_PRESS, key, action, mods);
 	}
 
-	void Input::MouseEvent(const int button, const int action, const int mods) {
+	void Input::MousePressEvent(const int button, const int action, const int mods) {
 		if(action != NEON_BUTTON_UP) {
 			m_mouse.SetButton(button, true);
 		} else {
 			m_mouse.SetButton(button, false);
 		}
 
-		FlushMouseEvents();
+		EventManager::DispatchEvent(NEON_EVENT_MOUSE_PRESS, button, action, mods);
 	}
 
 	void Input::MouseCursorEvent(int x, int y) {
 		m_mouse.SetPosition(x, y);
 
-		FlushCursorEvents();
+		EventManager::DispatchEvent(NEON_EVENT_MOUSE_CURSOR, x, y);
 	}
 
-	void Input::FlushKeyboardEvents() const {
-		for(int i=0; i < m_keyboardEventNames.size(); ++i) {
-			m_eventManager.Run(m_keyboardEventNames[i]);
-		}
-	}
-	void Input::FlushMouseEvents() const {
-		for(int i=0; i < m_mouseEventNames.size(); ++i) {
-			m_eventManager.Run(m_mouseEventNames[i]);
-		}
-	}
-	void Input::FlushCursorEvents() const {
-		for(int i=0; i < m_mouseCursorEventNames.size(); ++i) {
-			m_eventManager.Run(m_mouseCursorEventNames[i]);
-		}
+	void Input::InitEvents() {
+		EventManager::AddEvent(NEON_EVENT_KEY_PRESS, EventPtr(new KeyPressEvent()));
+
+		EventManager::AddEvent(NEON_EVENT_MOUSE_PRESS, EventPtr(new struct MousePressEvent()));
+
+		EventManager::AddEvent(NEON_EVENT_MOUSE_CURSOR, EventPtr(new struct MouseCursorEvent()));
 	}
 }

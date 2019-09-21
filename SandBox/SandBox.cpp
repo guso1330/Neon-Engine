@@ -202,6 +202,17 @@ class SandBox : public Neon::Application {
 			Neon::Application(settings)
 		{
 			NE_INFO("SandBox app initialized");
+
+			SandBox* This = this;
+
+			Neon::EventManager::AddEventHandler(NEON_EVENT_KEY_PRESS, Neon::KeyPressCallback(
+				[This](int key, int action, int mods) {
+					NE_WARN("SandBox: Closing window");
+					if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+						This->GetWindow().Close();
+					}
+				}
+			));
 		}
 
 		~SandBox() {}
@@ -211,7 +222,7 @@ Neon::Application* Neon::CreateApplication() {
 	Neon::WindowSettings windowSettings;
 	windowSettings.width = WIDTH;
 	windowSettings.height = HEIGHT;
-	windowSettings.title = "Neon Engine";
+	windowSettings.title = "Neon Engine";	
 
 	return new SandBox(windowSettings);
 }

@@ -14,7 +14,7 @@ namespace Neon {
 		NEON_BUTTON_UP,
 		NEON_BUTTON_DOWN,
 		NEON_BUTTON_HOLD,
-		NEON_MOUSE_SCROLL, // maybe don't need this...?
+		NEON_MOUSE_SCROLL,
 		NEON_MOUSE_MOVE
 	};
 

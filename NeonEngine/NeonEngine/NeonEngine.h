@@ -20,8 +20,10 @@
 #include "shaders/material.h"
 
 /* App */
-#include "app/input/input.h"
+#include "app/eventManager.h"
+#include "app/eventTypes.h"
 #include "app/application.h"
+#include "app/input/input.h"
 
 /* Main - entry point */
 #include "main.h"

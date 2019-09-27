@@ -4,6 +4,7 @@
 	TODO:
 	 - Currently arguments are supported, but there is no way of actually passing new arguments or updating arguments.
 	 - Expose some global macro functions to access the event manager
+	 - Implement Subscribe and Unsubscribe
 	 - Event bubbling
 */
 #include "nepch.h"

@@ -5,7 +5,7 @@
 #include "utils/fileUtils/fileUtils.h"
 
 /* Core */
-#include "core/platform/opengl/opengl.h"
+#include "core/platforms/opengl/opengl.h"
 #include "core/ecs/ecs.h"
 
 /* Graphics */
@@ -14,6 +14,7 @@
 #include "graphics/entities/transform.h"
 #include "graphics/entities/renderable3d.h"
 #include "graphics/entities/renderableCollection.h"
+#include "graphics/layers/layer.h"
 // light includes, not used yet
 
 /* Shaders */

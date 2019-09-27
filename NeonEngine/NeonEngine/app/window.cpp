@@ -100,7 +100,7 @@ namespace Neon {
 		EventManager::AddEventHandler(NEON_EVENT_WINDOW_RESIZE, WindowResizeCallback(
 			// TODO replace this function with a more meaningful resize function
 			[](int width, int height) {
-				// NE_CORE_INFO("WindowResize Event 1: Resize occurred {}, {}", width, height);
+				NE_CORE_INFO("WindowResize Event 1: Resize occurred {}, {}", width, height);
 			}
 		));
 	}

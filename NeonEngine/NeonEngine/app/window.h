@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../core/platform/opengl/opengl.h"
+#include "../core/platforms/opengl/opengl.h"
 #include "./eventManager.h"
 #include "./eventTypes.h"
 #include "./input/input.h"

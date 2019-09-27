@@ -194,6 +194,23 @@ const int WIDTH = 512,
 // 	return EXIT_SUCCESS;
 // }
 
+class ExampleLayer : public Neon::Layer {
+	public:
+		ExampleLayer() : Layer("Example") {
+			m_GLContext.CreateContext();
+		}
+
+		void OnAttach() override {
+
+		}
+
+		void OnUpdate(Neon::Timestep) override {
+			m_GLContext.Clear();
+		}
+	private:
+		Neon::OpenGLContext m_GLContext;
+};
+
 class SandBox : public Neon::Application {
 	public:
 		SandBox() {}
@@ -203,16 +220,16 @@ class SandBox : public Neon::Application {
 		{
 			NE_INFO("SandBox app initialized");
 
-			SandBox* This = this;
-
 			Neon::EventManager::AddEventHandler(NEON_EVENT_KEY_PRESS, Neon::KeyPressCallback(
-				[This](int key, int action, int mods) {
-					NE_WARN("SandBox: Closing window");
+				[this](int key, int action, int mods) {
 					if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-						This->GetWindow().Close();
+						NE_WARN("SandBox: Closing application window");
+						this->GetWindow().Close();
 					}
 				}
 			));
+
+			PushLayer(new ExampleLayer());
 		}
 
 		~SandBox() {}

@@ -4,55 +4,50 @@
 
 namespace Neon {
 	Application* Application::s_Instance = nullptr;
-	OpenGLContext Application::s_GLContext;
 
 	Application::Application() :
-		m_EventManager(new EventManager()),
 		m_Window(new Window())
 	{
 		NE_CORE_INFO("Neon Engine - Version {}", NEON_ENGINE_VERSION);
 		m_isRunning = false;
 
 		s_Instance = this;
-		s_GLContext.CreateContext();
 	}
 
 	Application::Application(const WindowSettings &settings) :
-		m_EventManager(new EventManager()),
 		m_Window(new Window(settings))
 	{
 		NE_CORE_INFO("Neon Engine - Version {}", NEON_ENGINE_VERSION);
 		m_isRunning = false;
 
 		s_Instance = this;
-		s_GLContext.CreateContext();
+	}
+
+	void Application::PushLayer(Layer* layer) {
+		m_LayerStack.PushLayer(layer);
+	}
+
+	void Application::PushOverlay(Layer* layer) {
+		m_LayerStack.PushOverlay(layer);
 	}
 
 	void Application::Run() {
-		float elasped_time = 0,
-			  last_time = m_Window->GetTime(),
-			  current_time = 0;
+		float elapsed_time = 0.0f;
 
 		m_isRunning = true;
 
-		m_EventManager->PrintEvents();
-		
+		EventManager::PrintEvents();
+		m_Timer.Init();
 		while (m_isRunning && !m_Window->isClosed()) {
 			Neon::Debug::Utils::calcFPS(m_Window->GetGLFWwindow(), 1.0, "Neon Engine - Current FPS: ");
+			elapsed_time = m_Timer.GetElapsedTime();
 
-			// TODO: remove this from the application and abstract out the Rendering platform
-			s_GLContext.Clear();
-
-			/*
-				Update timer
-				- TODO: extract this to it's own class and handle different types of update loops
-			*/
-			current_time = glfwGetTime();
-			elasped_time = current_time - last_time;
+			for (Layer* layer : m_LayerStack)
+				layer->OnUpdate(elapsed_time);
 
 			m_Window->Update();
 
-			last_time = current_time;
+			m_Timer.Tick();
 		}
 	}
 }

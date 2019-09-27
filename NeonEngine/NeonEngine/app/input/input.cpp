@@ -38,9 +38,7 @@ namespace Neon {
 
 	void Input::InitEvents() {
 		EventManager::AddEvent(NEON_EVENT_KEY_PRESS, EventPtr(new KeyPressEvent()));
-
 		EventManager::AddEvent(NEON_EVENT_MOUSE_PRESS, EventPtr(new struct MousePressEvent()));
-
 		EventManager::AddEvent(NEON_EVENT_MOUSE_CURSOR, EventPtr(new struct MouseCursorEvent()));
 	}
 }

@@ -3,9 +3,9 @@
 #include "./renderable3d.h"
 #include "./mesh.h"
 #include "./model.h"
-#include "../../core/platform/opengl/program.h"
-#include "../../core/platform/opengl/vertexArray.h"
-#include "../../core/platform/opengl/vertexBuffer.h"
+#include "../../core/platforms/opengl/program.h"
+#include "../../core/platforms/opengl/vertexArray.h"
+#include "../../core/platforms/opengl/vertexBuffer.h"
 
 #include <glad/glad.h>
 #include <vector>

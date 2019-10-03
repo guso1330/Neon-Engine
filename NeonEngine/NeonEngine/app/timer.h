@@ -26,7 +26,7 @@ namespace Neon {
 
 			void Init();
 
-			Timestep GetCurrentTime();
+			Timestep GetCurrentTime() const;
 			Timestep GetElapsedTime();
 
 			void Tick();

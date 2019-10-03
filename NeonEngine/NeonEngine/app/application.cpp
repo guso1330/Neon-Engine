@@ -32,7 +32,7 @@ namespace Neon {
 	}
 
 	void Application::Run() {
-		float elapsed_time = 0.0f;
+		Timestep elapsed_time = 0.0f;
 
 		m_isRunning = true;
 
@@ -44,6 +44,8 @@ namespace Neon {
 
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(elapsed_time);
+
+			this->Update(elapsed_time);
 
 			m_Window->Update();
 

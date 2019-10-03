@@ -4,6 +4,7 @@
 
 #include "keyboard.h"
 #include "mouse.h"
+#include "../timer.h"
 
 namespace Neon {
 	class Input {
@@ -12,15 +13,16 @@ namespace Neon {
 			~Input() = default;
 
 			/* Getters */
+			inline static Timestep GetElapsedTime() { return s_Timer.GetElapsedTime(); }
 
 			/* Keyboard functions */
-			inline const bool IsKeyDown(int key) const { return m_keyboard.GetKey(key); }
-			inline const bool IsKeyUp(int key)   const { return !m_keyboard.GetKey(key); }
+			inline const bool IsKeyDown(int key) const { return m_Keyboard.GetKey(key); }
+			inline const bool IsKeyUp(int key)   const { return !m_Keyboard.GetKey(key); }
 
 			/* Mouse functions */
-			inline const glm::vec2 GetCursorPosition()  const { return m_mouse.GetPosition(); }
-			inline const bool IsMouseDown(int key) const { return m_mouse.GetButton(key); }
-			inline const bool IsMouseUp(int key)   const { return !m_mouse.GetButton(key); }
+			inline const glm::vec2 GetCursorPosition()  const { return m_Mouse.GetPosition(); }
+			inline const bool IsMouseDown(int key) const { return m_Mouse.GetButton(key); }
+			inline const bool IsMouseUp(int key)   const { return !m_Mouse.GetButton(key); }
 
 			/* Event functions */
 			void KeyboardEvent(const int key, const int action, const int mods);
@@ -32,7 +34,9 @@ namespace Neon {
 
 		private:
 			// Note: Each input class only has one associated mouse and keyboard
-			Keyboard m_keyboard;
-			Mouse m_mouse;
+			Keyboard m_Keyboard;
+			Mouse m_Mouse;
+		private:
+			static Timer s_Timer;
 	};
 }

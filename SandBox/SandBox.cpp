@@ -3,212 +3,155 @@
 const int WIDTH = 512,
 		  HEIGHT = 264;
 
-// int main() {
+//
+// Input Callback Functions
+//
+auto MoveCameraFunc = [](Neon::Camera* camera, Neon::Input* inputManager, float& camera_speed, float camera_acceleration, float camera_speed_limit, float elapsed_time) {
+	glm::vec3 position = camera->GetPosition();
 
-// 	srand (time(NULL));
+	camera_speed = camera_speed + (camera_acceleration * elapsed_time);
 
-// 	//
-// 	// GLFW is initialized within the window
-// 	// GLAD/OpenGL initialized inside the OpenGL  
-// 	//
-// 	Neon::Window *window = new Neon::Window(WIDTH, HEIGHT, false, "Neon Engine");
-// 	Neon::OpenGLContext gl_context;
-// 	Neon::Input* inputManager = window->GetInput();
+	// On Key up set camera_speed to 0
+	if(inputManager->IsKeyUp(GLFW_KEY_A) &&
+	   inputManager->IsKeyUp(GLFW_KEY_D) &&
+	   inputManager->IsKeyUp(GLFW_KEY_W) &&
+	   inputManager->IsKeyUp(GLFW_KEY_S)) {
+		camera_speed = 0.0f;
+	}
 
-// 	//
-// 	// Initialize the camera
-// 	//
-// 	float aspect_ratio = (float)WIDTH / (float)HEIGHT;
-// 	float fov = 70.0f;
-// 	float near = 0.01f;
-// 	float far = 1000.0f;
-// 	Neon::Camera camera(glm::vec3(0.0f, 0.0f, -5.0f), fov, aspect_ratio, near, far);
+	// Limit Camera Speed
+	if (camera_speed > camera_speed_limit) {
+		camera_speed = camera_speed_limit;
+	}
 
-// 	//
-// 	// Create the VAO for cube
-// 	//
-// 	std::map<unsigned int, std::pair<unsigned int, unsigned int> > vaos;
+	if(inputManager->IsKeyDown(GLFW_KEY_W) || inputManager->IsKeyDown(GLFW_KEY_S)) {
+		float lx = glm::sin(camera->GetYaw())*glm::cos(camera->GetPitch());
+		float ly = glm::sin(camera->GetPitch());
+		float lz = glm::cos(camera->GetYaw())*glm::cos(camera->GetPitch());
 
-// 	Neon::BufferLayout model_layout;
-// 	model_layout.Push(Neon::VALUE_TYPE::FLOAT, 3, offsetof(struct Neon::Vertex, pos));
-// 	model_layout.Push(Neon::VALUE_TYPE::FLOAT, 2, offsetof(struct Neon::Vertex, uv));
-// 	model_layout.Push(Neon::VALUE_TYPE::FLOAT, 3, offsetof(struct Neon::Vertex, normal));
+		if(inputManager->IsKeyDown(GLFW_KEY_S)) {
+			position.x = position.x + (-camera_speed*lx);
+			position.y = position.y + (-camera_speed*ly);
+			position.z = position.z + (-camera_speed*lz);
+		} else {
+			position.x = position.x + camera_speed*lx;
+			position.y = position.y + camera_speed*ly;
+			position.z = position.z + camera_speed*lz;
+		}
+	}
 
-// 	Neon::Model model("./SandBox/res/models/cube_basic.obj");
-// 	std::vector<Neon::Mesh*> meshes = model.GetMeshes();
+	if(inputManager->IsKeyDown(GLFW_KEY_A) || inputManager->IsKeyDown(GLFW_KEY_D)) {
+		if(inputManager->IsKeyDown(GLFW_KEY_A)) {				
+			position += glm::cross(camera->GetRelativeUp(), camera->GetDirection()) * camera_speed;
+			
+		} else {
+			position += glm::cross(camera->GetRelativeUp(), camera->GetDirection()) * -camera_speed;
+		}
+	}
 
-// 	for(std::vector<Neon::Mesh*>::iterator it=meshes.begin(); it != meshes.end(); ++it) {
-// 		std::vector<Neon::Vertex> c_verts = (*it)->GetVertexData();
-// 		std::vector<unsigned int> c_inds = (*it)->GetIndices();
+	camera->SetPosition(position);
+};
 
-// 		unsigned int c_vao = gl_context.CreateVao(&c_verts.front(), c_verts.size() * sizeof(Neon::Vertex), &c_inds.front(), c_inds.size(), model_layout, Neon::BufferUsage::STATIC);
+auto MoveCameraAroundFunc = [](Neon::Window* window, Neon::Camera* camera, int x, int y, float camera_rotate_speed) {
+	int dx = x - WIDTH/2,
+		dy = y - HEIGHT/2;
 
-// 		vaos.insert(std::make_pair(c_vao, std::make_pair(c_vao, (*it)->GetIndicesSize())));
-// 	}
+	if(dx) { // get rotation in the x direction
+		camera->RotateYaw(-camera_rotate_speed * dx);
+	}
+	if(dy) {
+		camera->RotatePitch(-camera_rotate_speed * dy);
+	}
 
-// 	//
-// 	// Create the shaders and the program
-// 	//
-// 	const unsigned int shaders[2] = {
-// 		gl_context.CreateShader("./SandBox/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER),
-// 		gl_context.CreateShader("./SandBox/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER)
-// 	};
-	
-// 	const char* texture_file_path = "./SandBox/res/textures/checkered_colored.jpg";
-// 	const unsigned int texture_id = gl_context.CreateTexture(texture_file_path, Neon::Diffuse, 0);
-
-// 	unsigned int program_id = gl_context.CreateProgram(shaders, 2);
-// 	gl_context.BindProgram(program_id);
-// 	Neon::Program* program = gl_context.GetProgram(program_id);
-
-// 	// Timer variables
-// 	double elapsed_time = 0,
-// 		   last_time = glfwGetTime(),
-// 		   current_time = 0;
-
-// 	// Camera Variables
-// 	float camera_speed = 0.0f;
-// 	float camera_acceleration = 0.3f;
-// 	float camera_speed_limit = 2.0f;
-// 	float camera_rotate_speed = (M_PI / 180.0f) * 0.5;
-
-// 	float angle = 0.0f,
-// 		  speed = 2.0f;
-
-// 	//
-// 	// Input Callback Functions
-// 	//
-// 	auto MoveCameraFunc = [&window, &camera, inputManager, &elapsed_time, &camera_speed, camera_acceleration, camera_speed_limit]() {
-
-// 		glm::vec3 position = camera.GetPosition();
-
-// 		camera_speed = camera_speed + (camera_acceleration * elapsed_time);
-
-// 		// On Key up set camera_speed to 0
-// 		if(inputManager->IsKeyUp(GLFW_KEY_A) && inputManager->IsKeyUp(GLFW_KEY_D) && inputManager->IsKeyUp(GLFW_KEY_W) && inputManager->IsKeyUp(GLFW_KEY_S)) {
-// 			camera_speed = 0.0f;
-// 		}
-
-// 		// Limit Camera Speed
-// 		if (camera_speed > camera_speed_limit) {
-// 			camera_speed = camera_speed_limit;
-// 		}
-
-// 		if(inputManager->IsKeyDown(GLFW_KEY_W) || inputManager->IsKeyDown(GLFW_KEY_S)) {
-// 			float lx = glm::sin(camera.GetYaw())*glm::cos(camera.GetPitch());
-// 			float ly = glm::sin(camera.GetPitch());
-// 			float lz = glm::cos(camera.GetYaw())*glm::cos(camera.GetPitch());
-
-// 			if(inputManager->IsKeyDown(GLFW_KEY_S)) {
-// 				position.x = position.x + (-camera_speed*lx);
-// 				position.y = position.y + (-camera_speed*ly);
-// 				position.z = position.z + (-camera_speed*lz);
-// 			} else {
-// 				position.x = position.x + camera_speed*lx;
-// 				position.y = position.y + camera_speed*ly;
-// 				position.z = position.z + camera_speed*lz;
-// 			}
-// 		}
-
-// 		if(inputManager->IsKeyDown(GLFW_KEY_A) || inputManager->IsKeyDown(GLFW_KEY_D)) {
-// 			if(inputManager->IsKeyDown(GLFW_KEY_A)) {				
-// 				position += glm::cross(camera.GetRelativeUp(), camera.GetDirection()) * camera_speed;
-				
-// 			} else {
-// 				position += glm::cross(camera.GetRelativeUp(), camera.GetDirection()) * -camera_speed;
-// 			}
-// 		}
-
-// 		camera.SetPosition(position);
-// 	};
-
-// 	auto MoveCameraAroundFunc = [inputManager, &camera, camera_rotate_speed, &window]() {
-
-// 		int x = inputManager->GetCursorPosition().x,
-// 			y = inputManager->GetCursorPosition().y;
-
-// 		int dx = x - WIDTH/2,
-// 			dy = y - HEIGHT/2;
-
-// 		if(dx) { // get rotation in the x direction
-// 			camera.RotateYaw(-camera_rotate_speed * dx);
-// 		}
-// 		if(dy) {
-// 			camera.RotatePitch(-camera_rotate_speed * dy);
-// 		}
-
-// 		glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
-// 	};
-
-// 	// Disable the cursor
-// 	glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
-// 	glfwSetInputMode(window->GetGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-// 	// TODO: Test a callback that passes a variable to manipulate a variable
-// 	inputManager->BindEvent("CameraMoveAround", Neon::NEON_CURSOR_EVENT, Neon::Callback<>(MoveCameraAroundFunc));
-
-// 	/**************************
-// 	** MAIN APPLICATION LOOP **
-// 	***************************/
-// 	glm::mat4 model_matrix(1.0f);
-	
-// 	// TODO: Needs to be manually set at the moment...
-// 	program->SetUniform4f("vcolor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	
-// 	// Main game loop
-// 	while (!window->isClosed()) {
-// 		Neon::Debug::calcFPS(window->GetGLFWwindow(), 1.0, "Neon Engine - Current FPS: ");
-// 		gl_context.Clear();
-
-// 		// Update timer
-// 		current_time = glfwGetTime();
-// 		elapsed_time = current_time - last_time;
-
-// 		angle += (elapsed_time * speed);
-// 		if (angle > 360.0) {
-// 			angle = 0;
-// 		}
-
-// 		model_matrix = glm::mat4(1.0);
-// 		model_matrix = model_matrix * glm::rotate(angle, glm::vec3(0.0, 1.0f, 0.0));
-
-// 		//
-// 		// Handle Camera Updates
-// 		//
-// 		MoveCameraFunc();
-// 		camera.Update();
-
-// 		// Set Up simple program
-// 		program->SetUniformMat4("model", model_matrix);
-// 		program->SetUniformMat4("matrices.view_projection", camera.GetViewProjection());
-
-// 		for(int i=0; i < vaos.size(); ++i) {
-// 			gl_context.Draw(vaos[i].first, vaos[i].second, GL_TRIANGLES);
-// 		}
-
-// 		window->Update();
-
-// 		last_time = current_time;
-// 	}
-
-// 	return EXIT_SUCCESS;
-// }
+	camera->Update();
+	glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
+};
 
 class ExampleLayer : public Neon::Layer {
 	public:
 		ExampleLayer() : Layer("Example") {
 			m_GLContext.CreateContext();
+			//
+			// Initialize the camera
+			//
+			float aspect_ratio = (float)WIDTH / (float)HEIGHT;
+			float fov = 70.0f;
+			float near = 0.01f;
+			float far = 1000.0f;
+			m_camera = new Neon::Camera(glm::vec3(0.0f, 0.0f, -5.0f), fov, aspect_ratio, near, far);
 		}
+
+		/* Getter Functions */
+		inline Neon::Camera* GetCamera() const { return m_camera; }
 
 		void OnAttach() override {
+			srand (time(NULL));
 
+			Neon::BufferLayout model_layout;
+			model_layout.Push(Neon::VALUE_TYPE::FLOAT, 3, offsetof(struct Neon::Vertex, pos));
+			model_layout.Push(Neon::VALUE_TYPE::FLOAT, 2, offsetof(struct Neon::Vertex, uv));
+			model_layout.Push(Neon::VALUE_TYPE::FLOAT, 3, offsetof(struct Neon::Vertex, normal));
+
+			Neon::Model model("./SandBox/res/models/cube_basic.obj");
+			std::vector<Neon::Mesh*> meshes = model.GetMeshes();
+
+			for(std::vector<Neon::Mesh*>::iterator it=meshes.begin(); it != meshes.end(); ++it) {
+				std::vector<Neon::Vertex> c_verts = (*it)->GetVertexData();
+				std::vector<unsigned int> c_inds = (*it)->GetIndices();
+
+				unsigned int c_vao = m_GLContext.CreateVao(&c_verts.front(), c_verts.size() * sizeof(Neon::Vertex), &c_inds.front(), c_inds.size(), model_layout, Neon::BufferUsage::STATIC);
+
+				m_vaos.insert(std::make_pair(c_vao, std::make_pair(c_vao, (*it)->GetIndicesSize())));
+			}
+
+			//
+			// Create the shaders and the program
+			//
+			const unsigned int shaders[2] = {
+				m_GLContext.CreateShader("./SandBox/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER),
+				m_GLContext.CreateShader("./SandBox/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER)
+			};
+			
+			const char* texture_file_path = "./SandBox/res/textures/checkered_colored.jpg";
+			const unsigned int texture_id = m_GLContext.CreateTexture(texture_file_path, Neon::Diffuse, 0);
+
+			unsigned int program_id = m_GLContext.CreateProgram(shaders, 2);
+			m_GLContext.BindProgram(program_id);
+			m_program = m_GLContext.GetProgram(program_id);
+
+			// TODO: Needs to be manually set at the moment...
+			m_program->SetUniform4f("vcolor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		}
 
-		void OnUpdate(Neon::Timestep) override {
+		void OnUpdate(Neon::Timestep ts) override {
+			float angle = 0.0f;
+			float speed = 2.0f;
+
 			m_GLContext.Clear();
+
+			angle += (ts * speed);
+			if (angle > 360.0) {
+				angle = 0;
+			}
+
+			m_modelMatrix = glm::mat4(1.0);
+			m_modelMatrix = m_modelMatrix * glm::rotate(angle, glm::vec3(0.0, 1.0f, 0.0));
+
+			m_camera->Update();
+
+			// Set Up simple program
+			m_program->SetUniformMat4("model", m_modelMatrix);
+			m_program->SetUniformMat4("matrices.view_projection", m_camera->GetViewProjection());
+
+			for(int i=0; i < m_vaos.size(); ++i)
+				m_GLContext.Draw(m_vaos[i].first, m_vaos[i].second, GL_TRIANGLES);
 		}
 	private:
 		Neon::OpenGLContext m_GLContext;
+		glm::mat4 m_modelMatrix = glm::mat4(1.0f);
+		Neon::Camera* m_camera;
+		Neon::Program* m_program;
+		std::map<unsigned int, std::pair<unsigned int, unsigned int> > m_vaos;
 };
 
 class SandBox : public Neon::Application {
@@ -220,19 +163,47 @@ class SandBox : public Neon::Application {
 		{
 			NE_INFO("SandBox app initialized");
 
+			Neon::Window* window = this->GetWindow();
+			glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
+
+			m_exampleLayer = new ExampleLayer();
+			PushLayer(m_exampleLayer);
+
+			float camera_rotate_speed = (M_PI / 180.0f) * 0.1;
+
 			Neon::EventManager::AddEventHandler(NEON_EVENT_KEY_PRESS, Neon::KeyPressCallback(
 				[this](int key, int action, int mods) {
 					if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 						NE_WARN("SandBox: Closing application window");
-						this->GetWindow().Close();
+						this->GetWindow()->Close();
 					}
 				}
 			));
+			
+			Neon::EventManager::AddEventHandler(NEON_EVENT_MOUSE_CURSOR, Neon::MouseCursorCallback(
+				[this, window, camera_rotate_speed]
+				(int x, int y) {
+					MoveCameraAroundFunc(window, m_exampleLayer->GetCamera(), x, y, camera_rotate_speed);
+				}
+			));
 
-			PushLayer(new ExampleLayer());
+			// Disable the cursor
+			glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
+			glfwSetInputMode(window->GetGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+
+		void Update(Neon::Timestep ts) override {
+			float update_ts = ts/60.0f;
+			float camera_acceleration = 0.3f;
+			float camera_speed_limit = 2.0f;
+
+			MoveCameraFunc(m_exampleLayer->GetCamera(), this->GetWindow()->GetInput(), m_cameraSpeed, camera_acceleration, camera_speed_limit, update_ts);
 		}
 
 		~SandBox() {}
+	private:
+		float m_cameraSpeed = 0.0f;
+		ExampleLayer* m_exampleLayer;
 };
 
 Neon::Application* Neon::CreateApplication() {

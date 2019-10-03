@@ -13,13 +13,14 @@ namespace Neon {
 			virtual ~Application() = default;
 
 			/* Getters */
-			inline Window& GetWindow() { return *m_Window; }
+			inline Window* GetWindow() { return m_Window.get(); }
 			inline static Application& Get() { return *s_Instance; }
 
 			/* Public Methods */
 			void PushLayer(Layer* layer);
 			void PushOverlay(Layer* overlay);
 			void Run();
+			virtual void Update(Timestep ts) {}
 
 		private:
 			bool m_isRunning;

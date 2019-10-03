@@ -12,13 +12,13 @@ namespace Neon {
 		m_lastTime = glfwGetTime();
 	}
 
-	Timestep Timer::GetCurrentTime() {
-		m_currentTime = glfwGetTime();
-		return m_currentTime;
+	Timestep Timer::GetCurrentTime() const {
+		return (Timestep)glfwGetTime();
 	}
 
 	Timestep Timer::GetElapsedTime() {
-		return GetCurrentTime() - m_lastTime;
+		m_currentTime = GetCurrentTime();
+		return m_currentTime - m_lastTime;
 	}
 
 	void Timer::Tick() {

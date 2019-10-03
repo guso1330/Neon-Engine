@@ -5,35 +5,45 @@
 #include "../eventTypes.h"
 
 namespace Neon {
+
+	Timer Input::s_Timer;
+
 	// Input Class
 	Input::Input() {
 		InitEvents();
+		s_Timer.Init();
 	}
 
 	void Input::KeyboardEvent(const int key, const int action, const int mods) {
 		if(action != NEON_KEY_UP) {
-			m_keyboard.SetKey(key, true);
+			m_Keyboard.SetKey(key, true);
 		} else {
-			m_keyboard.SetKey(key, false);
+			m_Keyboard.SetKey(key, false);
 		}
 
 		EventManager::DispatchEvent(NEON_EVENT_KEY_PRESS, key, action, mods);
+
+		s_Timer.Tick();
 	}
 
 	void Input::MousePressEvent(const int button, const int action, const int mods) {
 		if(action != NEON_BUTTON_UP) {
-			m_mouse.SetButton(button, true);
+			m_Mouse.SetButton(button, true);
 		} else {
-			m_mouse.SetButton(button, false);
+			m_Mouse.SetButton(button, false);
 		}
 
 		EventManager::DispatchEvent(NEON_EVENT_MOUSE_PRESS, button, action, mods);
+
+		s_Timer.Tick();
 	}
 
 	void Input::MouseCursorEvent(int x, int y) {
-		m_mouse.SetPosition(x, y);
+		m_Mouse.SetPosition(x, y);
 
 		EventManager::DispatchEvent(NEON_EVENT_MOUSE_CURSOR, x, y);
+
+		s_Timer.Tick();
 	}
 
 	void Input::InitEvents() {

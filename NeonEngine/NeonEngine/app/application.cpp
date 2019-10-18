@@ -5,21 +5,19 @@
 namespace Neon {
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application() :
-		m_Window(new Window())
-	{
+	Application::Application() {
 		NE_CORE_INFO("Neon Engine - Version {}", NEON_ENGINE_VERSION);
 		m_isRunning = false;
 
+		m_Window = std::unique_ptr<Window>(Window::Create());
 		s_Instance = this;
 	}
 
-	Application::Application(const WindowSettings &settings) :
-		m_Window(new Window(settings))
-	{
+	Application::Application(const WindowSettings &settings) {
 		NE_CORE_INFO("Neon Engine - Version {}", NEON_ENGINE_VERSION);
 		m_isRunning = false;
 
+		m_Window = std::unique_ptr<Window>(Window::Create(settings));
 		s_Instance = this;
 	}
 
@@ -39,7 +37,7 @@ namespace Neon {
 		EventManager::PrintEvents();
 		m_Timer.Init();
 		while (m_isRunning && !m_Window->isClosed()) {
-			Neon::Debug::Utils::calcFPS(m_Window->GetGLFWwindow(), 1.0, "Neon Engine - Current FPS: ");
+			// Neon::Debug::Utils::calcFPS(m_Window->GetNativeWindow(), 1.0, "Neon Engine - Current FPS: ");
 			elapsed_time = m_Timer.GetElapsedTime();
 
 			for (Layer* layer : m_LayerStack)

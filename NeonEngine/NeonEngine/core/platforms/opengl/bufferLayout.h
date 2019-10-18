@@ -3,10 +3,10 @@
 #include "./GL_Error.h"
 #include "../../../graphics/entities/vertex.h"
 
+#include "nepch.h"
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-#include <vector>
-#include <iostream>
 
 namespace Neon {
 	enum VALUE_TYPE {

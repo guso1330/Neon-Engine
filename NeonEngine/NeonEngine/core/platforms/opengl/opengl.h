@@ -28,19 +28,15 @@ namespace Neon {
 		typedef std::unordered_map<unsigned int, Texture*> TextureMap;
 
 		public:
-			// Constructor
+			/* Constructors */
 			OpenGLContext() {};
 			~OpenGLContext() {};
 
-			//
-			// Public Functional Methods
-			//
-			void Clear() const;
+			/* Public Methods */
+			static void Clear();
 			static void Draw(unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode);
 
-			//
-			// Create methods
-			//
+			/* Create methods */
 			static void CreateContext();
 			static unsigned int CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, BufferLayout layout, BufferUsage usage);
 			static unsigned int CreateShader(const std::string& filename, unsigned int shader_type);
@@ -48,43 +44,32 @@ namespace Neon {
 			static unsigned int CreateTexture(const std::string& filename, TextureType type, unsigned int unit);
 			static unsigned int CreateUniformBuffer(const void* data, size_t data_size, BufferUsage usage);
 
-			//
-			// Binding Methods
-			//
+			/* Binding Methods */
 			static void BindTexture(unsigned int tex_id, unsigned int unit);
 			static void BindVao(unsigned int vao_id);
 			static void BindProgram(unsigned int program_id);
 
-			//
-			// Get Program
-			//
-			inline Program* GetProgram(unsigned int program_id) { return s_programMap[program_id]; }
+			/* Getters */
+			static inline Program* GetProgram(unsigned int program_id) { return s_programMap[program_id]; }
+			static void GetActiveUniforms();
+			static void GetActiveAttributes();
 
-			//
-			// Set Methods
-			//
+			/* Setters */
 			static void SetClearColor(float r, float g, float b, float a);
-
-			void GetActiveUniforms();
-			void GetActiveAttributes() const;
 
 			static void UpdateUbo(unsigned int ubo_id, const void* data, size_t data_size);
 
-		//
-		// Private Methods
-		//
+		/* Private Methods */
 		private:
 			static bool Init();
 
-		//
-		// Private Variables
-		//
+		/* Private Variables */
 		private:
 			static glm::vec4 s_clearColor;
 			static unsigned int s_currentVao;
 			static unsigned int s_currentProgram;
 
-		// Private Structures/Containers
+		/* Private Structures/Containers */
 		private:
 			static VertexArrayMap s_vaoMap;
 			static ShaderMap s_shaderMap;

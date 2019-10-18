@@ -9,10 +9,10 @@
 #pragma once
 
 #include "./vertex.h"
-#include "../../core/platforms/opengl/vertexArray.h"
-#include "../../core/platforms/opengl/vertexBuffer.h"
-#include "../../core/platforms/opengl/indexBuffer.h"
-#include "../../core/platforms/opengl/program.h"
+#include "../../core/Platforms/OpenGL/vertexArray.h"
+#include "../../core/Platforms/OpenGL/vertexBuffer.h"
+#include "../../core/Platforms/OpenGL/indexBuffer.h"
+#include "../../core/Platforms/OpenGL/program.h"
 #include "../../shaders/material.h"
 #include "./transform.h"
 

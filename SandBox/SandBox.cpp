@@ -1,15 +1,15 @@
 #include "NeonEngine/NeonEngine.h"
 
-const int WIDTH = 512,
-		  HEIGHT = 264;
+#include <unistd.h>
 
-//
-// Input Callback Functions
-//
-auto MoveCameraFunc = [](Neon::Camera* camera, Neon::Input* inputManager, float& camera_speed, float camera_acceleration, float camera_speed_limit, float elapsed_time) {
+const int WIDTH = 512,
+		  HEIGHT = 256;
+
+/* Input Callback Functions */
+auto MoveCameraFunc = [](Neon::Camera* camera, Neon::Input* inputManager, float& camera_speed, float camera_velocity, float camera_speed_limit, float elapsed_time) {
 	glm::vec3 position = camera->GetPosition();
 
-	camera_speed = camera_speed + (camera_acceleration * elapsed_time);
+	camera_speed = camera_speed + (camera_velocity * elapsed_time);
 
 	// On Key up set camera_speed to 0
 	if(inputManager->IsKeyUp(GLFW_KEY_A) &&
@@ -64,7 +64,7 @@ auto MoveCameraAroundFunc = [](Neon::Window* window, Neon::Camera* camera, int x
 	}
 
 	camera->Update();
-	glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
+	glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 };
 
 class ExampleLayer : public Neon::Layer {
@@ -78,14 +78,14 @@ class ExampleLayer : public Neon::Layer {
 			float fov = 70.0f;
 			float near = 0.01f;
 			float far = 1000.0f;
-			m_camera = new Neon::Camera(glm::vec3(0.0f, 0.0f, -5.0f), fov, aspect_ratio, near, far);
+			m_Camera = new Neon::Camera(glm::vec3(0.0f, 0.0f, -5.0f), fov, aspect_ratio, near, far);
 		}
 
 		/* Getter Functions */
-		inline Neon::Camera* GetCamera() const { return m_camera; }
+		inline Neon::Camera* GetCamera() const { return m_Camera; }
 
 		void OnAttach() override {
-			srand (time(NULL));
+			srand(time(NULL));
 
 			Neon::BufferLayout model_layout;
 			model_layout.Push(Neon::VALUE_TYPE::FLOAT, 3, offsetof(struct Neon::Vertex, pos));
@@ -99,49 +99,53 @@ class ExampleLayer : public Neon::Layer {
 				std::vector<Neon::Vertex> c_verts = (*it)->GetVertexData();
 				std::vector<unsigned int> c_inds = (*it)->GetIndices();
 
-				unsigned int c_vao = m_GLContext.CreateVao(&c_verts.front(), c_verts.size() * sizeof(Neon::Vertex), &c_inds.front(), c_inds.size(), model_layout, Neon::BufferUsage::STATIC);
+				unsigned int c_vao = m_GLContext.CreateVao(
+					&c_verts.front(),
+					c_verts.size() * sizeof(Neon::Vertex),
+					&c_inds.front(),
+					c_inds.size(),
+					model_layout,
+					Neon::BufferUsage::STATIC
+				);
 
 				m_vaos.insert(std::make_pair(c_vao, std::make_pair(c_vao, (*it)->GetIndicesSize())));
 			}
 
-			//
-			// Create the shaders and the program
-			//
+			/* Create the shaders and the program */
 			const unsigned int shaders[2] = {
 				m_GLContext.CreateShader("./SandBox/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER),
 				m_GLContext.CreateShader("./SandBox/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER)
 			};
-			
+
 			const char* texture_file_path = "./SandBox/res/textures/checkered_colored.jpg";
 			const unsigned int texture_id = m_GLContext.CreateTexture(texture_file_path, Neon::Diffuse, 0);
 
 			unsigned int program_id = m_GLContext.CreateProgram(shaders, 2);
 			m_GLContext.BindProgram(program_id);
-			m_program = m_GLContext.GetProgram(program_id);
+			m_Program = m_GLContext.GetProgram(program_id);
 
 			// TODO: Needs to be manually set at the moment...
-			m_program->SetUniform4f("vcolor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+			m_Program->SetUniform4f("vcolor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		}
 
 		void OnUpdate(Neon::Timestep ts) override {
-			float angle = 0.0f;
-			float speed = 2.0f;
+			float angle;
+			float speed;
 
 			m_GLContext.Clear();
 
+			m_Camera->Update();
+
+			// Set Up simple program
+			angle = 0.0f;
+			speed = 2.0f;
 			angle += (ts * speed);
 			if (angle > 360.0) {
 				angle = 0;
 			}
-
-			m_modelMatrix = glm::mat4(1.0);
 			m_modelMatrix = m_modelMatrix * glm::rotate(angle, glm::vec3(0.0, 1.0f, 0.0));
-
-			m_camera->Update();
-
-			// Set Up simple program
-			m_program->SetUniformMat4("model", m_modelMatrix);
-			m_program->SetUniformMat4("matrices.view_projection", m_camera->GetViewProjection());
+			m_Program->SetUniformMat4("model", m_modelMatrix);
+			m_Program->SetUniformMat4("matrices.view_projection", m_Camera->GetViewProjection());
 
 			for(int i=0; i < m_vaos.size(); ++i)
 				m_GLContext.Draw(m_vaos[i].first, m_vaos[i].second, GL_TRIANGLES);
@@ -149,8 +153,8 @@ class ExampleLayer : public Neon::Layer {
 	private:
 		Neon::OpenGLContext m_GLContext;
 		glm::mat4 m_modelMatrix = glm::mat4(1.0f);
-		Neon::Camera* m_camera;
-		Neon::Program* m_program;
+		Neon::Camera* m_Camera;
+		Neon::Program* m_Program;
 		std::map<unsigned int, std::pair<unsigned int, unsigned int> > m_vaos;
 };
 
@@ -164,7 +168,7 @@ class SandBox : public Neon::Application {
 			NE_INFO("SandBox app initialized");
 
 			Neon::Window* window = this->GetWindow();
-			glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
+			glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 
 			m_exampleLayer = new ExampleLayer();
 			PushLayer(m_exampleLayer);
@@ -179,25 +183,38 @@ class SandBox : public Neon::Application {
 					}
 				}
 			));
-			
+
 			Neon::EventManager::AddEventHandler(NEON_EVENT_MOUSE_CURSOR, Neon::MouseCursorCallback(
 				[this, window, camera_rotate_speed]
 				(int x, int y) {
-					MoveCameraAroundFunc(window, m_exampleLayer->GetCamera(), x, y, camera_rotate_speed);
+					MoveCameraAroundFunc(
+						window,
+						m_exampleLayer->GetCamera(),
+						x,
+						y,
+						camera_rotate_speed
+					);
 				}
 			));
 
 			// Disable the cursor
-			glfwSetCursorPos(window->GetGLFWwindow(), WIDTH/2, HEIGHT/2);
-			glfwSetInputMode(window->GetGLFWwindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
+			glfwSetInputMode(static_cast<GLFWwindow*>(window->GetNativeWindow()), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		}
 
 		void Update(Neon::Timestep ts) override {
-			float update_ts = ts/60.0f;
-			float camera_acceleration = 0.3f;
+			float update_ts = (60.0f * ts) / 1000.0f; // TODO: divide by 60.0f?
+			float camera_velocity = 0.3f;
 			float camera_speed_limit = 2.0f;
 
-			MoveCameraFunc(m_exampleLayer->GetCamera(), this->GetWindow()->GetInput(), m_cameraSpeed, camera_acceleration, camera_speed_limit, update_ts);
+			MoveCameraFunc(
+				m_exampleLayer->GetCamera(),
+				(dynamic_cast<Neon::MacOSWindow*>(this->GetWindow()))->GetInput(),
+				m_cameraSpeed,
+				camera_velocity,
+				camera_speed_limit,
+				update_ts
+			);
 		}
 
 		~SandBox() {}
@@ -210,7 +227,7 @@ Neon::Application* Neon::CreateApplication() {
 	Neon::WindowSettings windowSettings;
 	windowSettings.width = WIDTH;
 	windowSettings.height = HEIGHT;
-	windowSettings.title = "Neon Engine";	
+	windowSettings.title = "Neon Engine";
 
 	return new SandBox(windowSettings);
 }

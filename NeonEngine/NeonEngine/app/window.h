@@ -1,58 +1,48 @@
 #pragma once
 
-#include "../core/platforms/opengl/opengl.h"
-#include "./eventManager.h"
-#include "./eventTypes.h"
-#include "./input/input.h"
-
-#include <GLFW/glfw3.h>
+#include "nepch.h"
+#include "../core/Core.h"
 
 namespace Neon {
+
 	struct WindowSettings {
-		unsigned int width = 1280;
-		unsigned int height = 720;
-		bool fullscreen = false;
-		const char* title = "";
+		bool fullscreen;
+		std::string title;
+		unsigned int height;
+		unsigned int width;
+		WindowSettings(
+			const std::string& n_title = NEON_ENGINE_TITLE,
+			unsigned int n_width = 1280,
+			unsigned int n_height = 720,
+			bool n_fullscreen = false
+		) : 
+			title(n_title),
+			width(n_width),
+			height(n_height),
+			fullscreen(n_fullscreen)
+		{}
 	};
 
-	class Window {
+	class Window
+	{
 		public:
-			/* Constructors & Destructors */
-			Window(unsigned int width = 1280, unsigned int height = 720, bool fullscreen = false, const char* title = "");
-			Window(const WindowSettings &settings);
-			~Window();
+			virtual ~Window() = default;
+
+			virtual void Update() = 0;
+			virtual void Close() = 0;
 
 			/* Getters */
-			inline int GetWidth() const { return m_width; }
-			inline int GetHeight() const { return m_height; }
-			inline Input* GetInput() const { return m_Input.get(); }
-			inline GLFWwindow* GetGLFWwindow() const { return m_Window; }
-			inline GLFWwindow* GetCurrentWindow() const { return glfwGetCurrentContext(); }
-			inline float GetTime() const { return glfwGetTime(); }
+			virtual unsigned int GetWidth() const = 0;
+			virtual unsigned int GetHeight() const = 0;
+			virtual bool isFullscreen() const = 0;
+			virtual bool isClosed() const = 0;
+			virtual void* GetNativeWindow() const = 0;
 
 			/* Setters */
-			void SetSize(unsigned int width, unsigned int height);
-			void SetInputMode(int mode, int value);
+			virtual void SetSize(unsigned int width, unsigned int height) = 0;
+			virtual void SetFullscreen(bool isFullscreen) = 0;
+			virtual void SetVSync(bool enabled) = 0;
 
-			/* State Functions */
-			inline bool isFullscreen() const { return m_fullscreen; }
-			bool isClosed() const;
-
-			/* Handler Functions */
-			void Update();
-			void Close();
-
-		private:
-			bool Init();
-			void RunInit();
-			void InitEvents();
-
-		private:
-			int m_width, m_height;
-			bool m_fullscreen;
-			
-			const char* m_title;
-			std::unique_ptr<Input> m_Input;
-			GLFWwindow *m_Window;
+			static Window* Create(const WindowSettings& settings = WindowSettings());
 	};
 }

@@ -5,7 +5,7 @@
 #include "utils/fileUtils/fileUtils.h"
 
 /* Core */
-#include "core/platforms/opengl/opengl.h"
+#include "core/Platforms/OpenGL/opengl.h"
 #include "core/ecs/ecs.h"
 
 /* Graphics */

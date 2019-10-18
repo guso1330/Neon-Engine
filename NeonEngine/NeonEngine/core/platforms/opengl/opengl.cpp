@@ -64,7 +64,7 @@ namespace Neon {
 		}
 	}
 
-	void OpenGLContext::Clear() const {
+	void OpenGLContext::Clear() {
 		GL_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 		GL_Call(glFlush());
 	}
@@ -187,7 +187,7 @@ namespace Neon {
 	/*****************/
 	/* GET FUNCTIONS */
 	/*****************/
-	void OpenGLContext::GetActiveAttributes() const {
+	void OpenGLContext::GetActiveAttributes() {
 		int i;
 		int count;
 

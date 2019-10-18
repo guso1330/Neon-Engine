@@ -1,6 +1,7 @@
 #pragma once
 
-#include "./window.h"
+#include "Window.h"
+#include "../core/Platforms/Platforms.h"
 #include "./eventManager.h"
 #include "./timer.h"
 #include "../graphics/layers/layerStack.h"

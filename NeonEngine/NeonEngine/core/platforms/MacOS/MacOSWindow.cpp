@@ -31,29 +31,29 @@ namespace Neon {
 	}
 
 	MacOSWindow::~MacOSWindow() {
-		glfwDestroyWindow(m_Window);
-		glfwTerminate();
+		GLFW::GLFWContext::GetInstance().Destroy();
 	}
 
 	void MacOSWindow::Update() {
-		glfwGetFramebufferSize(m_Window, (int*)&m_width, (int*)&m_height);
-		glfwSwapBuffers(m_Window);
-		glfwPollEvents();
+		std::pair<int, int> dimensions = GLFW::GLFWContext::GetInstance().Update();
+		m_width = dimensions.first;
+		m_height = dimensions.second;
 	}
 
 	void MacOSWindow::Close() {
-		glfwSetWindowShouldClose(m_Window, GLFW_TRUE);
+		GLFW::GLFWContext::GetInstance().Close();
 	}
 
 	/* Getters */
 	bool MacOSWindow::isClosed() const {
-		return glfwWindowShouldClose(m_Window) == 1;
+		return GLFW::GLFWContext::GetInstance().isCurrentWindowClosed();
 	}
 
 	/* Setters */
 	void MacOSWindow::SetSize(unsigned int width, unsigned int height) {
-		glfwSetWindowSize(m_Window, width, height);
-		glfwGetWindowSize(m_Window, (int*)&m_width, (int*)&m_height);
+		m_width = width;
+		m_height = height;
+		GLFW::GLFWContext::GetInstance().SetWindowDimensions(width, height);
 	}
 
 	void MacOSWindow::SetFullscreen(bool isFullscreen) {
@@ -62,93 +62,78 @@ namespace Neon {
 	}
 
 	void MacOSWindow::SetVSync(bool enabled) {
-		if (enabled) {
-			glfwSwapInterval(1);
-		} else {
-			glfwSwapInterval(0);
-		}
+		GLFW::GLFWContext::GetInstance().SetVSync(enabled);
 
 		m_vsyncEnabled = enabled;
 	}
 
 	void MacOSWindow::SetInputMode(int mode, int value) {
-		glfwSetInputMode(m_Window, mode, value);
+		GLFW::GLFWContext::GetInstance().SetInputMode(mode, value);
 	}
 
 	/* Private Initializers */
 	void MacOSWindow::RunInit() {
 		if (!Init()) {
-			NE_CORE_ERROR("Window did not initialize");
-			glfwTerminate();
+			NE_CORE_ERROR("MacOSWindow: Window did not initialize");
+			GLFW::GLFWContext::GetInstance().Destroy();
 		}
 	}
 
 	bool MacOSWindow::Init() {
-		if (!glfwInit()) {
-			NE_CORE_ERROR("Failed to initalize GLFW");
-			return false;
+		GLFW::GLFWwindowSettings settings;
+		bool initialized = false;
+
+		initialized = GLFW::GLFWContext::GetInstance().CreateContext();
+
+		if (initialized) {
+			settings.width = m_width;
+			settings.height = m_height;
+			settings.title = m_title;
+			m_Window = GLFW::GLFWContext::GetInstance().CreateWindow(
+				settings,
+				this
+			);
+
+			if (m_Window != nullptr) {
+				/* Initialize all events */
+				InitEvents();
+
+				/* NOTE: For now, i'm leaving the callback calls as inline functions */
+				/* Set all callbacks */
+				glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* glfwWindow, int width, int height) {
+					EventManager::DispatchEvent(NEON_EVENT_WINDOW_RESIZE, width, height);
+				});
+
+				glfwSetKeyCallback(m_Window, [](GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
+					void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
+					MacOSWindow *window = static_cast<MacOSWindow *>(ptr_window);
+					// TODO: Pass arguments from the window object ot this
+					//		 event function
+					window->GetInput()->KeyboardEvent(key, action, mods);
+				});
+
+				glfwSetCursorPosCallback(m_Window, [](GLFWwindow *glfwWindow, double x_pos, double y_pos) {
+					void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
+					MacOSWindow *window = static_cast<MacOSWindow *>(ptr_window);
+
+					window->GetInput()->MouseCursorEvent(x_pos, y_pos);
+				});
+
+				glfwSetMouseButtonCallback(m_Window, [](GLFWwindow *glfwWindow, int button, int action, int mods) {
+					void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
+					MacOSWindow *window = static_cast<MacOSWindow *>(ptr_window);
+					// TODO: Pass arguments from the window object ot this
+					//		 event function
+
+					window->GetInput()->MousePressEvent(button, action, mods);
+				});
+
+				glfwSetScrollCallback(m_Window, [](GLFWwindow *glfwWindow, double xoffset, double yoffset) {});
+			}
+
 		}
 
-		/* Setting meta data for the window properties */
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		#ifdef __APPLE__ // handle mac compatibility
-			NE_CORE_WARN("Setting MacOS forward compatibility");
-			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-		#endif
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_SAMPLES, 4);
-
-		/* Create variable to store the window */
-		m_Window = glfwCreateWindow((int)m_width, (int)m_height, m_title.c_str(), nullptr, nullptr);
-
-		/* Check if the window has opened */
-		if (m_Window == nullptr) {
-			NE_CORE_ERROR("Failed to create GLFW window");
-			return false;
-		}
-
-		// Assign the user pointer to this
-		glfwSetWindowUserPointer(m_Window, this);
-
-		/* Set the newly created window to the current context */
-		glfwMakeContextCurrent(m_Window);
-
-		/* Initialize all events */
-		InitEvents();
-
-		/* Set all callbacks */
-		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* glfwWindow, int width, int height) {
-			EventManager::DispatchEvent(NEON_EVENT_WINDOW_RESIZE, width, height);
-		});
-
-		glfwSetKeyCallback(m_Window, [](GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
-			void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
-			MacOSWindow *window = static_cast<MacOSWindow *>(ptr_window);
-			// TODO: Pass arguments from the window object ot this
-			//		 event function
-			window->GetInput()->KeyboardEvent(key, action, mods);
-		});
-
-		glfwSetCursorPosCallback(m_Window, [](GLFWwindow *glfwWindow, double x_pos, double y_pos) {
-			void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
-			MacOSWindow *window = static_cast<MacOSWindow *>(ptr_window);
-
-			window->GetInput()->MouseCursorEvent(x_pos, y_pos);
-		});
-
-		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow *glfwWindow, int button, int action, int mods) {
-			void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
-			MacOSWindow *window = static_cast<MacOSWindow *>(ptr_window);
-			// TODO: Pass arguments from the window object ot this
-			//		 event function
-
-			window->GetInput()->MousePressEvent(button, action, mods);
-		});
-
-		glfwSetScrollCallback(m_Window, [](GLFWwindow *glfwWindow, double xoffset, double yoffset) {});
-
-		return true;
+		return initialized;
 	}
 
 	void MacOSWindow::InitEvents() {

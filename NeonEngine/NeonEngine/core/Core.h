@@ -36,5 +36,8 @@
 	#error "Unknown compiler"
 #endif
 
+#define NE_ASSERT(x, ...) { if(!(x)) { NE_ERROR("Assertion Failed: {0}", __VA_ARGS__); exit(EXIT_FAILURE); } }
+#define NE_CORE_ASSERT(x, ...) { if(!(x)) { NE_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); exit(EXIT_FAILURE); } }
+
 #define NEON_ENGINE_VERSION "0.0.1"
 #define NEON_ENGINE_TITLE "Neon Engine"

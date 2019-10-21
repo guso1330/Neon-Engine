@@ -1,5 +1,5 @@
 #include "nepch.h"
-
+#include "../../Core.h"
 #include "./opengl.h"
 
 namespace Neon {
@@ -29,7 +29,7 @@ namespace Neon {
 	bool OpenGLContext::Init() {
 		// Setting up glad and initializing it
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-			NE_CORE_ERROR("Failed to initialize GLAD");
+			NE_CORE_ASSERT(false, "Failed to initialize GLAD");
 			return false;
 		}
 

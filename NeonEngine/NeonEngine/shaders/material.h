@@ -1,11 +1,14 @@
 #pragma once
 
-#include "../core/Platforms/OpenGL/program.h"
-#include "../core/Platforms/OpenGL/texture.h"
+#include "Core/Platforms/OpenGL/program.h"
+#include "Core/Platforms/OpenGL/texture.h"
 
 #include <glm/glm.hpp>
 
 namespace Neon {
+
+	// TODO: (TEMPORARY) Remove this namespacing
+	using namespace OpenGL;
 
 	class Material {
 		public:

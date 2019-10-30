@@ -1,6 +1,6 @@
 #include "shader.h"
 
-namespace Neon {
+namespace Neon { namespace OpenGL {	
 	Shader::Shader(const char* shaderFile, unsigned int shaderType) :
 		m_filename(shaderFile),
 		m_type(shaderType)
@@ -44,4 +44,4 @@ namespace Neon {
 			exit(EXIT_FAILURE);
 		}
 	}
-}
+}}

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../../../app/Window.h"
-#include "../../../app/input/input.h"
-#include "../../../app/eventManager.h"
-#include "../../../app/eventTypes.h"
-#include "../GLFW/GLFWContext.h"
+#include "App/IWindow.h"
+#include "App/Input/input.h"
+#include "App/eventManager.h"
+#include "App/eventTypes.h"
+#include "Core/Platforms/GLFW/GLFWContext.h"
 
 namespace Neon {
-	class MacOSWindow : public Window {
+	class MacOSWindow : public IWindow {
 		public:
 			MacOSWindow(const WindowSettings& settings);
 			MacOSWindow(std::string title, unsigned int width, unsigned int height, bool fullscreen);

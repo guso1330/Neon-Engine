@@ -96,9 +96,9 @@
 // }
 
 // template<>
-// struct hash<neon::Index>
+// struct hash<Neon::Index>
 // {
-// 	std::size_t operator()(neon::Index const& i) const 
+// 	std::size_t operator()(Neon::Index const& i) const 
 // 	{
 // 		std::size_t res = 0;
 // 		hash_combine(res,i.vertex_index);

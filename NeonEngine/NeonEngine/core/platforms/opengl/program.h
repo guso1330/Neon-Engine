@@ -15,9 +15,7 @@
 #include <string>
 #include <iostream>
 
-namespace Neon {
-
-
+namespace Neon { namespace OpenGL {
 	class Program {
 		typedef std::unordered_map<const char*, int> LocationCache;
 		typedef std::pair<std::string, unsigned int> AttributeUniformBlock;
@@ -63,4 +61,5 @@ namespace Neon {
 			LocationCache m_uniformLocationCache;
 			LocationCache m_attributeLocationCache;
 	};
-}
+
+}}

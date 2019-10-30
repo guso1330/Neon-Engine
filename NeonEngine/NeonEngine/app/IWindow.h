@@ -1,7 +1,8 @@
 #pragma once
 
+#include "Core/Core.h"
+
 #include "nepch.h"
-#include "../core/Core.h"
 
 namespace Neon {
 
@@ -23,10 +24,10 @@ namespace Neon {
 		{}
 	};
 
-	class Window
+	class IWindow
 	{
 		public:
-			virtual ~Window() = default;
+			virtual ~IWindow() = default;
 
 			virtual void Update() = 0;
 			virtual void Close() = 0;
@@ -43,6 +44,6 @@ namespace Neon {
 			virtual void SetFullscreen(bool isFullscreen) = 0;
 			virtual void SetVSync(bool enabled) = 0;
 
-			static Window* Create(const WindowSettings& settings = WindowSettings());
+			static IWindow* Create(const WindowSettings& settings = WindowSettings());
 	};
 }

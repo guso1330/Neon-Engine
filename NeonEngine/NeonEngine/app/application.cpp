@@ -1,6 +1,6 @@
 #include "nepch.h"
 
-#include "application.h"
+#include "App/application.h"
 
 namespace Neon {
 	Application* Application::s_Instance = nullptr;
@@ -9,7 +9,7 @@ namespace Neon {
 		NE_CORE_INFO("Neon Engine - Version {}", NEON_ENGINE_VERSION);
 		m_isRunning = false;
 
-		m_Window = std::unique_ptr<Window>(Window::Create());
+		m_Window = std::unique_ptr<IWindow>(IWindow::Create());
 		s_Instance = this;
 	}
 
@@ -17,7 +17,7 @@ namespace Neon {
 		NE_CORE_INFO("Neon Engine - Version {}", NEON_ENGINE_VERSION);
 		m_isRunning = false;
 
-		m_Window = std::unique_ptr<Window>(Window::Create(settings));
+		m_Window = std::unique_ptr<IWindow>(IWindow::Create(settings));
 		s_Instance = this;
 	}
 
@@ -34,7 +34,6 @@ namespace Neon {
 
 		m_isRunning = true;
 
-		EventManager::PrintEvents();
 		m_Timer.Init();
 		while (m_isRunning && !m_Window->isClosed()) {
 			// Neon::Debug::Utils::calcFPS(m_Window->GetNativeWindow(), 1.0, "Neon Engine - Current FPS: ");

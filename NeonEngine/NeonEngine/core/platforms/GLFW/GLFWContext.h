@@ -30,7 +30,10 @@ namespace Neon { namespace GLFW {
 
 	class GLFWContext {
 		public:
+			/* Constructors */
 			GLFWContext(GLFWContext const&) = delete;
+
+			/* Operator overrides */
 			void operator=(GLFWContext const&) = delete;
 
 			/* Implementation functions */

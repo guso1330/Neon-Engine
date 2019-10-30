@@ -2,7 +2,7 @@
 
 #include "./program.h"
 
-namespace Neon {
+namespace Neon { namespace OpenGL {
 	Program::Program(std::vector<Shader*> shaders) :
 		m_shaders(shaders)
 	{
@@ -119,4 +119,5 @@ namespace Neon {
 	void Program::Unbind() {
 		GL_Call(glUseProgram(0));
 	}
-}
+
+}}

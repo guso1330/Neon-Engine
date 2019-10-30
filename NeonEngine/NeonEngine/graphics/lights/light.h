@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../entities/renderable3d.h"
-#include "../cameras/camera.h"
+#include "Graphics/Entities/renderable3d.h"
+#include "Graphics/Cameras/camera.h"
 
 #include <vector>
 

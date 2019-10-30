@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace Neon {
+namespace Neon { namespace OpenGL {
 	enum TextureType {
 		Diffuse,
 		Normal,
@@ -39,4 +39,4 @@ namespace Neon {
 			int m_width, m_height;
 			TextureType m_type;
 	};
-}
+}}

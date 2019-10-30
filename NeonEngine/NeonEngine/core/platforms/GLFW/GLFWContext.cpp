@@ -1,5 +1,5 @@
 #include "GLFWContext.h"
-#include "../../Core.h"
+#include "Core/Core.h"
 
 namespace Neon { namespace GLFW {
 	bool GLFWContext::s_initialized = false;

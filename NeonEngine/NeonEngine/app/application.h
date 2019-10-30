@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Window.h"
-#include "../core/Platforms/Platforms.h"
-#include "./eventManager.h"
-#include "./timer.h"
-#include "../graphics/layers/layerStack.h"
+#include "App/IWindow.h"
+#include "Core/Platforms/Platforms.h"
+#include "App/eventManager.h"
+#include "App/timer.h"
+#include "Graphics/Layers/layerStack.h"
 
 namespace Neon {
 	class Application {
@@ -14,7 +14,7 @@ namespace Neon {
 			virtual ~Application() = default;
 
 			/* Getters */
-			inline Window* GetWindow() { return m_Window.get(); }
+			inline IWindow* GetWindow() { return m_Window.get(); }
 			inline static Application& Get() { return *s_Instance; }
 
 			/* Public Methods */
@@ -25,7 +25,7 @@ namespace Neon {
 
 		private:
 			bool m_isRunning;
-			std::unique_ptr<Window> m_Window;
+			std::unique_ptr<IWindow> m_Window;
 			LayerStack m_LayerStack;
 			Timer m_Timer;
 

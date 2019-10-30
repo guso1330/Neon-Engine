@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "./vertex.h"
-#include "../../core/Platforms/OpenGL/vertexArray.h"
-#include "../../core/Platforms/OpenGL/vertexBuffer.h"
-#include "../../core/Platforms/OpenGL/indexBuffer.h"
-#include "../../core/Platforms/OpenGL/program.h"
-#include "../../shaders/material.h"
-#include "./transform.h"
+#include "Graphics/Entities/vertex.h"
+#include "Core/Platforms/OpenGL/VertexBuffer.h"
+#include "Core/Platforms/OpenGL/IndexBuffer.h"
+#include "Core/Platforms/OpenGL/VertexArray.h"
+#include "Core/Platforms/OpenGL/program.h"
+#include "Shaders/material.h"
+#include "Graphics/Entities/transform.h"
 
 #include <vector>
 #include <iostream>

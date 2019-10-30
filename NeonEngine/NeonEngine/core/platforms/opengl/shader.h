@@ -5,10 +5,9 @@
 #include <glad/glad.h>
 #include <iostream>
 
-#include "../../../utils/fileUtils/fileUtils.h"
+#include "Utils/FileUtils/FileUtils.h"
 
-namespace Neon {
-
+namespace Neon { namespace OpenGL {
 	class Shader {
 		public:
 			Shader(const char* shaderFile, unsigned int shaderType);
@@ -27,4 +26,4 @@ namespace Neon {
 			const char* m_source;
 			unsigned int m_shaderID;
 	};
-}
+}}

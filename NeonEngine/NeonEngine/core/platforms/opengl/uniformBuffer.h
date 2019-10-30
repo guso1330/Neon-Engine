@@ -6,8 +6,7 @@
 #include <iostream>
 #include <vector>
 
-namespace Neon {
-
+namespace Neon { namespace OpenGL {
 	class UniformBuffer {
 		public:
 			UniformBuffer();
@@ -24,4 +23,4 @@ namespace Neon {
 		private:
 			unsigned int m_ubo;
 	};
-}
+}}

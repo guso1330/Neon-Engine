@@ -1,7 +1,6 @@
-#include "./indexBuffer.h"
+#include "./IndexBuffer.h"
 
-namespace Neon {
-
+namespace Neon { namespace OpenGL {
 	IndexBuffer::IndexBuffer() {
 		GL_Call(glGenBuffers(1, &m_ibo));
 	}
@@ -27,4 +26,4 @@ namespace Neon {
 		m_count = data.size();
 		GL_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.size() * sizeof(unsigned int), &data.front(), GL_STATIC_DRAW));
 	}
-}
+}}

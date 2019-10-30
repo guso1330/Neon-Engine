@@ -1,4 +1,4 @@
-#include "fileUtils.h"
+#include "FileUtils.h"
 
 namespace Neon {
 	std::string read_file(const char* filepath) {

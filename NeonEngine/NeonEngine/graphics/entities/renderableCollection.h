@@ -1,11 +1,11 @@
 #pragma once
 
-#include "./renderable3d.h"
-#include "./mesh.h"
-#include "./model.h"
-#include "../../core/Platforms/OpenGL/program.h"
-#include "../../core/Platforms/OpenGL/vertexArray.h"
-#include "../../core/Platforms/OpenGL/vertexBuffer.h"
+#include "Graphics/Entities/renderable3d.h"
+#include "Graphics/Entities/mesh.h"
+#include "Graphics/Entities/model.h"
+#include "Core/Platforms/OpenGL/program.h"
+#include "Core/Platforms/OpenGL/VertexBuffer.h"
+#include "Core/Platforms/OpenGL/VertexArray.h"
 
 #include <glad/glad.h>
 #include <vector>

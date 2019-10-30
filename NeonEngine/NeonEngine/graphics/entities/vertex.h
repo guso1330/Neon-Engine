@@ -1,5 +1,10 @@
 #pragma once
 
+/*
+	TODO:
+		- Extract glm out of this or create platform specific maths api
+*/
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/ext.hpp>
 #include <glm/glm.hpp>

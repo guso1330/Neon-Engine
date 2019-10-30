@@ -1,30 +1,30 @@
 #pragma once
 
 /* Utils */
-#include "utils/debug/logger.hpp"
-#include "utils/fileUtils/fileUtils.h"
+#include "Utils/Debug/logger.hpp"
+#include "Utils/FileUtils/FileUtils.h"
 
 /* Core */
-#include "core/Platforms/OpenGL/opengl.h"
-#include "core/ecs/ecs.h"
+#include "Core/Platforms/OpenGL/OpenGLContext.h"
+#include "Core/ecs/ecs.h"
 
 /* Graphics */
-#include "graphics/cameras/camera.h"
-#include "graphics/entities/vertex.h"
-#include "graphics/entities/transform.h"
-#include "graphics/entities/renderable3d.h"
-#include "graphics/entities/renderableCollection.h"
-#include "graphics/layers/layer.h"
+#include "Graphics/Cameras/camera.h"
+#include "Graphics/Entities/vertex.h"
+#include "Graphics/Entities/transform.h"
+#include "Graphics/Entities/renderable3d.h"
+#include "Graphics/Entities/renderableCollection.h"
+#include "Graphics/Layers/layer.h"
 // light includes, not used yet
 
 /* Shaders */
-#include "shaders/material.h"
+#include "Shaders/material.h"
 
 /* App */
-#include "app/eventManager.h"
-#include "app/eventTypes.h"
-#include "app/application.h"
-#include "app/input/input.h"
+#include "App/eventManager.h"
+#include "App/eventTypes.h"
+#include "App/application.h"
+#include "App/Input/input.h"
 
 /* Main - entry point */
 #include "main.h"

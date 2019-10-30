@@ -3,8 +3,8 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#include "./vertex.h"
-#include "../../shaders/material.h"
+#include "Graphics/Entities/vertex.h"
+#include "Shaders/material.h"
 
 namespace Neon {
 	class Mesh {

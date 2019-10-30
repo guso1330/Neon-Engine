@@ -5,7 +5,7 @@
 #define STB_IMAGE_IMPLEMENTATION // needed to use the stb_image library
 #include <stb_image.h>
 
-namespace Neon {
+namespace Neon { namespace OpenGL {
 	Texture::Texture(const std::string& filename, TextureType type) :
 		m_type(type)
 	{
@@ -52,4 +52,4 @@ namespace Neon {
 		GL_Call(glActiveTexture(GL_TEXTURE0 + unit));
 		GL_Call(glBindTexture(GL_TEXTURE_2D, 0));
 	}
-}
+}}

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.9.1)
 project(NeonEngine_lib VERSION 0.0.1 DESCRIPTION "NeonEngine library")
 
 # Source files
-set(LIB_DIR "${PROJECT_SOURCE_DIR}/dependencies")
+set(LIB_DIR "${PROJECT_SOURCE_DIR}/Dependencies")
 file(GLOB_RECURSE SRC_FILES "${PROJECT_SOURCE_DIR}/NeonEngine/**.cpp")
 file(GLOB_RECURSE HEADER_FILES "${PROJECT_SOURCE_DIR}/NeonEngine/**.h*")
 

@@ -52,7 +52,7 @@ auto MoveCameraFunc = [](Neon::Camera* camera, Neon::Input* inputManager, float&
 	camera->SetPosition(position);
 };
 
-auto MoveCameraAroundFunc = [](Neon::Window* window, Neon::Camera* camera, int x, int y, float camera_rotate_speed) {
+auto MoveCameraAroundFunc = [](Neon::IWindow* window, Neon::Camera* camera, int x, int y, float camera_rotate_speed) {
 	int dx = x - WIDTH/2,
 		dy = y - HEIGHT/2;
 
@@ -70,7 +70,7 @@ auto MoveCameraAroundFunc = [](Neon::Window* window, Neon::Camera* camera, int x
 class ExampleLayer : public Neon::Layer {
 	public:
 		ExampleLayer() : Layer("Example") {
-			m_GLContext.CreateContext();
+			Neon::OpenGL::OpenGLContext::GetInstance().CreateContext();
 			//
 			// Initialize the camera
 			//
@@ -87,10 +87,11 @@ class ExampleLayer : public Neon::Layer {
 		void OnAttach() override {
 			srand(time(NULL));
 
-			Neon::BufferLayout model_layout;
-			model_layout.Push(Neon::VALUE_TYPE::FLOAT, 3, offsetof(struct Neon::Vertex, pos));
-			model_layout.Push(Neon::VALUE_TYPE::FLOAT, 2, offsetof(struct Neon::Vertex, uv));
-			model_layout.Push(Neon::VALUE_TYPE::FLOAT, 3, offsetof(struct Neon::Vertex, normal));
+			Neon::BufferLayout model_layout = {
+				{ "vPosition", Neon::ShaderDataType::FLOAT3 },
+				{ "vTexCoord", Neon::ShaderDataType::FLOAT2 },
+				{ "vNormal", Neon::ShaderDataType::FLOAT3 }
+			};
 
 			Neon::Model model("./SandBox/res/models/cube_basic.obj");
 			std::vector<Neon::Mesh*> meshes = model.GetMeshes();
@@ -99,7 +100,7 @@ class ExampleLayer : public Neon::Layer {
 				std::vector<Neon::Vertex> c_verts = (*it)->GetVertexData();
 				std::vector<unsigned int> c_inds = (*it)->GetIndices();
 
-				unsigned int c_vao = m_GLContext.CreateVao(
+				unsigned int c_vao = Neon::OpenGL::OpenGLContext::GetInstance().CreateVao(
 					&c_verts.front(),
 					c_verts.size() * sizeof(Neon::Vertex),
 					&c_inds.front(),
@@ -113,16 +114,16 @@ class ExampleLayer : public Neon::Layer {
 
 			/* Create the shaders and the program */
 			const unsigned int shaders[2] = {
-				m_GLContext.CreateShader("./SandBox/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER),
-				m_GLContext.CreateShader("./SandBox/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER)
+				Neon::OpenGL::OpenGLContext::GetInstance().CreateShader("./SandBox/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER),
+				Neon::OpenGL::OpenGLContext::GetInstance().CreateShader("./SandBox/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER)
 			};
 
 			const char* texture_file_path = "./SandBox/res/textures/checkered_colored.jpg";
-			const unsigned int texture_id = m_GLContext.CreateTexture(texture_file_path, Neon::Diffuse, 0);
+			const unsigned int texture_id = Neon::OpenGL::OpenGLContext::GetInstance().CreateTexture(texture_file_path, Neon::Diffuse, 0);
 
-			unsigned int program_id = m_GLContext.CreateProgram(shaders, 2);
-			m_GLContext.BindProgram(program_id);
-			m_Program = m_GLContext.GetProgram(program_id);
+			unsigned int program_id = Neon::OpenGL::OpenGLContext::GetInstance().CreateProgram(shaders, 2);
+			Neon::OpenGL::OpenGLContext::GetInstance().BindProgram(program_id);
+			m_Program = Neon::OpenGL::OpenGLContext::GetInstance().GetProgram(program_id);
 
 			// TODO: Needs to be manually set at the moment...
 			m_Program->SetUniform4f("vcolor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -132,13 +133,13 @@ class ExampleLayer : public Neon::Layer {
 			float angle;
 			float speed;
 
-			m_GLContext.Clear();
+			Neon::OpenGL::OpenGLContext::GetInstance().Clear();
 
 			m_Camera->Update();
 
 			// Set Up simple program
 			angle = 0.0f;
-			speed = 2.0f;
+			speed = 1.0f;
 			angle += (ts * speed);
 			if (angle > 360.0) {
 				angle = 0;
@@ -148,10 +149,9 @@ class ExampleLayer : public Neon::Layer {
 			m_Program->SetUniformMat4("matrices.view_projection", m_Camera->GetViewProjection());
 
 			for(int i=0; i < m_vaos.size(); ++i)
-				m_GLContext.Draw(m_vaos[i].first, m_vaos[i].second, GL_TRIANGLES);
+				Neon::OpenGL::OpenGLContext::GetInstance().DrawIndexed(m_vaos[i].first, m_vaos[i].second, GL_TRIANGLES);
 		}
 	private:
-		Neon::OpenGLContext m_GLContext;
 		glm::mat4 m_modelMatrix = glm::mat4(1.0f);
 		Neon::Camera* m_Camera;
 		Neon::Program* m_Program;
@@ -165,9 +165,9 @@ class SandBox : public Neon::Application {
 		SandBox(const Neon::WindowSettings &settings) :
 			Neon::Application(settings)
 		{
-			NE_INFO("SandBox app initialized");
+			NE_INFO("SandBox: SandBox app initialized");
 
-			Neon::Window* window = this->GetWindow();
+			Neon::IWindow* window = this->GetWindow();
 			glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 
 			m_exampleLayer = new ExampleLayer();

@@ -27,16 +27,17 @@
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
-		44DE252A236C853D009B3FE1 /* NeonEngineMac */ = {
+		44DE252A236C853D009B3FE1 /* NeonEngine */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = "$(ACTION)";
-			buildConfigurationList = 44DE252D236C853D009B3FE1 /* Build configuration list for PBXLegacyTarget "NeonEngineMac" */;
+			buildConfigurationList = 44DE252D236C853D009B3FE1 /* Build configuration list for PBXLegacyTarget "NeonEngine" */;
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/augustusoberdick/Documents/Neon-Engine/build_mac";
 			dependencies = (
 			);
-			name = NeonEngineMac;
+			name = NeonEngine;
 			passBuildSettingsInEnvironment = 1;
 			productName = NeonEngineMac;
 		};
@@ -66,7 +67,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				44DE252A236C853D009B3FE1 /* NeonEngineMac */,
+				44DE252A236C853D009B3FE1 /* NeonEngine */,
 			);
 		};
 /* End PBXProject section */
@@ -216,7 +217,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		44DE252D236C853D009B3FE1 /* Build configuration list for PBXLegacyTarget "NeonEngineMac" */ = {
+		44DE252D236C853D009B3FE1 /* Build configuration list for PBXLegacyTarget "NeonEngine" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				44DE252E236C853D009B3FE1 /* Debug */,

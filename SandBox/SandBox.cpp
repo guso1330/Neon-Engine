@@ -148,8 +148,9 @@ class ExampleLayer : public Neon::Layer {
 			m_Program->SetUniformMat4("model", m_modelMatrix);
 			m_Program->SetUniformMat4("matrices.view_projection", m_Camera->GetViewProjection());
 
-			for(int i=0; i < m_vaos.size(); ++i)
+			for(int i=0; i < m_vaos.size(); ++i) {
 				Neon::OpenGL::OpenGLContext::GetInstance().DrawIndexed(m_vaos[i].first, m_vaos[i].second, GL_TRIANGLES);
+			}
 		}
 	private:
 		glm::mat4 m_modelMatrix = glm::mat4(1.0f);

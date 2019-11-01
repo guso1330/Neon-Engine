@@ -21,7 +21,8 @@ namespace Neon { namespace OpenGL {
 
 			/* Getters */
 			inline const unsigned int GetId() const { return m_vbo; }
-			virtual const BufferLayout& GetLayout() const override { return m_layout; }
+			inline virtual const BufferLayout& GetLayout() const override { return m_layout; }
+			inline virtual unsigned int GetUsage() const override { return m_usage; }
 
 			/* Setters */
 			virtual void SetLayout(const BufferLayout& bufferLayout) override;

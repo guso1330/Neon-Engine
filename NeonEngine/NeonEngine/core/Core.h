@@ -11,11 +11,11 @@
 #elif defined(__APPLE__) || defined(__MACH__)
     #include "TargetConditionals.h"
     #if TARGET_IPHONE_SIMULATOR
-		#error "iOS Simulators are not supported at this time"
+		  #error "iOS Simulators are not supported at this time"
     #elif TARGET_OS_IPHONE
-		#error "iOS devices are not supported at this time"
+		  #error "iOS devices are not supported at this time"
     #elif TARGET_OS_MAC
-		#define NE_PLATFORM_MACOS
+		  #define NE_PLATFORM_MACOS
     #else
     	#error "Unknown Apple platform"
     #endif

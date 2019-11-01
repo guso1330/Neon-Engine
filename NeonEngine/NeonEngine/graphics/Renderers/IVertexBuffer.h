@@ -14,6 +14,7 @@ namespace Neon {
 
 			/* Getters */
 			virtual const BufferLayout& GetLayout() const = 0;
+			virtual unsigned int GetUsage() const = 0;
 
 			/* Setters */
 			virtual void SetLayout(const BufferLayout& bufferLayout) = 0;

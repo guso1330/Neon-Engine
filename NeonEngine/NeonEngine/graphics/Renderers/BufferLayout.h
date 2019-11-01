@@ -6,6 +6,12 @@
 
 namespace Neon {
 
+	/* BufferUsage */
+	enum class BufferUsage
+	{
+		STATIC=1, DYNAMIC=2
+	};
+
 	/* 
 		Shader Data Type
 		TODO: Abstract this out to Core/Types?

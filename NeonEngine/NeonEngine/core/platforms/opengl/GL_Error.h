@@ -3,8 +3,8 @@
 #pragma once
 
 #include <glad/glad.h>
-#include <iostream>
-#include <signal.h> // raise(SIGTRAP)
+
+#include "nepch.h"
 
 #ifdef _WIN32
 	#define DEBUG_BREAK __debugbreak()
@@ -12,10 +12,10 @@
 	#define DEBUG_BREAK raise(SIGTRAP)
 #endif
 
-#define NEON_ASSERT(x) if(!(x)) DEBUG_BREAK;
+#define GL_ASSERT(x) if(!(x)) DEBUG_BREAK;
 #define GL_Call(x) GLClearError();\
 	x;\
-	NEON_ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+	GL_ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 
 namespace Neon {
 	static void GLClearError() {

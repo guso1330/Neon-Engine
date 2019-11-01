@@ -21,7 +21,7 @@ namespace Neon { namespace OpenGL {
 
 	/*
 		TODO
-		- Update AddVertexBuffer and AddIndexBuffer to include setup functionality, this way you can abstract away that stuff from the renderer code
+		- Update AddVertexBuffer and AddIndexBuffer to include setup functionality, this way you can abstract away that stuff from the renderer code?
 	*/
 	void VertexArray::AddVertexBuffer(std::shared_ptr<IVertexBuffer>& vb) {
 		m_VertexBuffers.push_back(vb);

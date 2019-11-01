@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Graphics/Renderers/IGraphicContext.h"
+#include "Graphics/Renderers/IRendererAPI.h"
 #include "Core/Platforms/OpenGL/GL_Error.h"
 #include "Core/Platforms/OpenGL/VertexBuffer.h"
 #include "Core/Platforms/OpenGL/VertexArray.h"
@@ -10,19 +12,15 @@
 #include "Core/Platforms/OpenGL/program.h"
 #include "Core/Platforms/OpenGL/texture.h"
 
-#include "Graphics/Renderers/IGraphicContext.h"
-
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
 namespace Neon { namespace OpenGL {
-	enum class BufferUsage
+	class OpenGLContext :
+		public IGraphicContext,
+		public IRendererAPI
 	{
-		STATIC, DYNAMIC
-	};
-
-	class OpenGLContext : IGraphicContext {
 		typedef std::unordered_map<unsigned int, VertexArray*> VertexArrayMap;
 		typedef std::unordered_map<unsigned int, UniformBuffer*> UniformBufferMap;
 		typedef std::unordered_map<unsigned int, Shader*> ShaderMap;
@@ -36,9 +34,11 @@ namespace Neon { namespace OpenGL {
 			/* Operator Overrides */
 			void operator=(OpenGLContext const&) = delete;
 
-			/* Public Methods */
-			void Clear();
-			void DrawIndexed(unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode);
+			/* Methods */
+			virtual void Clear() override;
+			virtual void DrawIndexed(const std::shared_ptr<IVertexArray>& vao) override;
+			void DrawIndexed(const unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode);
+			void UpdateUbo(unsigned int ubo_id, const void* data, size_t data_size);
 
 			/* Create methods */
 			void CreateContext() override;
@@ -60,9 +60,10 @@ namespace Neon { namespace OpenGL {
 			void GetActiveAttributes();
 
 			/* Setters */
-			void SetClearColor(float r, float g, float b, float a);
+			virtual void SetClearColor(float r, float g, float b, float a) override;
 
-			void UpdateUbo(unsigned int ubo_id, const void* data, size_t data_size);
+		public:
+			static unsigned int GL_BufferUsage(BufferUsage usage);
 
 		/* Private Methods */
 		private:

@@ -3,11 +3,10 @@
 #include "Core/Platforms/OpenGL/OpenGLContext.h"
 
 namespace Neon { namespace OpenGL {
-	static unsigned int GL_BufferUsage(BufferUsage usage);
 	bool OpenGLContext::s_initialized = false;
 
 	void OpenGLContext::CreateContext() {
-		NE_CORE_ASSERT(!s_initialized, "OpenGL cannot be initialized twice");
+		NE_CORE_ASSERT(!s_initialized, "OpenGLContext cannot be initialized twice");
 
 		if(Init()) {
 			s_initialized = true;
@@ -15,8 +14,8 @@ namespace Neon { namespace OpenGL {
 			/* Print Renderer and OpenGL info */
 			const GLubyte *renderer = glGetString(GL_RENDERER);
 			const GLubyte *version = glGetString(GL_VERSION);
-			NE_CORE_INFO("OpenGL: Renderer: {}", renderer);
-			NE_CORE_INFO("OpenGL: OpenGL Version: {}", version);
+			NE_CORE_INFO("OpenGLContext: Renderer: {}", renderer);
+			NE_CORE_INFO("OpenGLContext: OpenGL Version: {}", version);
 		}
 	}
 
@@ -41,8 +40,15 @@ namespace Neon { namespace OpenGL {
 		return true;
 	}
 
-	void OpenGLContext::DrawIndexed(const unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode) {
+	void OpenGLContext::DrawIndexed(const std::shared_ptr<IVertexArray>& vao) {
+		BindProgram(m_currentProgram);
 
+		vao->Bind();
+
+		GL_Call(glDrawElements(GL_TRIANGLES, vao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, NULL));
+	}
+
+	void OpenGLContext::DrawIndexed(const unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode) {
 		// Grab the vao from the vaoMap
 		VertexArrayMap::iterator vao_it = m_vaoMap.find(vao_id);
 
@@ -68,6 +74,7 @@ namespace Neon { namespace OpenGL {
 	unsigned int OpenGLContext::CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, const BufferLayout& layout, BufferUsage usage) {
 
 		VertexArray* vao = new VertexArray();
+		// std::shared_ptr<VertexArray> vao = std::make_shared<VertexArray>();
 		VertexBuffer* vbo = new VertexBuffer(GL_BufferUsage(usage));
 		IndexBuffer* ibo = new IndexBuffer();
 
@@ -195,12 +202,12 @@ namespace Neon { namespace OpenGL {
 		int length; // name length
 
 		GL_Call(glGetProgramiv(m_currentProgram, GL_ACTIVE_ATTRIBUTES, &count));
-		NE_CORE_INFO("OpenGL: Active Attributes: {}", count);
+		NE_CORE_INFO("OpenGLContext: Active Attributes: {}", count);
 
 		for (i = 0; i < count; i++)
 		{
 			glGetActiveAttrib(m_currentProgram, (unsigned int)i, bufSize, &length, &size, &type, name);
-			NE_CORE_INFO("OpenGL: Attribute #{} Type: {} Name: {}", i, type, name);
+			NE_CORE_INFO("OpenGLContext: Attribute #{} Type: {} Name: {}", i, type, name);
 		}
 	}
 
@@ -227,7 +234,7 @@ namespace Neon { namespace OpenGL {
 			unsigned int block_index = glGetUniformBlockIndex(current_program->GetProgramId(), &name[0]);
 			current_program->SaveUniform(block_index, uniform_block_name);
 
-			NE_CORE_INFO("OpenGL: uniformBlock {}: at {}", uniform_block_name, block_index);
+			NE_CORE_INFO("OpenGLContext: uniformBlock {}: at {}", uniform_block_name, block_index);
 		}
 
 		// Get and save the Uniform Variables
@@ -241,12 +248,12 @@ namespace Neon { namespace OpenGL {
 		int length; // name length
 
 		GL_Call(glGetProgramiv(m_currentProgram, GL_ACTIVE_UNIFORMS, &count));
-		NE_CORE_INFO("OpenGL: Active Uniforms {}", count);
+		NE_CORE_INFO("OpenGLContext: Active Uniforms {}", count);
 
 		for (int i = 0; i < count; i++)
 		{
 			GL_Call(glGetActiveUniform(m_currentProgram, (unsigned int)i, bufSize, &length, &size, &type, name));
-			NE_CORE_INFO("OpenGL: Uniform #{} Type: {} Name: {}", i, type, name);
+			NE_CORE_INFO("OpenGLContext: Uniform #{} Type: {} Name: {}", i, type, name);
 		}
 	}
 
@@ -271,7 +278,7 @@ namespace Neon { namespace OpenGL {
 		GL_Call(glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, m_clearColor.w));
 	}
 
-	static unsigned int GL_BufferUsage(BufferUsage usage) {
+	unsigned int OpenGLContext::GL_BufferUsage(BufferUsage usage) {
 		switch(usage) {
 			case BufferUsage::STATIC:
 				return GL_STATIC_DRAW;

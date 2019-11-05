@@ -5,5 +5,5 @@
 #include <fstream>
 
 namespace Neon {
-	std::string read_file(const char* filepath);
+	std::string read_file(const std::string& filepath);
 }

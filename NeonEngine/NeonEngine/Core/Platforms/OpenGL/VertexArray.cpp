@@ -30,4 +30,14 @@ namespace Neon { namespace OpenGL {
 	void VertexArray::AddIndexBuffer(std::shared_ptr<IIndexBuffer>& ib) {
 		m_IndexBuffer = ib;
 	}
+
+	void VertexArray::AddVertexBuffer(std::shared_ptr<VertexBuffer>& vb) {
+		std::shared_ptr<IVertexBuffer> b_vb = std::static_pointer_cast<IVertexBuffer>(vb);
+		m_VertexBuffers.push_back(b_vb);
+	}
+
+	void VertexArray::AddIndexBuffer(std::shared_ptr<IndexBuffer>& ib) {
+		std::shared_ptr<IIndexBuffer> b_ib = std::static_pointer_cast<IIndexBuffer>(ib);
+		m_IndexBuffer = b_ib;
+	}
 }}

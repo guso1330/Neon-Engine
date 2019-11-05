@@ -12,8 +12,8 @@
 #include "Core/Platforms/OpenGL/VertexBuffer.h"
 #include "Core/Platforms/OpenGL/IndexBuffer.h"
 #include "Core/Platforms/OpenGL/VertexArray.h"
-#include "Core/Platforms/OpenGL/program.h"
-#include "Shaders/material.h"
+#include "Core/Platforms/OpenGL/Program.h"
+#include "Graphics/Shaders/material.h"
 #include "Graphics/Entities/transform.h"
 
 #include <vector>
@@ -40,7 +40,7 @@ namespace Neon {
 			
 			// SETTERS
 			inline void SetColor(const glm::vec4 &n_color) { m_color = n_color; }
-			void SetTexture(const std::string &filename, TextureType type = Diffuse); // Generate a new texture
+			void SetTexture(const std::string &filename, TextureType type = TextureType::DIFFUSE); // Generate a new texture
 			void SetTexture(Texture* n_texture, TextureType type); // Pass in a texture that already exists
 
 			virtual void SetUpDraw(const glm::mat4 &transform) const;

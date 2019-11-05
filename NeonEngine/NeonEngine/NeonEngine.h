@@ -18,7 +18,7 @@
 // light includes, not used yet
 
 /* Shaders */
-#include "Shaders/material.h"
+#include "Graphics/Shaders/material.h"
 
 /* App */
 #include "App/eventManager.h"

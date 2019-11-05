@@ -3,7 +3,7 @@
 #include "Graphics/Entities/renderable3d.h"
 #include "Graphics/Entities/mesh.h"
 #include "Graphics/Entities/model.h"
-#include "Core/Platforms/OpenGL/program.h"
+#include "Core/Platforms/OpenGL/Program.h"
 #include "Core/Platforms/OpenGL/VertexBuffer.h"
 #include "Core/Platforms/OpenGL/VertexArray.h"
 

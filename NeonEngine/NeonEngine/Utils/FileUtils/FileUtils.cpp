@@ -1,8 +1,8 @@
 #include "FileUtils.h"
 
 namespace Neon {
-	std::string read_file(const char* filepath) {
-		FILE* file = fopen(filepath, "rt");
+	std::string read_file(const std::string& filepath) {
+		FILE* file = fopen(filepath.c_str(), "rt");
 		if(file == nullptr) {
 			std::cout << filepath << " not found" << std::endl;
 			system("PAUSE");

@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "Graphics/Entities/vertex.h"
-#include "Shaders/material.h"
+#include "Graphics/Shaders/material.h"
 
 namespace Neon {
 	class Mesh {

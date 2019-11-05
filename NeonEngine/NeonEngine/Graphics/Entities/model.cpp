@@ -110,11 +110,11 @@ namespace Neon {
 			{
 				std::string diffuse_path = m_directory + "/" + std::string(filename.C_Str());
 				NE_CORE_INFO("Diffuse Texture Path: {}", diffuse_path);
-				n_material->SetDiffuse(new Texture(diffuse_path, Diffuse));
+				n_material->SetDiffuse(new Texture(diffuse_path, TextureType::DIFFUSE));
 			} else if (aiReturn_SUCCESS == ai_material->GetTexture(aiTextureType_SPECULAR, 0, &filename)) {
 				NE_CORE_INFO("Specular Texture Path: {}", filename.C_Str());
 				std::string diffuse_path = m_directory + "/" + std::string(filename.C_Str());
-				n_material->SetSpecular(new Texture(diffuse_path, Specular));
+				n_material->SetSpecular(new Texture(diffuse_path, TextureType::SPECULAR));
 			}
 		}
 

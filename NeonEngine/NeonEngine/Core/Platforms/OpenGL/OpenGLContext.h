@@ -8,9 +8,9 @@
 #include "Core/Platforms/OpenGL/VertexArray.h"
 #include "Core/Platforms/OpenGL/IndexBuffer.h"
 #include "Core/Platforms/OpenGL/uniformBuffer.h"
-#include "Core/Platforms/OpenGL/shader.h"
-#include "Core/Platforms/OpenGL/program.h"
-#include "Core/Platforms/OpenGL/texture.h"
+#include "Core/Platforms/OpenGL/Shader.h"
+#include "Core/Platforms/OpenGL/Program.h"
+#include "Core/Platforms/OpenGL/Texture.h"
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -21,11 +21,11 @@ namespace Neon { namespace OpenGL {
 		public IGraphicContext,
 		public IRendererAPI
 	{
-		typedef std::unordered_map<unsigned int, VertexArray*> VertexArrayMap;
+		typedef std::unordered_map<unsigned int, std::shared_ptr<VertexArray> > VertexArrayMap;
 		typedef std::unordered_map<unsigned int, UniformBuffer*> UniformBufferMap;
-		typedef std::unordered_map<unsigned int, Shader*> ShaderMap;
-		typedef std::unordered_map<unsigned int, Program*> ProgramMap;
-		typedef std::unordered_map<unsigned int, Texture*> TextureMap;
+		typedef std::unordered_map<unsigned int, std::shared_ptr<Shader> > ShaderMap;
+		typedef std::unordered_map<unsigned int, std::shared_ptr<Program> > ProgramMap;
+		typedef std::unordered_map<unsigned int, std::shared_ptr<Texture> > TextureMap;
 
 		public:
 			/* Constructors */
@@ -42,10 +42,10 @@ namespace Neon { namespace OpenGL {
 
 			/* Create methods */
 			void CreateContext() override;
-			unsigned int CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, const BufferLayout& layout, BufferUsage usage);
-			unsigned int CreateShader(const std::string& filename, unsigned int shader_type);
-			unsigned int CreateProgram(const unsigned int shader_ids[], unsigned int size);
-			unsigned int CreateTexture(const std::string& filename, TextureType type, unsigned int unit);
+			std::shared_ptr<VertexArray> CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, const BufferLayout& layout, BufferUsage usage);
+			std::shared_ptr<Shader> CreateShader(const std::string& filename, const ShaderType shader_type);
+			std::shared_ptr<Program> CreateProgram(const std::string name, std::shared_ptr<Shader>& vertexShader, std::shared_ptr<Shader>& fragmentShader);
+			std::shared_ptr<Texture> CreateTexture(const std::string& filename, TextureType type);
 			unsigned int CreateUniformBuffer(const void* data, size_t data_size, BufferUsage usage);
 
 			/* Binding Methods */
@@ -55,7 +55,7 @@ namespace Neon { namespace OpenGL {
 
 			/* Getters */
 			static OpenGLContext& GetInstance();
-			inline Program* GetProgram(unsigned int program_id) { return m_programMap[program_id]; }
+			inline std::shared_ptr<Program>& GetProgram(unsigned int program_id) { return m_programMap[program_id]; }
 			void GetActiveUniforms();
 			void GetActiveAttributes();
 

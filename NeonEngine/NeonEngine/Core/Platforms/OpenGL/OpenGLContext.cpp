@@ -50,7 +50,7 @@ namespace Neon { namespace OpenGL {
 
 	void OpenGLContext::DrawIndexed(const unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode) {
 		// Grab the vao from the vaoMap
-		VertexArrayMap::iterator vao_it = m_vaoMap.find(vao_id);
+		VertexArrayMap::const_iterator vao_it = m_vaoMap.find(vao_id);
 
 		BindProgram(m_currentProgram);
 
@@ -71,14 +71,12 @@ namespace Neon { namespace OpenGL {
 	/********************/
 	// Note: For now this function will support one VBO and one IBO per VAO. This is to ensure that 
 	//		 it stays as simple as possible until necessary
-	unsigned int OpenGLContext::CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, const BufferLayout& layout, BufferUsage usage) {
+	std::shared_ptr<VertexArray> OpenGLContext::CreateVao(const void* data, size_t data_size, const unsigned int* indices, unsigned int indices_count, const BufferLayout& layout, BufferUsage usage) {
 
-		VertexArray* vao = new VertexArray();
-		// std::shared_ptr<VertexArray> vao = std::make_shared<VertexArray>();
-		VertexBuffer* vbo = new VertexBuffer(GL_BufferUsage(usage));
-		IndexBuffer* ibo = new IndexBuffer();
-
-		unsigned int vao_id;
+		// OpenGL Structures
+		std::shared_ptr<VertexArray> vao = std::make_shared<VertexArray>();
+		std::shared_ptr<VertexBuffer> vbo = std::make_shared<VertexBuffer>(GL_BufferUsage(usage));
+		std::shared_ptr<IndexBuffer> ibo = std::make_shared<IndexBuffer>();
 
 		// Bind the VAO, VBO, IBO
 		vao->Bind();
@@ -90,48 +88,41 @@ namespace Neon { namespace OpenGL {
 		ibo->Bind();
 		ibo->SetBufferData(indices, indices_count);
 
-		vao_id = vao->GetVao();
-		m_currentVao = vao_id;
+		vao->AddVertexBuffer(vbo);
+		vao->AddIndexBuffer(ibo);
 
 		vao->Unbind();
 
-		// Increment and Handle VAO ID
-		m_vaoMap.insert(std::make_pair(vao_id, vao));
+		// Handle VAO ID
+		m_vaoMap.insert(std::make_pair(vao->GetVao(), vao));
+		m_currentVao = vao->GetVao();
 
-		return vao_id;
+		return vao;
 	}
 
-	unsigned int OpenGLContext::CreateShader(const std::string& filename, unsigned int shader_type) {
-		Shader* shader = new Shader(filename.c_str(), shader_type);
-		unsigned int shader_id = shader->GetShaderId();
+	std::shared_ptr<Shader> OpenGLContext::CreateShader(const std::string& filename, const ShaderType shader_type) {
+		std::shared_ptr<Shader> shader = std::make_shared<Shader>(filename.c_str(), shader_type);
 		
-		m_shaderMap.insert(std::make_pair(shader_id, shader));
+		m_shaderMap.insert(std::make_pair(shader->GetId(), shader));
 
-		return shader_id;
+		return shader;
 	}
 
 	/* TODO: This API is some what weird. Why input an array and require the size to be passed in? Is this necessary or could it be simplified? */
-	unsigned int OpenGLContext::CreateProgram(const unsigned int shader_ids[], unsigned int size) {
-		std::vector<Shader*> shaders;
-		for(int i=0; i < size; ++i) {
-			shaders.push_back(m_shaderMap[shader_ids[i]]);
-		}
-
-		Program* program = new Program(shaders);
-		unsigned int program_id = program->GetProgramId();
+	std::shared_ptr<Program> OpenGLContext::CreateProgram(const std::string name, std::shared_ptr<Shader>& vertexShader, std::shared_ptr<Shader>& fragmentShader) {
+		std::shared_ptr<Program> program = std::make_shared<Program>(name, vertexShader, fragmentShader);
+		unsigned int program_id = program->GetId();
 
 		m_programMap.insert(std::make_pair(program_id, program));
 
-		return program_id;
+		return program;
 	}
 
-	unsigned int OpenGLContext::CreateTexture(const std::string& filename, TextureType type, unsigned int unit) {
-		Texture* texture = new Texture(filename, type);
-
-		texture->Bind(unit);
+	std::shared_ptr<Texture> OpenGLContext::CreateTexture(const std::string& filename, TextureType type) {
+		std::shared_ptr<Texture> texture = std::make_shared<Texture>(filename, type);
 		m_textureMap.insert(std::make_pair(texture->GetId(), texture));
 
-		return texture->GetId();
+		return texture;
 	}
 
 	unsigned int OpenGLContext::CreateUniformBuffer(const void* data, size_t data_size, BufferUsage usage) {
@@ -216,22 +207,22 @@ namespace Neon { namespace OpenGL {
 
 		GL_Call(glGetProgramiv(m_currentProgram, GL_ACTIVE_UNIFORM_BLOCKS, &num_block));
 
-		Program* current_program = GetProgram(m_currentProgram);
+		std::shared_ptr<Program> current_program = GetProgram(m_currentProgram);
 
 		// Get and save the Uniform Blocks
 		for(int block = 0; block < num_block; ++block) {
 			int name_len;
 
 			// Get name length
-			GL_Call(glGetActiveUniformBlockiv(current_program->GetProgramId(), block, GL_UNIFORM_BLOCK_NAME_LENGTH, &name_len));
+			GL_Call(glGetActiveUniformBlockiv(current_program->GetId(), block, GL_UNIFORM_BLOCK_NAME_LENGTH, &name_len));
 
 			// Get name
 			char name[name_len];
-			GL_Call(glGetActiveUniformBlockName(current_program->GetProgramId(), block, name_len, NULL, &name[0]));
+			GL_Call(glGetActiveUniformBlockName(current_program->GetId(), block, name_len, NULL, &name[0]));
 			std::string uniform_block_name((char*)&name[0], name_len-1);
 			
 			// Save name to the uniformMap
-			unsigned int block_index = glGetUniformBlockIndex(current_program->GetProgramId(), &name[0]);
+			unsigned int block_index = glGetUniformBlockIndex(current_program->GetId(), &name[0]);
 			current_program->SaveUniform(block_index, uniform_block_name);
 
 			NE_CORE_INFO("OpenGLContext: uniformBlock {}: at {}", uniform_block_name, block_index);

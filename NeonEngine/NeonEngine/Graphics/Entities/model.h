@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Platforms/OpenGL/texture.h"
+#include "Core/Platforms/OpenGL/Texture.h"
 #include "./mesh.h"
 #include "./renderable3d.h"
 

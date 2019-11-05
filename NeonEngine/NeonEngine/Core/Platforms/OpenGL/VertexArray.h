@@ -1,7 +1,9 @@
 #pragma once
 
-#include "./GL_Error.h"
 #include "Graphics/Renderers/IVertexArray.h"
+#include "Core/Platforms/OpenGL/GL_Error.h"
+#include "Core/Platforms/OpenGL/VertexBuffer.h"
+#include "Core/Platforms/OpenGL/IndexBuffer.h"
 
 #include <glad/glad.h>
 
@@ -15,7 +17,9 @@ namespace Neon { namespace OpenGL {
 			virtual void Bind() const override;
 			virtual void Unbind() const override;
 			virtual void AddVertexBuffer(std::shared_ptr<IVertexBuffer>& vb) override;
+			void AddVertexBuffer(std::shared_ptr<VertexBuffer>& vb);
 			virtual void AddIndexBuffer(std::shared_ptr<IIndexBuffer>& ib) override;
+			void AddIndexBuffer(std::shared_ptr<IndexBuffer>& ib);
 
 			/* Getters */
 			inline const unsigned int GetVao() const { return m_vao; }

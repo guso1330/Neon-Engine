@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Platforms/OpenGL/program.h"
-#include "Core/Platforms/OpenGL/texture.h"
+#include "Core/Platforms/OpenGL/Program.h"
+#include "Core/Platforms/OpenGL/Texture.h"
 
 #include <glm/glm.hpp>
 

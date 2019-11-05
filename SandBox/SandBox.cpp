@@ -100,7 +100,7 @@ class ExampleLayer : public Neon::Layer {
 				std::vector<Neon::Vertex> c_verts = (*it)->GetVertexData();
 				std::vector<unsigned int> c_inds = (*it)->GetIndices();
 
-				unsigned int c_vao = Neon::OpenGL::OpenGLContext::GetInstance().CreateVao(
+				std::shared_ptr<Neon::OpenGL::VertexArray> c_vao = Neon::OpenGL::OpenGLContext::GetInstance().CreateVao(
 					&c_verts.front(),
 					c_verts.size() * sizeof(Neon::Vertex),
 					&c_inds.front(),
@@ -109,21 +109,23 @@ class ExampleLayer : public Neon::Layer {
 					Neon::BufferUsage::STATIC
 				);
 
-				m_vaos.insert(std::make_pair(c_vao, std::make_pair(c_vao, (*it)->GetIndicesSize())));
+				m_vaos.push_back(c_vao);
 			}
 
 			/* Create the shaders and the program */
-			const unsigned int shaders[2] = {
-				Neon::OpenGL::OpenGLContext::GetInstance().CreateShader("./SandBox/res/shaders/textureVShader.glsl", GL_VERTEX_SHADER),
-				Neon::OpenGL::OpenGLContext::GetInstance().CreateShader("./SandBox/res/shaders/textureFShader.glsl", GL_FRAGMENT_SHADER)
-			};
+			std::shared_ptr<Neon::OpenGL::Shader> texturedVertexShader = Neon::OpenGL::OpenGLContext::GetInstance().CreateShader("./SandBox/res/shaders/textureVShader.glsl", Neon::ShaderType::VERTEX_SHADER);
+			std::shared_ptr<Neon::OpenGL::Shader> texturedFragmentShader = Neon::OpenGL::OpenGLContext::GetInstance().CreateShader("./SandBox/res/shaders/textureFShader.glsl", Neon::ShaderType::FRAGMENT_SHADER);
 
-			const char* texture_file_path = "./SandBox/res/textures/checkered_colored.jpg";
-			const unsigned int texture_id = Neon::OpenGL::OpenGLContext::GetInstance().CreateTexture(texture_file_path, Neon::Diffuse, 0);
+			m_Texture = Neon::OpenGL::OpenGLContext::GetInstance().CreateTexture("./SandBox/res/textures/checkered_colored.jpg", Neon::TextureType::DIFFUSE);
 
-			unsigned int program_id = Neon::OpenGL::OpenGLContext::GetInstance().CreateProgram(shaders, 2);
-			Neon::OpenGL::OpenGLContext::GetInstance().BindProgram(program_id);
-			m_Program = Neon::OpenGL::OpenGLContext::GetInstance().GetProgram(program_id);
+			m_Program = Neon::OpenGL::OpenGLContext::GetInstance().CreateProgram(
+				"textureShaderProgram",
+				texturedVertexShader,
+				texturedFragmentShader
+			);
+
+			Neon::OpenGL::OpenGLContext::GetInstance().BindTexture(m_Texture->GetId(), 0);
+			Neon::OpenGL::OpenGLContext::GetInstance().BindProgram(m_Program->GetId());
 
 			// TODO: Needs to be manually set at the moment...
 			m_Program->SetUniform4f("vcolor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -148,15 +150,17 @@ class ExampleLayer : public Neon::Layer {
 			m_Program->SetUniformMat4("model", m_modelMatrix);
 			m_Program->SetUniformMat4("matrices.view_projection", m_Camera->GetViewProjection());
 
-			for(int i=0; i < m_vaos.size(); ++i) {
-				Neon::OpenGL::OpenGLContext::GetInstance().DrawIndexed(m_vaos[i].first, m_vaos[i].second, GL_TRIANGLES);
+			for(std::vector<std::shared_ptr<Neon::VertexArray> >::const_iterator it = m_vaos.begin(); it != m_vaos.end(); ++it) {
+				Neon::OpenGL::OpenGLContext::GetInstance().DrawIndexed((*it));
 			}
 		}
+
 	private:
 		glm::mat4 m_modelMatrix = glm::mat4(1.0f);
 		Neon::Camera* m_Camera;
-		Neon::Program* m_Program;
-		std::map<unsigned int, std::pair<unsigned int, unsigned int> > m_vaos;
+		std::shared_ptr<Neon::OpenGL::Program> m_Program;
+		std::shared_ptr<Neon::OpenGL::Texture> m_Texture;
+		std::vector<std::shared_ptr<Neon::VertexArray> > m_vaos;
 };
 
 class SandBox : public Neon::Application {
@@ -219,6 +223,7 @@ class SandBox : public Neon::Application {
 		}
 
 		~SandBox() {}
+
 	private:
 		float m_cameraSpeed = 0.0f;
 		ExampleLayer* m_exampleLayer;

@@ -33,17 +33,17 @@ namespace Neon {
 		Texture* texture = new Texture(filename, type);
 
 		switch(type) {
-			case Diffuse:
+			case TextureType::DIFFUSE:
 				m_material->SetDiffuse(texture);
 				break;
-			case Specular:
+			case TextureType::SPECULAR:
 				m_material->SetSpecular(texture);
 				break;
-			case Normal:
+			case TextureType::NORMAL:
 				break;
-			case Height:
+			case TextureType::HEIGHT:
 				break;
-			case Occlusion:
+			case TextureType::OCCLUSION:
 				break;
 			default:
 				break;
@@ -51,9 +51,9 @@ namespace Neon {
 	}
 
 	void Renderable3d::SetTexture(Texture* n_texture, TextureType type) { 
-		if(type == Diffuse) {
+		if(type == TextureType::DIFFUSE) {
 			m_material->SetDiffuse(n_texture);
-		} else if (type == Specular) {
+		} else if (type == TextureType::SPECULAR) {
 			m_material->SetSpecular(n_texture);
 		}
 	}

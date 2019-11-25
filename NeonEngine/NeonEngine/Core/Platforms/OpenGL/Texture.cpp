@@ -47,6 +47,7 @@ namespace Neon { namespace OpenGL {
 	}
 
 	Texture::~Texture() {
+		Unbind();
 		GL_Call(glDeleteTextures(1, &m_texId)); // delete the texture
 	}
 

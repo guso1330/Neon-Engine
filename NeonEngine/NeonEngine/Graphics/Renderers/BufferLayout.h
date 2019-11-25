@@ -9,7 +9,9 @@ namespace Neon {
 	/* BufferUsage */
 	enum class BufferUsage
 	{
-		STATIC=1, DYNAMIC=2
+		NONE = 0,
+		STATIC=1,
+		DYNAMIC=2
 	};
 
 	/* 

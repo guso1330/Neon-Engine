@@ -18,8 +18,9 @@ namespace Neon { namespace OpenGL {
 		typedef std::pair<std::string, unsigned int> AttributeUniformBlock;
 
 		public:
+			Program(const std::string& name, const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
 			Program(const std::string& name, std::shared_ptr<Shader>& vertexShader, std::shared_ptr<Shader> fragmentShader);
-			~Program();
+			virtual ~Program();
 
 		public:
 			virtual void Bind() override;

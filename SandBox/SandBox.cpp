@@ -70,10 +70,7 @@ auto MoveCameraAroundFunc = [](Neon::IWindow* window, Neon::Camera* camera, int 
 class ExampleLayer : public Neon::Layer {
 	public:
 		ExampleLayer() : Layer("Example") {
-			Neon::OpenGL::OpenGLContext::GetInstance().CreateContext();
-			//
 			// Initialize the camera
-			//
 			float aspect_ratio = (float)WIDTH / (float)HEIGHT;
 			float fov = 70.0f;
 			float near = 0.01f;
@@ -84,6 +81,7 @@ class ExampleLayer : public Neon::Layer {
 		/* Getter Functions */
 		inline Neon::Camera* GetCamera() const { return m_Camera; }
 
+		/* Member Functions */
 		void OnAttach() override {
 			srand(time(NULL));
 
@@ -93,47 +91,60 @@ class ExampleLayer : public Neon::Layer {
 				{ "vNormal", Neon::ShaderDataType::FLOAT3 }
 			};
 
-			Neon::Model model("./SandBox/res/models/cube_basic.obj");
-			std::vector<Neon::Mesh*> meshes = model.GetMeshes();
+			// Load all Models
+			Neon::Model Cube("./SandBox/res/models/cube_basic.obj");
+			Neon::Model Suzanne("./SandBox/res/models/m9.obj");
+			
+			std::vector<Neon::Mesh*> meshes;
+			meshes.reserve(Cube.GetMeshes().size() + Suzanne.GetMeshes().size());
+			meshes.insert(meshes.end(), Cube.GetMeshes().begin(), Cube.GetMeshes().end());
+			meshes.insert(meshes.end(), Suzanne.GetMeshes().begin(), Suzanne.GetMeshes().end());
 
 			for(std::vector<Neon::Mesh*>::iterator it=meshes.begin(); it != meshes.end(); ++it) {
 				std::vector<Neon::Vertex> c_verts = (*it)->GetVertexData();
 				std::vector<unsigned int> c_inds = (*it)->GetIndices();
+				std::shared_ptr<Neon::IVertexArray> n_vao;
+				std::shared_ptr<Neon::IVertexBuffer> n_vbo;
+				std::shared_ptr<Neon::IIndexBuffer> n_ibo;
 
-				std::shared_ptr<Neon::OpenGL::VertexArray> c_vao = Neon::OpenGL::OpenGLContext::GetInstance().CreateVao(
+				n_vao = std::shared_ptr<Neon::IVertexArray>(Neon::IVertexArray::Create());
+				n_vao->Bind();
+
+				n_vbo = std::shared_ptr<Neon::IVertexBuffer>(Neon::IVertexBuffer::Create(
 					&c_verts.front(),
 					c_verts.size() * sizeof(Neon::Vertex),
-					&c_inds.front(),
-					c_inds.size(),
-					model_layout,
-					Neon::BufferUsage::STATIC
-				);
+					model_layout
+				));
 
-				m_vaos.push_back(c_vao);
+				n_ibo = std::shared_ptr<Neon::IIndexBuffer>(Neon::IIndexBuffer::Create(
+					&c_inds.front(),
+					c_inds.size()
+				));
+
+				n_vao->AttachVertexBuffer(n_vbo);
+				n_vao->AttachIndexBuffer(n_ibo);
+
+				m_vaos.push_back(n_vao);
 			}
 
 			/* Create the shaders and the program */
-			std::shared_ptr<Neon::OpenGL::Shader> texturedVertexShader = Neon::OpenGL::OpenGLContext::GetInstance().CreateShader("./SandBox/res/shaders/textureVShader.glsl", Neon::ShaderType::VERTEX_SHADER);
-			std::shared_ptr<Neon::OpenGL::Shader> texturedFragmentShader = Neon::OpenGL::OpenGLContext::GetInstance().CreateShader("./SandBox/res/shaders/textureFShader.glsl", Neon::ShaderType::FRAGMENT_SHADER);
+			m_Texture = std::shared_ptr<Neon::ITexture>(Neon::ITexture::Create(
+				"./SandBox/res/textures/checkered_colored.jpg",
+				Neon::TextureType::DIFFUSE
+			));
+			m_Texture->Bind();
 
-			m_Texture = Neon::OpenGL::OpenGLContext::GetInstance().CreateTexture("./SandBox/res/textures/checkered_colored.jpg", Neon::TextureType::DIFFUSE);
-
-			m_Program = Neon::OpenGL::OpenGLContext::GetInstance().CreateProgram(
+			m_Program = std::shared_ptr<Neon::IProgram>(Neon::IProgram::Create(
 				"textureShaderProgram",
-				texturedVertexShader,
-				texturedFragmentShader
-			);
-
-			Neon::OpenGL::OpenGLContext::GetInstance().BindTexture(m_Texture->GetId(), 0);
-			Neon::OpenGL::OpenGLContext::GetInstance().BindProgram(m_Program->GetId());
-
-			// TODO: Needs to be manually set at the moment...
-			m_Program->SetUniform4f("vcolor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+				"./SandBox/res/shaders/textureVShader.glsl",
+				"./SandBox/res/shaders/textureFShader.glsl"
+			));
 		}
 
 		void OnUpdate(Neon::Timestep ts) override {
 			float angle;
 			float speed;
+			Neon::RenderMatrices mats;
 
 			Neon::OpenGL::OpenGLContext::GetInstance().Clear();
 
@@ -147,20 +158,22 @@ class ExampleLayer : public Neon::Layer {
 				angle = 0;
 			}
 			m_modelMatrix = m_modelMatrix * glm::rotate(angle, glm::vec3(0.0, 1.0f, 0.0));
-			m_Program->SetUniformMat4("model", m_modelMatrix);
-			m_Program->SetUniformMat4("matrices.view_projection", m_Camera->GetViewProjection());
+			mats.viewProjection = m_Camera->GetViewProjection();
 
-			for(std::vector<std::shared_ptr<Neon::VertexArray> >::const_iterator it = m_vaos.begin(); it != m_vaos.end(); ++it) {
-				Neon::OpenGL::OpenGLContext::GetInstance().DrawIndexed((*it));
+			int i = 0;
+			for(std::vector<std::shared_ptr<Neon::IVertexArray> >::iterator it = m_vaos.begin(); it != m_vaos.end(); ++it) {
+				mats.transform = glm::translate(m_modelMatrix, glm::vec3(0.0, 0.0, (float)2.0f * i));
+				Neon::Renderer::GetInstance().Submit((*it), m_Program, mats);
+				++i;
 			}
 		}
 
 	private:
 		glm::mat4 m_modelMatrix = glm::mat4(1.0f);
 		Neon::Camera* m_Camera;
-		std::shared_ptr<Neon::OpenGL::Program> m_Program;
-		std::shared_ptr<Neon::OpenGL::Texture> m_Texture;
-		std::vector<std::shared_ptr<Neon::VertexArray> > m_vaos;
+		std::shared_ptr<Neon::IProgram> m_Program;
+		std::shared_ptr<Neon::ITexture> m_Texture;
+		std::vector<std::shared_ptr<Neon::IVertexArray> > m_vaos;
 };
 
 class SandBox : public Neon::Application {
@@ -172,12 +185,18 @@ class SandBox : public Neon::Application {
 		{
 			NE_INFO("SandBox: SandBox app initialized");
 
+			// Initialize Renderer
+			Neon::Renderer::Init();
+
+			// Create window
 			Neon::IWindow* window = this->GetWindow();
 			glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 
+			// Create a render layer
 			m_exampleLayer = new ExampleLayer();
 			PushLayer(m_exampleLayer);
 
+			// Initialize Application Events
 			float camera_rotate_speed = (M_PI / 180.0f) * 0.1;
 
 			Neon::EventManager::AddEventHandler(NEON_EVENT_KEY_PRESS, Neon::KeyPressCallback(
@@ -202,8 +221,6 @@ class SandBox : public Neon::Application {
 				}
 			));
 
-			// Disable the cursor
-			glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 			glfwSetInputMode(static_cast<GLFWwindow*>(window->GetNativeWindow()), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		}
 
@@ -211,6 +228,8 @@ class SandBox : public Neon::Application {
 			float update_ts = (60.0f * ts) / 1000.0f; // TODO: divide by 60.0f?
 			float camera_velocity = 0.3f;
 			float camera_speed_limit = 2.0f;
+
+			Neon::Debug::CalcFPS(this->GetWindow(), 1.0, "Neon Engine");
 
 			MoveCameraFunc(
 				m_exampleLayer->GetCamera(),
@@ -220,6 +239,9 @@ class SandBox : public Neon::Application {
 				camera_speed_limit,
 				update_ts
 			);
+
+			// Disable the cursor
+			glfwSetCursorPos(static_cast<GLFWwindow*>(this->GetWindow()->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 		}
 
 		~SandBox() {}
@@ -231,8 +253,8 @@ class SandBox : public Neon::Application {
 
 Neon::Application* Neon::CreateApplication() {
 	Neon::WindowSettings windowSettings;
-	windowSettings.width = WIDTH;
-	windowSettings.height = HEIGHT;
+	// windowSettings.width = WIDTH;
+	// windowSettings.height = HEIGHT;
 	windowSettings.title = "Neon Engine";
 
 	return new SandBox(windowSettings);

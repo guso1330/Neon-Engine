@@ -17,5 +17,4 @@
 #include <unordered_set>
 #include <vector>
 
-#include "Utils/Debug/utils.h"
 #include "Utils/Debug/logger.hpp"

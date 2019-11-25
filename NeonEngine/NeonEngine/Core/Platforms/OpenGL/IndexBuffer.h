@@ -11,7 +11,8 @@ namespace Neon { namespace OpenGL {
 	class IndexBuffer : public IIndexBuffer {
 		public:
 			IndexBuffer();
-			virtual ~IndexBuffer() override;
+			IndexBuffer(unsigned int* indices, size_t size);
+			virtual ~IndexBuffer();
 
 			/* Methods */
 			virtual void Bind() const override;
@@ -21,8 +22,8 @@ namespace Neon { namespace OpenGL {
 			inline const unsigned int GetId() { return m_ibo; }
 			virtual const inline unsigned int GetCount() const override { return m_count; }
 
-			void SetBufferData(const unsigned int* data, size_t count);
-			void SetBufferData(const std::vector<unsigned int> &data);
+			void SetBufferData(const unsigned int* indices, size_t count);
+			void SetBufferData(const std::vector<unsigned int> &indices);
 
 		private:
 			unsigned int m_count;

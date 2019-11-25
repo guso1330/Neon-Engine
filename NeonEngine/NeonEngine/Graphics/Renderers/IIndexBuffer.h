@@ -13,6 +13,6 @@ namespace Neon {
 			/* Getters */
 			virtual const unsigned int GetCount() const = 0;
 
-			static IIndexBuffer* Create(unsigned int* data, size_t size);
+			static IIndexBuffer* Create(unsigned int* indices, size_t size);
 	};
 } // Neon

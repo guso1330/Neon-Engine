@@ -14,7 +14,7 @@ namespace Neon {
 			/* Getters */
 			virtual const std::string GetName() const = 0;
 
-			static std::shared_ptr<IProgram> Create(const std::string& name, const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
+			static IProgram* Create(const std::string& name, const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
 	};
 
 	class ProgramLibrary {

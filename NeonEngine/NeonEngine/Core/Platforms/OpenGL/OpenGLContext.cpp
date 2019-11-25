@@ -6,16 +6,14 @@ namespace Neon { namespace OpenGL {
 	bool OpenGLContext::s_initialized = false;
 
 	void OpenGLContext::CreateContext() {
-		NE_CORE_ASSERT(!s_initialized, "OpenGLContext cannot be initialized twice");
-
-		if(Init()) {
+		if(!s_initialized && Init()) {
 			s_initialized = true;
 
 			/* Print Renderer and OpenGL info */
 			const GLubyte *renderer = glGetString(GL_RENDERER);
 			const GLubyte *version = glGetString(GL_VERSION);
-			NE_CORE_INFO("OpenGLContext: Renderer: {}", renderer);
-			NE_CORE_INFO("OpenGLContext: OpenGL Version: {}", version);
+			NE_CORE_INFO("OpenGLContext: Renderer - {}", renderer);
+			NE_CORE_INFO("OpenGLContext: OpenGL Version - {}", version);
 		}
 	}
 
@@ -41,10 +39,6 @@ namespace Neon { namespace OpenGL {
 	}
 
 	void OpenGLContext::DrawIndexed(const std::shared_ptr<IVertexArray>& vao) {
-		BindProgram(m_currentProgram);
-
-		vao->Bind();
-
 		GL_Call(glDrawElements(GL_TRIANGLES, vao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, NULL));
 	}
 
@@ -75,7 +69,7 @@ namespace Neon { namespace OpenGL {
 
 		// OpenGL Structures
 		std::shared_ptr<VertexArray> vao = std::make_shared<VertexArray>();
-		std::shared_ptr<VertexBuffer> vbo = std::make_shared<VertexBuffer>(GL_BufferUsage(usage));
+		std::shared_ptr<VertexBuffer> vbo = std::make_shared<VertexBuffer>(usage);
 		std::shared_ptr<IndexBuffer> ibo = std::make_shared<IndexBuffer>();
 
 		// Bind the VAO, VBO, IBO
@@ -88,8 +82,8 @@ namespace Neon { namespace OpenGL {
 		ibo->Bind();
 		ibo->SetBufferData(indices, indices_count);
 
-		vao->AddVertexBuffer(vbo);
-		vao->AddIndexBuffer(ibo);
+		vao->AttachVertexBuffer(vbo);
+		vao->AttachIndexBuffer(ibo);
 
 		vao->Unbind();
 
@@ -267,16 +261,5 @@ namespace Neon { namespace OpenGL {
 		m_clearColor.z = b;
 		m_clearColor.w = a;
 		GL_Call(glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, m_clearColor.w));
-	}
-
-	unsigned int OpenGLContext::GL_BufferUsage(BufferUsage usage) {
-		switch(usage) {
-			case BufferUsage::STATIC:
-				return GL_STATIC_DRAW;
-			case BufferUsage::DYNAMIC:
-				return GL_DYNAMIC_DRAW;
-			default: break;
-		}
-		return 0;
 	}
 }}

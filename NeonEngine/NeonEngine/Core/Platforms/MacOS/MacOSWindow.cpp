@@ -67,6 +67,10 @@ namespace Neon {
 		m_vsyncEnabled = enabled;
 	}
 
+	void MacOSWindow::SetTitle(const std::string& title) {
+		GLFW::GLFWContext::GetInstance().SetTitle(title.c_str());
+	}
+
 	void MacOSWindow::SetInputMode(int mode, int value) {
 		GLFW::GLFWContext::GetInstance().SetInputMode(mode, value);
 	}

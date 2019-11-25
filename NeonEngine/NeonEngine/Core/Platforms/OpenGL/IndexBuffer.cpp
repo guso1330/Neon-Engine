@@ -5,7 +5,13 @@ namespace Neon { namespace OpenGL {
 		GL_Call(glGenBuffers(1, &m_ibo));
 	}
 
+	IndexBuffer::IndexBuffer(unsigned int* indices, size_t size) {
+		GL_Call(glGenBuffers(1, &m_ibo));
+		SetBufferData(indices, size);
+	}
+
 	IndexBuffer::~IndexBuffer() {
+		Unbind();
 		GL_Call(glDeleteBuffers(1, &m_ibo));
 	}
 
@@ -17,13 +23,16 @@ namespace Neon { namespace OpenGL {
 		GL_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 	}
 
-	void IndexBuffer::SetBufferData(const unsigned int* data, size_t count) {
+	void IndexBuffer::SetBufferData(const unsigned int* indices, size_t count) {
 		m_count = count;
-		GL_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW));
+		Bind();
+		GL_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW));
 	}
 
-	void IndexBuffer::SetBufferData(const std::vector<unsigned int> &data) {
-		m_count = data.size();
-		GL_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.size() * sizeof(unsigned int), &data.front(), GL_STATIC_DRAW));
+	void IndexBuffer::SetBufferData(const std::vector<unsigned int> &indices) {
+		m_count = indices.size();
+		Bind();
+		GL_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices.front(), GL_STATIC_DRAW));
+		Unbind();
 	}
 }}

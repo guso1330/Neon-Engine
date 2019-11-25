@@ -12,12 +12,12 @@ namespace Neon {
 		m_lastTime = glfwGetTime();
 	}
 
-	Timestep Timer::GetCurrentTime() const {
+	Timestep Timer::GetTime() const {
 		return (Timestep)glfwGetTime();
 	}
 
 	Timestep Timer::GetElapsedTime() {
-		m_currentTime = GetCurrentTime();
+		m_currentTime = GetTime();
 		return m_currentTime - m_lastTime;
 	}
 

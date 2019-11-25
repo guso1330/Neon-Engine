@@ -23,6 +23,6 @@ namespace Neon {
 			virtual const unsigned int GetWidth() const = 0;
 			virtual const unsigned int GetHeight() const = 0;
 
-			static std::shared_ptr<ITexture> Create(const std::string& filepath);
+			static ITexture* Create(const std::string& filepath, TextureType type);
 	};
 }

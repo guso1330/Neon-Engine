@@ -10,7 +10,7 @@ namespace Neon { namespace OpenGL {
 	class Shader : public IShader {
 		public:
 			Shader(const std::string& filepath, const ShaderType type);
-			~Shader();
+			virtual ~Shader();
 
 			/* Getters */
 			inline const unsigned int GetId() const { return m_shaderID; }

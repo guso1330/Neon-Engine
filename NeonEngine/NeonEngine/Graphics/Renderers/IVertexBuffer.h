@@ -6,7 +6,7 @@ namespace Neon {
 	class IVertexBuffer {
 		public:
 			/* Constructors */
-			~IVertexBuffer() = default;
+			virtual ~IVertexBuffer() = default;
 
 			/* Methods */
 			virtual void Bind() const = 0;
@@ -14,11 +14,11 @@ namespace Neon {
 
 			/* Getters */
 			virtual const BufferLayout& GetLayout() const = 0;
-			virtual unsigned int GetUsage() const = 0;
+			virtual BufferUsage GetUsage() const = 0;
 
 			/* Setters */
 			virtual void SetLayout(const BufferLayout& bufferLayout) = 0;
 
-			static IVertexBuffer* Create(void* data, size_t size);
+			static IVertexBuffer* Create(void* data, size_t size, const BufferLayout& bufferLayout);
 	};
 }

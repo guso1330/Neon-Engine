@@ -14,8 +14,8 @@ namespace Neon  {
 			/* Methods */
 			virtual void Bind() const = 0;
 			virtual void Unbind() const = 0;
-			virtual void AddVertexBuffer(std::shared_ptr<IVertexBuffer>& vb) = 0;
-			virtual void AddIndexBuffer(std::shared_ptr<IIndexBuffer>& ib) = 0;
+			virtual void AttachVertexBuffer(std::shared_ptr<IVertexBuffer>& vb) = 0;
+			virtual void AttachIndexBuffer(std::shared_ptr<IIndexBuffer>& ib) = 0;
 
 			/* Getters */
 			virtual const std::vector<std::shared_ptr<IVertexBuffer> >& GetVertexBuffers() const = 0;

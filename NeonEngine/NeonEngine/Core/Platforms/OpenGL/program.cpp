@@ -3,8 +3,20 @@
 #include "Core/Platforms/OpenGL/Program.h"
 
 namespace Neon { namespace OpenGL {
-	Program::Program(const std::string& name, std::shared_ptr<Shader>& vertexShader, std::shared_ptr<Shader> fragmentShader) :
-		m_name(name)
+	Program::Program(const std::string& name, const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath)
+		: m_name(name)
+	{
+		std::shared_ptr<Shader> vertexShader = std::make_shared<Shader>(vertexShaderFilePath, ShaderType::VERTEX_SHADER);
+		std::shared_ptr<Shader> fragmentShader = std::make_shared<Shader>(fragmentShaderFilePath, ShaderType::FRAGMENT_SHADER);
+
+		m_Shaders.push_back(vertexShader);
+		m_Shaders.push_back(fragmentShader);
+
+		Init();
+	}
+
+	Program::Program(const std::string& name, std::shared_ptr<Shader>& vertexShader, std::shared_ptr<Shader> fragmentShader)
+		: m_name(name)
 	{
 		m_Shaders.push_back(vertexShader);
 		m_Shaders.push_back(fragmentShader);

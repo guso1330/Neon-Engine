@@ -18,6 +18,6 @@ namespace Neon {
 			/* Getters */
 			virtual const ShaderType GetType() const = 0;
 
-			static std::shared_ptr<IShader> Create(const std::string& filepath, const ShaderType type);
+			static IShader* Create(const std::string& filepath, const ShaderType type);
 	};
 }

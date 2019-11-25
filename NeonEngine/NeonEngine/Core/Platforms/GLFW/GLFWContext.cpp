@@ -88,6 +88,10 @@ namespace Neon { namespace GLFW {
 		glfwSetWindowSize(glfwGetCurrentContext(), width, height);
 	}
 
+	void GLFWContext::SetTitle(const char* title) {
+		glfwSetWindowTitle(glfwGetCurrentContext(), title);
+	}
+
 	void GLFWContext::SetInputMode(int mode, int value) {
 		glfwSetInputMode(glfwGetCurrentContext(), mode, value);
 	}

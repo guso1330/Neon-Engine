@@ -3,10 +3,6 @@
 #include "nepch.h"
 
 namespace Neon {
-	std::shared_ptr<IProgram> Create(const std::string& name, const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath) {
-		// Switch statement selecting version of create function
-	}
-
 	void ProgramLibrary::Add(const std::shared_ptr<IProgram>& program) {
 		const std::string name = program->GetName();
 		if (!Exists(name)) {

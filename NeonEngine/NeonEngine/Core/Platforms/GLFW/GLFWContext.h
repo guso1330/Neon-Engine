@@ -9,6 +9,7 @@
 */
 #include "nepch.h"
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Neon { namespace GLFW {
@@ -55,6 +56,7 @@ namespace Neon { namespace GLFW {
 			void SetWindowHint(int hint, int value);
 			void SetVSync(bool enabled);
 			void SetWindowDimensions(int width, int height);
+			void SetTitle(const char* title);
 			void SetInputMode(int mode, int value);
 
 		private:

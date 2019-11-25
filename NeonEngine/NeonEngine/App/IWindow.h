@@ -5,7 +5,6 @@
 #include "nepch.h"
 
 namespace Neon {
-
 	struct WindowSettings {
 		bool fullscreen;
 		std::string title;
@@ -24,8 +23,7 @@ namespace Neon {
 		{}
 	};
 
-	class IWindow
-	{
+	class IWindow {
 		public:
 			virtual ~IWindow() = default;
 
@@ -43,6 +41,7 @@ namespace Neon {
 			virtual void SetSize(unsigned int width, unsigned int height) = 0;
 			virtual void SetFullscreen(bool isFullscreen) = 0;
 			virtual void SetVSync(bool enabled) = 0;
+			virtual void SetTitle(const std::string& title) = 0;
 
 			static IWindow* Create(const WindowSettings& settings = WindowSettings());
 	};

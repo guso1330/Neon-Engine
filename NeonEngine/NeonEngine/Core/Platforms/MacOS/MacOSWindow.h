@@ -28,6 +28,7 @@ namespace Neon {
 			void SetSize(unsigned int width, unsigned int height) override;
 			void SetFullscreen(bool isFullscreen) override;
 			void SetVSync(bool enabled) override;
+			void SetTitle(const std::string& title) override;
 			void SetInputMode(int mode, int value);
 
 		private:

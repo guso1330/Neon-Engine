@@ -1,11 +1,6 @@
 #pragma once
 
-/* Utils */
-#include "Utils/Debug/logger.hpp"
-#include "Utils/FileUtils/FileUtils.h"
-
 /* Core */
-#include "Core/Platforms/OpenGL/OpenGLContext.h"
 #include "Core/ecs/ecs.h"
 
 /* Graphics */
@@ -15,6 +10,7 @@
 #include "Graphics/Entities/renderable3d.h"
 #include "Graphics/Entities/renderableCollection.h"
 #include "Graphics/Layers/layer.h"
+#include "Graphics/Renderers/Renderer.h"
 // light includes, not used yet
 
 /* Shaders */
@@ -25,6 +21,11 @@
 #include "App/eventTypes.h"
 #include "App/application.h"
 #include "App/Input/input.h"
+
+/* Utils */
+#include "Utils/Debug/logger.hpp"
+#include "Utils/Debug/Utils.h"
+#include "Utils/FileUtils/FileUtils.h"
 
 /* Main - entry point */
 #include "main.h"

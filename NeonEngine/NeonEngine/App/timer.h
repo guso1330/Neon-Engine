@@ -1,3 +1,7 @@
+/*
+	TODO:
+	- Remove GLFW from this module
+*/
 #pragma once
 
 #include <GLFW/glfw3.h>
@@ -26,7 +30,7 @@ namespace Neon {
 
 			void Init();
 
-			Timestep GetCurrentTime() const;
+			Timestep GetTime() const;
 			Timestep GetElapsedTime();
 
 			void Tick();

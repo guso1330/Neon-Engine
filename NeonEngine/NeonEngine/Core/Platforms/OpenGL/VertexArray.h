@@ -11,20 +11,23 @@ namespace Neon { namespace OpenGL {
 	class VertexArray : public IVertexArray {
 		public:
 			VertexArray();
-			~VertexArray();
+			virtual ~VertexArray();
 
 			/* Methods */
 			virtual void Bind() const override;
 			virtual void Unbind() const override;
-			virtual void AddVertexBuffer(std::shared_ptr<IVertexBuffer>& vb) override;
-			void AddVertexBuffer(std::shared_ptr<VertexBuffer>& vb);
-			virtual void AddIndexBuffer(std::shared_ptr<IIndexBuffer>& ib) override;
-			void AddIndexBuffer(std::shared_ptr<IndexBuffer>& ib);
+			virtual void AttachVertexBuffer(std::shared_ptr<IVertexBuffer>& vb) override;
+			virtual void AttachIndexBuffer(std::shared_ptr<IIndexBuffer>& ib) override;
+			void AttachVertexBuffer(std::shared_ptr<VertexBuffer>& vb);
+			void AttachIndexBuffer(std::shared_ptr<IndexBuffer>& ib);
 
 			/* Getters */
 			inline const unsigned int GetVao() const { return m_vao; }
 			virtual inline const std::vector<std::shared_ptr<IVertexBuffer> >& GetVertexBuffers() const override { return m_VertexBuffers; }
 			virtual inline const std::shared_ptr<IIndexBuffer>& GetIndexBuffer() const override { return m_IndexBuffer; }
+
+		private:
+			void InitializeVertexBufferElements(std::shared_ptr<IVertexBuffer>& vb);
 
 		private:
 			unsigned int m_vao;

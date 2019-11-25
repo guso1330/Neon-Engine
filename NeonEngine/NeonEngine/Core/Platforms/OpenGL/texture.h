@@ -13,7 +13,7 @@ namespace Neon { namespace OpenGL {
 
 		public:
 			Texture(const std::string& filename, TextureType type = TextureType::DIFFUSE);
-			~Texture();
+			virtual ~Texture();
 
 			virtual void Bind(unsigned int unit = 0) const override;
 			virtual void Unbind(unsigned int unit = 0) const override;

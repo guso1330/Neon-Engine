@@ -1,18 +1,18 @@
-[submodule "NeonEngine/dependencies/GLFW"]
-	path = NeonEngine/dependencies/GLFW
+[submodule "NeonEngine/Dependencies/GLFW"]
+	path = NeonEngine/Dependencies/GLFW
 	url = https://github.com/glfw/glfw.git
-[submodule "NeonEngine/dependencies/glm"]
-	path = NeonEngine/dependencies/glm
+[submodule "NeonEngine/Dependencies/glm"]
+	path = NeonEngine/Dependencies/glm
 	url = https://github.com/g-truc/glm.git
-[submodule "NeonEngine/dependencies/stb_image"]
-	path = NeonEngine/dependencies/stb_image
+[submodule "NeonEngine/Dependencies/stb_image"]
+	path = NeonEngine/Dependencies/stb_image
 	url = https://github.com/nothings/stb.git
 [submodule "assimp"]
 	path = assimp
 	url = https://github.com/assimp/assimp.git
-[submodule "NeonEngine/dependencies/assimp"]
-	path = NeonEngine/dependencies/assimp
+[submodule "NeonEngine/Dependencies/assimp"]
+	path = NeonEngine/Dependencies/assimp
 	url = https://github.com/assimp/assimp.git
-[submodule "NeonEngine/dependencies/spdlog"]
-	path = NeonEngine/dependencies/spdlog
+[submodule "NeonEngine/Dependencies/spdlog"]
+	path = NeonEngine/Dependencies/spdlog
 	url = https://github.com/gabime/spdlog.git

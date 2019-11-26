@@ -2,8 +2,6 @@
 
 #include "Core/Core.h"
 
-#include "nepch.h"
-
 namespace Neon {
 	struct WindowSettings {
 		bool fullscreen;

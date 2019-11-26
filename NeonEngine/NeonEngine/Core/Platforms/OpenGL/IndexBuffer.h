@@ -26,7 +26,7 @@ namespace Neon { namespace OpenGL {
 			void SetBufferData(const std::vector<unsigned int> &indices);
 
 		private:
-			unsigned int m_count;
+			size_t m_count;
 			unsigned int m_ibo;
 	};
 }}

@@ -50,6 +50,5 @@ namespace Neon { namespace OpenGL {
 			data,
 			ConvertBufferUsageToOpenGLUsage(m_usage)
 		));
-		Unbind();
 	}
 }}

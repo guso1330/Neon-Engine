@@ -146,7 +146,7 @@ class ExampleLayer : public Neon::Layer {
 			float speed;
 			Neon::RenderMatrices mats;
 
-			Neon::OpenGL::OpenGLContext::GetInstance().Clear();
+			Neon::Renderer::GetInstance().Clear();
 
 			m_Camera->Update();
 
@@ -253,8 +253,8 @@ class SandBox : public Neon::Application {
 
 Neon::Application* Neon::CreateApplication() {
 	Neon::WindowSettings windowSettings;
-	// windowSettings.width = WIDTH;
-	// windowSettings.height = HEIGHT;
+	windowSettings.width = WIDTH;
+	windowSettings.height = HEIGHT;
 	windowSettings.title = "Neon Engine";
 
 	return new SandBox(windowSettings);

@@ -1,6 +1,5 @@
 #include "Graphics/Renderers/IProgram.h"
 #include "Core/Core.h"
-#include "nepch.h"
 
 namespace Neon {
 	void ProgramLibrary::Add(const std::shared_ptr<IProgram>& program) {

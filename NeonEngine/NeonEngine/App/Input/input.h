@@ -4,7 +4,7 @@
 
 #include "keyboard.h"
 #include "mouse.h"
-#include "../timer.h"
+#include "App/Timer.h"
 
 namespace Neon {
 	class Input {

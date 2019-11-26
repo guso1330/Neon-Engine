@@ -3,7 +3,7 @@
 #include "App/IWindow.h"
 #include "Core/Platforms/Platforms.h"
 #include "App/eventManager.h"
-#include "App/timer.h"
+#include "App/Timer.h"
 #include "Graphics/Layers/layerStack.h"
 
 namespace Neon {

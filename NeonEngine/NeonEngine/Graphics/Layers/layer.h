@@ -2,7 +2,7 @@
 
 #include "nepch.h"
 
-#include "App/timer.h"
+#include "App/Timer.h"
 
 namespace Neon {
 	class Layer {

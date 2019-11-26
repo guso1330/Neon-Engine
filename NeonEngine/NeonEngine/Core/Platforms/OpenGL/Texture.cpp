@@ -1,5 +1,4 @@
 #include "Core/Core.h"
-#include "nepch.h"
 
 #include "Core/Platforms/OpenGL/Texture.h"
 

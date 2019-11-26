@@ -33,6 +33,5 @@ namespace Neon { namespace OpenGL {
 		m_count = indices.size();
 		Bind();
 		GL_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices.front(), GL_STATIC_DRAW));
-		Unbind();
 	}
 }}

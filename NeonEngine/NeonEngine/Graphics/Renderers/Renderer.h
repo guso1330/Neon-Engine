@@ -42,6 +42,7 @@ namespace Neon {
 		private:
 			Renderer() {}
 			static bool Instantiate();
+
 		/* Private static Variables */
 		private:
 			static bool s_initialized;

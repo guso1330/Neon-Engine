@@ -1,6 +1,6 @@
-#include "nepch.h"
-
 #include "Core/Platforms/OpenGL/OpenGLContext.h"
+
+#include "nepch.h"
 
 namespace Neon { namespace OpenGL {
 	bool OpenGLContext::s_initialized = false;
@@ -217,7 +217,8 @@ namespace Neon { namespace OpenGL {
 			
 			// Save name to the uniformMap
 			unsigned int block_index = glGetUniformBlockIndex(current_program->GetId(), &name[0]);
-			current_program->SaveUniform(block_index, uniform_block_name);
+			// TODO: Implement this save uniform function
+			// current_program->SaveUniform(block_index, uniform_block_name);
 
 			NE_CORE_INFO("OpenGLContext: uniformBlock {}: at {}", uniform_block_name, block_index);
 		}

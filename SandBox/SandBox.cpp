@@ -185,9 +185,6 @@ class SandBox : public Neon::Application {
 		{
 			NE_INFO("SandBox: SandBox app initialized");
 
-			// Initialize Renderer
-			Neon::Renderer::Init();
-
 			// Create window
 			Neon::IWindow* window = this->GetWindow();
 			glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);

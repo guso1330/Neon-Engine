@@ -2,13 +2,6 @@
 
 #include "Core/Core.h"
 
-// Interfaces
-#include "Graphics/Renderers/IRendererAPI.h"
-#include "Graphics/Renderers/IVertexArray.h"
-#include "Graphics/Renderers/IProgram.h"
-#include "Graphics/Renderers/ITexture.h"
-#include "Graphics/Renderers/BufferLayout.h"
-
 // OpenGL
 #include "Core/Platforms/OpenGL/OpenGLContext.h"
 
@@ -42,6 +35,7 @@ namespace Neon {
 		private:
 			Renderer() {}
 			static bool Instantiate();
+			static IRendererAPI& GetRendererAPIInstance();
 
 		/* Private static Variables */
 		private:

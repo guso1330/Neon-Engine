@@ -2,6 +2,8 @@
 
 #include "Graphics/Shaders/IShader.h"
 
+#include <glm/glm.hpp>
+
 namespace Neon {
 	class IProgram {
 		public:
@@ -13,6 +15,12 @@ namespace Neon {
 
 			/* Getters */
 			virtual const std::string GetName() const = 0;
+
+			/* Setters */
+			virtual void SetInt(const std::string& name, int value) = 0;
+			virtual void SetFloat3(const std::string& name, const glm::vec3& value) = 0;
+			virtual void SetFloat4(const std::string& name, const glm::vec4& value) = 0;
+			virtual void SetMat4(const std::string& name, const glm::mat4& value) = 0;
 
 			static IProgram* Create(const std::string& name, const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
 	};

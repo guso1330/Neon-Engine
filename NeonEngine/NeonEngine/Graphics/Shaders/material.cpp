@@ -17,27 +17,27 @@ namespace Neon {
 	}
 
 	void Material::Bind(Program *program) const {
-		program->SetUniform3f("material.ambient", m_ambient);
+		program->SetFloat3("material.ambient", m_ambient);
 
 		if(m_diffuse != nullptr) {
 			m_diffuse->Bind(0);
-			program->SetUniform1i("material.diffuse", 0);
+			program->SetInt("material.diffuse", 0);
 		}
 		if(m_specular != nullptr) {
 			m_specular->Bind(1);
-			program->SetUniform1i("material.specular", 1);
+			program->SetInt("material.specular", 1);
 		}
 		if(m_normal != nullptr) {
 			m_normal->Bind(2);
-			program->SetUniform1i("material.normal", 2);
+			program->SetInt("material.normal", 2);
 		}
 		if(m_height != nullptr) {
 			m_height->Bind(3);
-			program->SetUniform1i("material.height", 3);
+			program->SetInt("material.height", 3);
 		}
 		if(m_occlusion != nullptr) {
 			m_occlusion->Bind(4);
-			program->SetUniform1i("material.occlusion", 4);
+			program->SetInt("material.occlusion", 4);
 		}
 	}
 

@@ -19,7 +19,7 @@
 /* App */
 #include "App/eventManager.h"
 #include "App/eventTypes.h"
-#include "App/application.h"
+#include "App/Application.h"
 #include "App/Input/input.h"
 
 /* Utils */

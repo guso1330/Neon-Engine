@@ -23,8 +23,9 @@ namespace Neon {
 	void Application::Init() {
 		NE_CORE_INFO("Neon Engine - Version {}", NEON_ENGINE_VERSION);
 
-		// Initialize Renderer
+		// Initialize Subsystems
 		Renderer::Init();
+		m_EntityManager.Init();
 
 		s_Instance = this;
 	}
@@ -46,11 +47,17 @@ namespace Neon {
 		while (m_isRunning && !m_Window->isClosed()) {
 			elapsed_time = m_Timer.GetElapsedTime();
 
+			// Update ECS Systems
+			m_EntityManager.Update(elapsed_time);
+
+			// Update layers
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(elapsed_time);
 
+			// Update application
 			this->Update(elapsed_time);
 
+			// Update window
 			m_Window->Update();
 
 			m_Timer.Tick();

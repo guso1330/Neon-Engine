@@ -5,8 +5,12 @@
 #include "App/eventManager.h"
 #include "App/Timer.h"
 #include "Graphics/Layers/layerStack.h"
+#include "Core/ECS/EntityManager.h"
 
 namespace Neon {
+
+	using namespace ECS;
+
 	class Application {
 		public:
 			Application();
@@ -31,6 +35,7 @@ namespace Neon {
 			std::unique_ptr<IWindow> m_Window;
 			LayerStack m_LayerStack;
 			Timer m_Timer;
+			EntityManager m_EntityManager;
 
 		private:
 			static Application* s_Instance;

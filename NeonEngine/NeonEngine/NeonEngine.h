@@ -1,8 +1,5 @@
 #pragma once
 
-/* Core */
-#include "Core/ecs/ecs.h"
-
 /* Graphics */
 #include "Graphics/Cameras/camera.h"
 #include "Graphics/Entities/vertex.h"

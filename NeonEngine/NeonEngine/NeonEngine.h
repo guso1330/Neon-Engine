@@ -1,5 +1,9 @@
 #pragma once
 
+/* Core */
+#include "Core/Memory/LinearAllocator.h"
+#include "Core/Memory/PoolAllocator.h"
+
 /* Graphics */
 #include "Graphics/Cameras/camera.h"
 #include "Graphics/Entities/vertex.h"

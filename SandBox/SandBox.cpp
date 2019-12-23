@@ -1,6 +1,6 @@
 #include "NeonEngine/NeonEngine.h"
 
-#include <unistd.h>
+#include "nepch.h"
 
 const int WIDTH = 512,
 		  HEIGHT = 256;
@@ -67,6 +67,9 @@ auto MoveCameraAroundFunc = [](Neon::IWindow* window, Neon::Camera* camera, int 
 	glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 };
 
+Neon::Memory::LinearAllocator LAllocator;
+Neon::Memory::PoolAllocator PAllocator;
+
 class ExampleLayer : public Neon::Layer {
 	public:
 		ExampleLayer() : Layer("Example") {
@@ -84,6 +87,67 @@ class ExampleLayer : public Neon::Layer {
 		/* Member Functions */
 		void OnAttach() override {
 			srand(time(NULL));
+
+			/*
+				Memory testing - BEGIN
+			*/
+			struct Complex {
+				void* operator new (size_t alloc_size) {
+					void* return_address = LAllocator.Allocate(alloc_size);
+					if (return_address == nullptr) {
+						LAllocator.Clean();
+						return_address = LAllocator.Allocate(alloc_size);
+					}
+					return return_address;
+				}
+
+				void operator delete (void* deletePtr) {}
+
+				// std::unordered_map<int, std::vector<std::string>> umap;
+				// std::map<int, std::string> map;
+				// std::vector<int> list;
+				// std::string s;
+				// double d;
+				// int a;
+				// int b;
+				char c;
+				char d;
+				char e;
+			};
+			NE_WARN("Complex has a sizeof({}) and an alignof({})", sizeof(Complex), alignof(Complex));
+			Neon::Timer timer;
+			Neon::Timestep initialTime;
+			Complex* t[1000];
+
+			LAllocator.Init(1048576);
+			PAllocator.Init<Complex>(500);
+
+			timer.Init();
+			initialTime = timer.GetTime();
+
+			for (int x=0; x < 5000; ++x) {
+
+				// Run New test
+				for (int i=0; i < 1000; ++i) {
+					t[i] = new Complex();
+				}
+
+				// // Run Delete test
+				// for (int j=0; j < 1000; ++j) {
+				// 	delete t[j];
+				// }
+
+				LAllocator.Clean();
+			}
+
+			NE_WARN("Memory Alloc Test: New/Delete total time - {}\n", timer.GetTime() - initialTime);
+
+			LAllocator.Clean();
+
+			exit(EXIT_SUCCESS);
+			/*
+				Memory testing - END
+			*/
 
 			Neon::BufferLayout model_layout = {
 				{ "vPosition", Neon::ShaderDataType::FLOAT3 },

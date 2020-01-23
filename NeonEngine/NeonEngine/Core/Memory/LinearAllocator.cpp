@@ -26,6 +26,10 @@ namespace Neon { namespace Memory {
 		uint8_t adjustment = GetForwardAlignedAddressOffset(m_currentAddressPosition, alignment);
 		size_t n_usedMemory = GetUsedMemory() + adjustment + allocSize;
 
+		// if (adjustment > 0) {
+		// 	NE_CORE_INFO("LinearAllocator: Adjustment is {}", adjustment);
+		// }
+
 		NE_CORE_ASSERT(allocSize > 0 && GetSize() > 0, "LinearAllocator Allocate() - allocSize must be greater than 0");
 
 		if (n_usedMemory > GetSize()) {

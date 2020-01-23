@@ -56,3 +56,4 @@ namespace Neon { namespace Core {
 
 #define NEON_ENGINE_VERSION "0.0.1"
 #define NEON_ENGINE_TITLE "Neon Engine"
+#define NE_DEFAULT_MEM_ALIGNMENT 8

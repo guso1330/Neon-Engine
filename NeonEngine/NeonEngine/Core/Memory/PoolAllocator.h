@@ -3,7 +3,6 @@
 #include "Core/Memory/IAllocator.h"
 #include "Core/Memory/FreeList.h"
 
-#include "Core/Core.h"
 #include "Core/Memory/Helpers.h"
 
 namespace Neon { namespace Memory {
@@ -16,23 +15,34 @@ namespace Neon { namespace Memory {
 			/* Member Functions */
 			template<class T>
 			bool Init(size_t numElements) {
+				FreeList c_block;
 				uint8_t adjustment;
-				// // Ensure size of T is greater than the size of a pointer, since empty blocks store the next address
-				// NE_CORE_ASSERT(sizeof(T) >= sizeof(void*), "PoolAllocator - object size cannot be smaller than address size");
 
 				if (numElements > 0) {
 					m_blockSize = sizeof(T) > sizeof(FreeList) ? sizeof(T) : sizeof(FreeList);
 					m_size = numElements * m_blockSize;
-					m_alignment = alignof(T);
 					m_start = new unsigned char[m_size];
-					adjustment = GetForwardAlignedAddressOffset(m_start, m_alignment);
-					m_FreeHead = (FreeList*)((uintptr_t)m_start + adjustment);
+					adjustment = GetForwardAlignedAddressOffset(m_start, alignof(T));
+					m_FreeHead = reinterpret_cast<FreeList>(
+						reinterpret_cast<uintptr_t>(m_start) + adjustment
+					);
 
-					for (int i = 0; i < numElements; ++i) {
-						
+					if (adjustment > 0) {
+						NE_CORE_INFO("PoolAllocator: Adjustment is ", adjustment);
 					}
 
+					c_block = m_FreeHead;
+					for (int i = 0; i < numElements; ++i) {
+						c_block->next = reinterpret_cast<FreeList>(
+							reinterpret_cast<uintptr_t>(c_block) + m_blockSize
+						);
+						c_block = c_block->next;
+					}
+
+					c_block->next = nullptr;
+
 					NE_CORE_INFO("PoolAllocator: Initialized with size of {} bytes", m_size);
+
 					return true;
 				}
 
@@ -43,7 +53,6 @@ namespace Neon { namespace Memory {
 			virtual void Free(void* memptr) override;
 
 			/* Getters */
-			uint8_t GetAlignment() const { return m_alignment; }
 			size_t GetBlockSize() const { return m_blockSize; }
 
 		private:
@@ -54,8 +63,7 @@ namespace Neon { namespace Memory {
 			PoolAllocator& operator=(const PoolAllocator&);
 
 			/* Private Members */
-			uint8_t m_alignment;
-			size_t m_blockSize;
-			FreeList* m_FreeHead;
+			size_t m_blockSize; // Size of individual blocks of memory
+			FreeList m_FreeHead; // Beginning of free list
 	};
 }}

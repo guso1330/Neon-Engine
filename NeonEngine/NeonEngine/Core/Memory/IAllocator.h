@@ -1,8 +1,7 @@
 #pragma once
 
 #include "nepch.h"
-
-#define NE_DEFAULT_MEM_ALIGNMENT 8
+#include "Core/Core.h"
 
 namespace Neon { namespace Memory {
 	class IAllocator {

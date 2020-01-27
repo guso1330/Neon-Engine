@@ -3,7 +3,7 @@
 #include "Core/Core.h"
 
 namespace Neon { namespace Memory {
-	static size_t GetAlign(size_t n) {
+	static uint8_t GetAlign(size_t n) {
 		return (n + sizeof(intptr_t) - 1) & ~(sizeof(intptr_t) - 1);
 	}
 

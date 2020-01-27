@@ -67,7 +67,6 @@ auto MoveCameraAroundFunc = [](Neon::IWindow* window, Neon::Camera* camera, int 
 	glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 };
 
-Neon::Memory::LinearAllocator LAllocator;
 Neon::Memory::PoolAllocator PAllocator;
 
 class ExampleLayer : public Neon::Layer {
@@ -93,56 +92,51 @@ class ExampleLayer : public Neon::Layer {
 			*/
 			struct Complex {
 				void* operator new (size_t alloc_size) {
-					void* return_address = LAllocator.Allocate(alloc_size);
+					void* return_address = PAllocator.Allocate(alloc_size);
 					if (return_address == nullptr) {
-						LAllocator.Clean();
-						return_address = LAllocator.Allocate(alloc_size);
+						NE_ASSERT(false, "Complex New: Allocator is full. Please clean and reallocate.");
 					}
 					return return_address;
 				}
 
-				void operator delete (void* deletePtr) {}
+				void operator delete (void* deletePtr) {
+					PAllocator.Free(deletePtr);
+				}
 
-				// std::unordered_map<int, std::vector<std::string>> umap;
-				// std::map<int, std::string> map;
-				// std::vector<int> list;
-				// std::string s;
-				// double d;
-				// int a;
-				// int b;
+				std::map<int, std::string> map;
+				std::string s;
+				double z;
+				int x;
+				int y;
 				char c;
 				char d;
 				char e;
 			};
+
 			NE_WARN("Complex has a sizeof({}) and an alignof({})", sizeof(Complex), alignof(Complex));
+
 			Neon::Timer timer;
 			Neon::Timestep initialTime;
 			Complex* t[1000];
 
-			LAllocator.Init(1048576);
-			PAllocator.Init<Complex>(500);
+			PAllocator.Init<Complex>(1000);
 
 			timer.Init();
 			initialTime = timer.GetTime();
 
 			for (int x=0; x < 5000; ++x) {
-
 				// Run New test
 				for (int i=0; i < 1000; ++i) {
 					t[i] = new Complex();
 				}
 
-				// // Run Delete test
-				// for (int j=0; j < 1000; ++j) {
-				// 	delete t[j];
-				// }
-
-				LAllocator.Clean();
+				// Run Delete test
+				for (int j=0; j < 1000; ++j) {
+					delete t[j];
+				}
 			}
 
 			NE_WARN("Memory Alloc Test: New/Delete total time - {}\n", timer.GetTime() - initialTime);
-
-			LAllocator.Clean();
 
 			exit(EXIT_SUCCESS);
 			/*

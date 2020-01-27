@@ -23,18 +23,20 @@ namespace Neon { namespace Memory {
 					m_size = numElements * m_blockSize;
 					m_start = new unsigned char[m_size];
 					adjustment = GetForwardAlignedAddressOffset(m_start, alignof(T));
-					m_FreeHead = reinterpret_cast<FreeList>(
+					m_pFreeHead = m_pPoolHead = reinterpret_cast<FreeList>(
 						reinterpret_cast<uintptr_t>(m_start) + adjustment
 					);
 
-					if (adjustment > 0) {
-						NE_CORE_INFO("PoolAllocator: Adjustment is ", adjustment);
-					}
+					NE_CORE_WARN("PoolAllocator: adjustment - {}, alignment - {}", adjustment, GetAlign(sizeof(T)));
 
-					c_block = m_FreeHead;
+					// Set up the inherited member variables
+					m_usedMemory = m_size + adjustment;
+
+					c_block = m_pFreeHead;
 					for (int i = 0; i < numElements; ++i) {
+						adjustment = GetForwardAlignedAddressOffset(c_block , alignof(T));
 						c_block->next = reinterpret_cast<FreeList>(
-							reinterpret_cast<uintptr_t>(c_block) + m_blockSize
+							reinterpret_cast<uintptr_t>(c_block) + m_blockSize + adjustment
 						);
 						c_block = c_block->next;
 					}
@@ -49,7 +51,7 @@ namespace Neon { namespace Memory {
 				return false;
 			}
 
-			virtual void* Allocate(size_t allocSize, uint8_t alignment = NE_DEFAULT_MEM_ALIGNMENT) override;
+			virtual void* Allocate(size_t allocSize = 0, uint8_t alignment = NE_DEFAULT_MEM_ALIGNMENT) override;
 			virtual void Free(void* memptr) override;
 
 			/* Getters */
@@ -64,6 +66,7 @@ namespace Neon { namespace Memory {
 
 			/* Private Members */
 			size_t m_blockSize; // Size of individual blocks of memory
-			FreeList m_FreeHead; // Beginning of free list
+			FreeList m_pFreeHead; // Beginning of free list
+			FreeList m_pPoolHead; // Beginning of pool
 	};
 }}

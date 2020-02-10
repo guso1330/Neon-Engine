@@ -21,6 +21,7 @@ bin/
 build/
 build*/
 *.dylib
+NeonEngine.xcodeproj/*
 
 # Cmake exclude files
 CMakeCache.txt

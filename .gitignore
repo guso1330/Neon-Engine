@@ -40,7 +40,7 @@ cmake_install.cmake
 
 # Build results
 [Dd]ebug/
-!NeonEngine/NeonEngine/utils/debug/
+!NeonEngine/NeonEngine/[Uu]tils/[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/

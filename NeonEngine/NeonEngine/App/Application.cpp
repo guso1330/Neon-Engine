@@ -1,5 +1,6 @@
 #include "App/Application.h"
 #include "Graphics/Renderers/Renderer.h"
+#include "Core/Platforms/Platforms.h"
 
 #include "nepch.h"
 

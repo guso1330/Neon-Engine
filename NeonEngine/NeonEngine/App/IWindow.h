@@ -2,6 +2,10 @@
 
 #include "Core/Core.h"
 
+#include "App/Input/input.h"
+#include "App/eventManager.h"
+#include "App/eventTypes.h"
+
 namespace Neon {
 	struct WindowSettings {
 		bool fullscreen;
@@ -23,6 +27,7 @@ namespace Neon {
 
 	class IWindow {
 		public:
+			IWindow() : m_Input(new Input) {}
 			virtual ~IWindow() = default;
 
 			virtual void Update() = 0;
@@ -34,13 +39,18 @@ namespace Neon {
 			virtual bool isFullscreen() const = 0;
 			virtual bool isClosed() const = 0;
 			virtual void* GetNativeWindow() const = 0;
+			virtual inline Input* GetInput() const { return m_Input.get(); }
 
 			/* Setters */
 			virtual void SetSize(unsigned int width, unsigned int height) = 0;
 			virtual void SetFullscreen(bool isFullscreen) = 0;
 			virtual void SetVSync(bool enabled) = 0;
 			virtual void SetTitle(const std::string& title) = 0;
+			virtual void SetInputMode(int mode, int value) = 0;
 
 			static IWindow* Create(const WindowSettings& settings = WindowSettings());
+
+		protected:
+			std::unique_ptr<Input> m_Input;
 	};
 }

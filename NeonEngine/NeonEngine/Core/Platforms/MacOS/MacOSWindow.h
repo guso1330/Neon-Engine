@@ -1,10 +1,7 @@
 #pragma once
 
-#include "App/IWindow.h"
-#include "App/Input/input.h"
-#include "App/eventManager.h"
-#include "App/eventTypes.h"
 #include "Core/Platforms/GLFW/GLFWContext.h"
+#include "App/IWindow.h"
 
 namespace Neon {
 	class MacOSWindow : public IWindow {
@@ -22,14 +19,13 @@ namespace Neon {
 			inline bool isFullscreen() const override { return m_isFullscreen; }
 			bool isClosed() const override;
 			inline void* GetNativeWindow() const override { return m_Window; };
-			inline Input* GetInput() const { return m_Input.get(); }
 
 			/* Setters */
 			void SetSize(unsigned int width, unsigned int height) override;
 			void SetFullscreen(bool isFullscreen) override;
 			void SetVSync(bool enabled) override;
 			void SetTitle(const std::string& title) override;
-			void SetInputMode(int mode, int value);
+			void SetInputMode(int mode, int value) override;
 
 		private:
 			void RunInit();
@@ -44,6 +40,5 @@ namespace Neon {
 			std::string m_title;
 
 			GLFWwindow* m_Window;
-			std::unique_ptr<Input> m_Input;
 	};
 }

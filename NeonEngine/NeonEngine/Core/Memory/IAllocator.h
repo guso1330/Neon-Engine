@@ -3,27 +3,34 @@
 #include "nepch.h"
 #include "Core/Core.h"
 
+/*
+	- Article for STL Aligned Memory Allocator: https://johanmabille.github.io/blog/2014/12/06/aligned-memory-allocator/
+	- Article describing Custom Allocator creation: https://docs.roguewave.com/sourcepro/11.1/html/toolsug/11-6.html
+
+	TODO:
+	- For all allocators go through and verify that alignment is working
+*/
+
 namespace Neon { namespace Memory {
 	class IAllocator {
 		public:
 			/* Constructor/Destructor */
-			IAllocator();
-			virtual ~IAllocator();
+			IAllocator() = default;
+			IAllocator(const IAllocator& allocator) noexcept;
+			IAllocator(IAllocator&& allocator) noexcept;
+			virtual ~IAllocator() = default;
+
+			/* Operator Override */
+			IAllocator& operator=(const IAllocator& allocator) = delete;
+			IAllocator& operator=(IAllocator&& allocator) noexcept;
 
 			/* Members */
-			virtual void* Allocate(size_t allocSize, uint8_t alignment = NE_DEFAULT_MEM_ALIGNMENT) = 0;
-			virtual void Free(void* memptr) = 0;
+			virtual void* Allocate(size_t size) = 0;
+			virtual void Free(void* deletePtr) = 0;
 
 			/* Getters */
-			inline void* GetStart() const { return m_start; }
-			inline size_t GetSize() const { return m_size; }
-			inline size_t GetAllocations() const { return m_allocations; }
-			inline size_t GetUsedMemory() const { return m_usedMemory; }
+			virtual const size_t GetSize() const = 0;
+			virtual const size_t GetUsedMemory() const = 0;
 
-		protected:
-			void* m_start;
-			size_t m_size;
-			size_t m_allocations;
-			size_t m_usedMemory;
 	};
 }}

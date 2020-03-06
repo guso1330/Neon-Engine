@@ -17,8 +17,8 @@ file(GLOB_RECURSE TEST_FILES "${TEST_DIR}/**-test.cpp")
 set(CMAKE_MACOSX_RPATH 1)
 set(TEST_BINARY "NeonEngine-test")
 add_executable(${TEST_BINARY} ${TEST_FILES})
-set_property(TARGET ${TEST_BINARY} PROPERTY CXX_STANDARD 11)
 add_test(NAME ${TEST_BINARY} COMMAND ${TEST_BINARY})
+set_property(TARGET ${TEST_BINARY} PROPERTY CXX_STANDARD 11)
 target_link_libraries(${TEST_BINARY} gtest ${PROJECT_NAME})
 
 # library

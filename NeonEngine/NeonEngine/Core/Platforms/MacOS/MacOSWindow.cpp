@@ -7,9 +7,7 @@
  	- Handle full screen windows and multiple monitors
 */
 namespace Neon {
-	MacOSWindow::MacOSWindow(const WindowSettings &settings) :
-		m_Input(new Input())
-	{
+	MacOSWindow::MacOSWindow(const WindowSettings &settings) {
 		m_title = settings.title;
 		m_width = settings.width;
 		m_height = settings.height;
@@ -23,8 +21,7 @@ namespace Neon {
 		m_width(width),
 		m_height(height),
 		m_isFullscreen(fullscreen),
-		m_title(title),
-		m_Input(new Input())
+		m_title(title)
 	{
 		m_vsyncEnabled = false;
 		RunInit();

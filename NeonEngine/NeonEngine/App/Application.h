@@ -1,11 +1,10 @@
 #pragma once
 
+#include "Core/ECS/EntityManager.h"
+#include "Graphics/Layers/layerStack.h"
 #include "App/IWindow.h"
-#include "Core/Platforms/Platforms.h"
 #include "App/eventManager.h"
 #include "App/Timer.h"
-#include "Graphics/Layers/layerStack.h"
-#include "Core/ECS/EntityManager.h"
 
 namespace Neon {
 

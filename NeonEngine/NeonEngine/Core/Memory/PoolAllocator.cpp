@@ -1,43 +1,70 @@
 #include "Core/Memory/PoolAllocator.h"
 
-namespace Neon { namespace Memory {
-	/*
-		TODO
-		- Handle allocation differently
-		- Support creation of multiple pools and when allocations are full create more pools
-	*/
+#include "Core/Memory/Helpers.h"
 
+namespace Neon { namespace Memory {
 	PoolAllocator::PoolAllocator() :
+		m_initialized(false),
+		m_chunkSize(0),
 		m_blockSize(0),
-		m_pFreeHead(nullptr)
+		m_size(0),
+		m_usedMemory(0),
+		m_pFreeListHead(nullptr)
 	{}
 
 	PoolAllocator::~PoolAllocator() {
-		// Clean up memory and freelist
-		m_pFreeHead = m_pPoolHead = nullptr;
-		m_usedMemory = m_allocations = 0;
+		m_size = 0;
+		m_usedMemory = 0;
+		m_chunkSize = 0;
+		m_blockSize = 0;
+		m_pFreeListHead = nullptr;
+		m_initialized = false;
 	}
 
-	void* PoolAllocator::Allocate(size_t allocSize, uint8_t alignment) {
-		FreeList c_block = m_pFreeHead;
-		if (c_block == nullptr) {
-			// TODO: Handle running out of space in a different way
-			// NE_CORE_ASSERT(false, "PoolAllocator - There are no more free blocks available");
-			return nullptr;
+	void* PoolAllocator::Allocate(size_t size) {
+        FreeList n_freeList;
+
+		NE_CORE_ASSERT(m_initialized, "PoolAllocator Allocate() - cannot call allocate on uninitialized PoolAllocator");
+
+		if (m_pFreeListHead == nullptr) {
+			m_pFreeListHead = AllocateBlock();
 		}
 
-		m_pFreeHead = c_block->next;
+		n_freeList = m_pFreeListHead;
+		m_pFreeListHead = m_pFreeListHead->next;
 
-		++m_allocations;
+		m_usedMemory += m_chunkSize;
 
-		return c_block;
+		return reinterpret_cast<void*>(n_freeList);
 	}
 
-	void PoolAllocator::Free(void* memptr) {
-		// TODO: need to check that the memptr is in the range of the memory block
-		reinterpret_cast<FreeList>(memptr)->next = m_pFreeHead;
-		m_pFreeHead = reinterpret_cast<FreeList>(memptr);
+	void PoolAllocator::Free(void* deletePtr) {
+		reinterpret_cast<FreeList>(deletePtr)->next = m_pFreeListHead;
+		m_pFreeListHead = reinterpret_cast<FreeList>(deletePtr);
+		m_usedMemory -= m_chunkSize;
+	}
 
-		--m_allocations;
+	FreeList PoolAllocator::AllocateBlock() {
+		FreeList n_freeList = nullptr;
+		FreeList n_chunk = nullptr;
+		uint8_t adjustment = 0;
+		size_t numItems = 0;
+
+		n_freeList = reinterpret_cast<FreeList>(new unsigned char[m_blockSize]);
+		n_chunk = n_freeList;
+		numItems = m_blockSize / m_chunkSize;
+
+		for (int i = 0; i < numItems - 1; ++i) {
+			adjustment = GetForwardAlignedAddressOffset(reinterpret_cast<void*>(n_chunk), m_alignment);
+			n_chunk->next = reinterpret_cast<FreeList>(
+				reinterpret_cast<unsigned char*>(n_chunk) + m_chunkSize + adjustment
+			);
+			n_chunk = n_chunk->next;
+		}
+
+		n_chunk->next = nullptr;
+		m_size += m_blockSize;
+
+		return n_freeList;
 	}
 }}

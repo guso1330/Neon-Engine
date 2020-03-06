@@ -67,6 +67,7 @@ auto MoveCameraAroundFunc = [](Neon::IWindow* window, Neon::Camera* camera, int 
 	glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 };
 
+Neon::Memory::LinearAllocator LAllocator;
 Neon::Memory::PoolAllocator PAllocator;
 
 class ExampleLayer : public Neon::Layer {
@@ -108,9 +109,12 @@ class ExampleLayer : public Neon::Layer {
 				double z;
 				int x;
 				int y;
-				char c;
-				char d;
-				char e;
+				char f;
+				char g;
+				char h;
+				bool a;
+				bool b;
+				bool c;
 			};
 
 			NE_WARN("Complex has a sizeof({}) and an alignof({})", sizeof(Complex), alignof(Complex));
@@ -119,7 +123,8 @@ class ExampleLayer : public Neon::Layer {
 			Neon::Timestep initialTime;
 			Complex* t[1000];
 
-			PAllocator.Init<Complex>(1000);
+			PAllocator.Init<Complex>(1000, alignof(Complex));
+			// LAllocator.Init(1000 * sizeof(Complex));
 
 			timer.Init();
 			initialTime = timer.GetTime();
@@ -127,18 +132,20 @@ class ExampleLayer : public Neon::Layer {
 			for (int x=0; x < 5000; ++x) {
 				// Run New test
 				for (int i=0; i < 1000; ++i) {
-					t[i] = new Complex();
+                    t[i] = new Complex();
 				}
 
 				// Run Delete test
 				for (int j=0; j < 1000; ++j) {
-					delete t[j];
+                    delete t[j];
 				}
+
+				// LAllocator.Clean();
 			}
 
 			NE_WARN("Memory Alloc Test: New/Delete total time - {}\n", timer.GetTime() - initialTime);
 
-			exit(EXIT_SUCCESS);
+			// exit(EXIT_SUCCESS); 
 			/*
 				Memory testing - END
 			*/
@@ -150,8 +157,8 @@ class ExampleLayer : public Neon::Layer {
 			};
 
 			// Load all Models
-			Neon::Model Cube("./SandBox/res/models/cube_basic.obj");
-			Neon::Model Suzanne("./SandBox/res/models/m9.obj");
+			Neon::Model Cube("res/models/cube_basic.obj");
+			Neon::Model Suzanne("res/models/m9.obj");
 			
 			std::vector<Neon::Mesh*> meshes;
 			meshes.reserve(Cube.GetMeshes().size() + Suzanne.GetMeshes().size());
@@ -187,15 +194,15 @@ class ExampleLayer : public Neon::Layer {
 
 			/* Create the shaders and the program */
 			m_Texture = std::shared_ptr<Neon::ITexture>(Neon::ITexture::Create(
-				"./SandBox/res/textures/checkered_colored.jpg",
+				"res/textures/checkered_colored.jpg",
 				Neon::TextureType::DIFFUSE
 			));
 			m_Texture->Bind();
 
 			m_Program = std::shared_ptr<Neon::IProgram>(Neon::IProgram::Create(
 				"textureShaderProgram",
-				"./SandBox/res/shaders/textureVShader.glsl",
-				"./SandBox/res/shaders/textureFShader.glsl"
+				"res/shaders/textureVShader.glsl",
+				"res/shaders/textureFShader.glsl"
 			));
 		}
 
@@ -288,7 +295,7 @@ class SandBox : public Neon::Application {
 
 			MoveCameraFunc(
 				m_exampleLayer->GetCamera(),
-				(dynamic_cast<Neon::MacOSWindow*>(this->GetWindow()))->GetInput(),
+				(this->GetWindow())->GetInput(),
 				m_cameraSpeed,
 				camera_velocity,
 				camera_speed_limit,

@@ -1,4 +1,4 @@
-#include "./camera.h"
+#include "Graphics/Cameras/Camera.h"
 
 namespace Neon {
 	Camera::Camera(const glm::vec3& pos, float fov, float aspect, float near, float far) {

@@ -5,7 +5,7 @@
 #include "Core/Memory/PoolAllocator.h"
 
 /* Graphics */
-#include "Graphics/Cameras/camera.h"
+#include "Graphics/Cameras/Camera.h"
 #include "Graphics/Entities/vertex.h"
 #include "Graphics/Entities/transform.h"
 #include "Graphics/Entities/renderable3d.h"
@@ -18,10 +18,10 @@
 #include "Graphics/Shaders/material.h"
 
 /* App */
-#include "App/eventManager.h"
-#include "App/eventTypes.h"
+#include "App/EventManager.h"
+#include "App/EventTypes.h"
 #include "App/Application.h"
-#include "App/Input/input.h"
+#include "App/Input/Input.h"
 
 /* Utils */
 #include "Utils/Debug/logger.hpp"

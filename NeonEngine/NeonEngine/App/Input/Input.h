@@ -2,8 +2,8 @@
 
 // TODO: Implement key codes for Neon Engine (Pull from GLFW key codes)
 
-#include "keyboard.h"
-#include "mouse.h"
+#include "App/Input/Keyboard.h"
+#include "App/Input/Mouse.h"
 #include "App/Timer.h"
 
 namespace Neon {

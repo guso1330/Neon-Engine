@@ -1,4 +1,4 @@
-#include "mouse.h"
+#include "App/Input/Mouse.h"
 
 namespace Neon {
 	Mouse::Mouse() {

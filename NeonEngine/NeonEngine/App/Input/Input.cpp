@@ -1,8 +1,8 @@
 #include "nepch.h"
 
+#include "Core/Events/EventManager.h"
+#include "Core/Events/EventTypes.h"
 #include "App/Input/Input.h"
-#include "App/EventManager.h"
-#include "App/EventTypes.h"
 
 namespace Neon {
 

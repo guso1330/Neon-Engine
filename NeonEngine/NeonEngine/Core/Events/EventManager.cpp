@@ -1,4 +1,4 @@
-#include "App/EventManager.h"
+#include "Core/Events/EventManager.h"
 
 namespace Neon {
 	EventStore EventManager::s_eventStore;

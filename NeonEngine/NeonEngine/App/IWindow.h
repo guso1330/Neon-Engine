@@ -3,8 +3,8 @@
 #include "Core/Core.h"
 
 #include "App/Input/Input.h"
-#include "App/EventManager.h"
-#include "App/EventTypes.h"
+#include "Core/Events/EventManager.h"
+#include "Core/Events/EventTypes.h"
 
 namespace Neon {
 	struct WindowSettings {

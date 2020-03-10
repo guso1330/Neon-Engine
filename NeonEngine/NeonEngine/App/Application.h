@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Core/ECS/EntityManager.h"
+#include "Core/Events/EventManager.h"
 #include "Graphics/Layers/layerStack.h"
 #include "App/IWindow.h"
-#include "App/EventManager.h"
 #include "App/Timer.h"
 
 namespace Neon {

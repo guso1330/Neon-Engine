@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/EventManager.h"
+#include "Core/Events/EventManager.h"
 
 // TODO: Move event names to some macros
 #define NEON_EVENT_WINDOW_RESIZE "WindowResize"

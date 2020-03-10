@@ -3,6 +3,8 @@
 /* Core */
 #include "Core/Memory/LinearAllocator.h"
 #include "Core/Memory/PoolAllocator.h"
+#include "Core/Events/EventManager.h"
+#include "Core/Events/EventTypes.h"
 
 /* Graphics */
 #include "Graphics/Cameras/Camera.h"
@@ -12,14 +14,11 @@
 #include "Graphics/Entities/renderableCollection.h"
 #include "Graphics/Layers/layer.h"
 #include "Graphics/Renderers/Renderer.h"
-// light includes, not used yet
 
 /* Shaders */
 #include "Graphics/Shaders/material.h"
 
 /* App */
-#include "App/EventManager.h"
-#include "App/EventTypes.h"
 #include "App/Application.h"
 #include "App/Input/Input.h"
 

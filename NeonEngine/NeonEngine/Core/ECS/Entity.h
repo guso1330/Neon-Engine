@@ -7,7 +7,8 @@
 namespace Neon { namespace ECS {
 	class Entity {
 		public:
-			explicit Entity(const EntityID id) : m_id(id) {  }
+			/* Constructor/Destructor */
+			explicit Entity(const EntityID id) : m_id(id) {}
 
 			/* Getters */
 			inline const EntityID GetID() { return m_id; }

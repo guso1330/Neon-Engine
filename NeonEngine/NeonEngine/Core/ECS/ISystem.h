@@ -1,11 +1,12 @@
 #pragma once
 
-#include "App/Timer.h"
+#include "Core/Time/Timer.h"
 #include "Core/ECS/ECSTypes.h"
 
 namespace Neon { namespace ECS {
 	class ISystem {
 		public:
+			/* Constructor/Destructor */
 			virtual ~ISystem() = default;
 
 			/* Methods */

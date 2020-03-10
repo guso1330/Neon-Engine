@@ -3,12 +3,13 @@
 #include "Core/ECS/ECSTypes.h"
 #include "Core/ECS/Entity.h"
 #include "Core/ECS/ISystem.h"
-#include "App/Timer.h"
+#include "Core/Time/Timer.h"
 #include "nepch.h"
 
 namespace Neon { namespace ECS {
 	class EntityManager {
 		public:
+			/* Constructor/Destructor */
 			EntityManager() = default;
 			~EntityManager() = default;
 

@@ -1,10 +1,15 @@
 #pragma once
 
+#include "Core/Time/Timer.h"
 #include "Core/ECS/EntityManager.h"
 #include "Core/Events/EventManager.h"
 #include "Graphics/Layers/layerStack.h"
 #include "App/IWindow.h"
-#include "App/Timer.h"
+
+/*
+	TODO:
+	- Ensure application class follows the singleton pattern 100%
+*/
 
 namespace Neon {
 
@@ -17,7 +22,7 @@ namespace Neon {
 			virtual ~Application() = default;
 
 			/* Getters */
-			inline IWindow* GetWindow() { return m_Window.get(); }
+			inline IWindow* GetWindow() { return m_pWindow.get(); }
 			inline static Application& Get() { return *s_Instance; }
 
 			/* Public Methods */
@@ -31,9 +36,9 @@ namespace Neon {
 
 		private:
 			bool m_isRunning;
-			std::unique_ptr<IWindow> m_Window;
-			LayerStack m_LayerStack;
 			Timer m_Timer;
+			std::unique_ptr<IWindow> m_pWindow;
+			LayerStack m_LayerStack;
 			EntityManager m_EntityManager;
 
 		private:

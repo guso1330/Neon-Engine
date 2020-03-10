@@ -2,7 +2,7 @@
 
 #include "nepch.h"
 
-#include "App/Timer.h"
+#include "Core/Time/Timer.h"
 
 namespace Neon {
 	class Layer {
@@ -10,9 +10,10 @@ namespace Neon {
 			Layer(const std::string& name = "Layer");
 			virtual ~Layer() = default;
 
-			/* getters */
+			/* Getters */
 			inline const std::string& GetName() { return m_name; }
 
+			/* Member (Virtual) functions */
 			virtual void OnAttach() {}
 			virtual void OnDetach() {}
 			virtual void OnUpdate(Timestep ts) {}

@@ -67,7 +67,6 @@ auto MoveCameraAroundFunc = [](Neon::IWindow* window, Neon::Camera* camera, int 
 	glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 };
 
-Neon::Memory::LinearAllocator LAllocator;
 Neon::Memory::PoolAllocator PAllocator;
 
 class ExampleLayer : public Neon::Layer {
@@ -80,6 +79,7 @@ class ExampleLayer : public Neon::Layer {
 			float far = 1000.0f;
 			m_Camera = new Neon::Camera(glm::vec3(0.0f, 0.0f, -5.0f), fov, aspect_ratio, near, far);
 		}
+
 
 		/* Getter Functions */
 		inline Neon::Camera* GetCamera() const { return m_Camera; }
@@ -124,7 +124,6 @@ class ExampleLayer : public Neon::Layer {
 			Complex* t[1000];
 
 			PAllocator.Init<Complex>(1000, alignof(Complex));
-			// LAllocator.Init(1000 * sizeof(Complex));
 
 			timer.Init();
 			initialTime = timer.GetTime();
@@ -139,13 +138,9 @@ class ExampleLayer : public Neon::Layer {
 				for (int j=0; j < 1000; ++j) {
                     delete t[j];
 				}
-
-				// LAllocator.Clean();
 			}
 
 			NE_WARN("Memory Alloc Test: New/Delete total time - {}\n", timer.GetTime() - initialTime);
-
-			// exit(EXIT_SUCCESS); 
 			/*
 				Memory testing - END
 			*/

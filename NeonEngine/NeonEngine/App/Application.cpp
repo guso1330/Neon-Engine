@@ -8,14 +8,14 @@ namespace Neon {
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application() :
-		m_Window(std::unique_ptr<IWindow>(IWindow::Create())),
+		m_pWindow(std::unique_ptr<IWindow>(IWindow::Create())),
 		m_isRunning(false)
 	{
 		Init();
 	}
 
 	Application::Application(const WindowSettings &settings) :
-		m_Window(std::unique_ptr<IWindow>(IWindow::Create(settings))),
+		m_pWindow(std::unique_ptr<IWindow>(IWindow::Create(settings))),
 		m_isRunning(false)
 	{
 		Init();
@@ -45,7 +45,7 @@ namespace Neon {
 		m_isRunning = true;
 
 		m_Timer.Init();
-		while (m_isRunning && !m_Window->isClosed()) {
+		while (m_isRunning && !m_pWindow->isClosed()) {
 			elapsed_time = m_Timer.GetElapsedTime();
 
 			// Update ECS Systems
@@ -59,7 +59,7 @@ namespace Neon {
 			this->Update(elapsed_time);
 
 			// Update window
-			m_Window->Update();
+			m_pWindow->Update();
 
 			m_Timer.Tick();
 		}

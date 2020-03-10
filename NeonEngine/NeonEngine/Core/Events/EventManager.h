@@ -6,6 +6,7 @@
 	 - Expose some global macro functions to access the event manager
 	 - Implement Subscribe and Unsubscribe
 	 - Event bubbling
+	 - Make class a singleton?
 */
 #include "Core/Types/Callback.h"
 #include "nepch.h"
@@ -41,7 +42,6 @@ namespace Neon {
 
 			/* Public Member Functions */
 			static bool AddEvent(std::string name, EventPtr event);
-
 			template<class T>
 			static std::pair<unsigned int, bool> AddEventHandler(std::string eventName, const T &callback) {
 				EventHandlerPtr n_eventHandlerPtr(new EventHandler());
@@ -77,11 +77,6 @@ namespace Neon {
 				return std::make_pair(n_eventHandlerPtr->id, true);
 			}
 
-			// bool RemoveEvent(string name);
-			// bool RemoveEventHandler(string name, uint id);
-			// const Event Subscribe(string name);
-			// bool Unsubscribe(string name);
-
 			template <class... ArgTypes>
 			static void DispatchEvent(std::string name, ArgTypes... args) {
 				typedef Callback<ArgTypes...> CallbackType;
@@ -105,6 +100,10 @@ namespace Neon {
 				}
 			}
 
+			// bool RemoveEvent(string name);
+			// bool RemoveEventHandler(string name, uint id);
+			// const Event Subscribe(string name);
+			// bool Unsubscribe(string name);
 			// bool DispatchEventHandler(string name, uint id, Args ...);
 
 			/* Debug function */

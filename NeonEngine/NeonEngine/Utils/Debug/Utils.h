@@ -1,7 +1,7 @@
 #pragma once
 
 #include "App/IWindow.h"
-#include "App/Timer.h"
+#include "Core/Time/Timer.h"
 
 #include "Utils/Debug/logger.hpp"
 

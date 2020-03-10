@@ -6,6 +6,11 @@
 /*
 	- Article for STL Aligned Memory Allocator: https://johanmabille.github.io/blog/2014/12/06/aligned-memory-allocator/
 	- Article describing Custom Allocator creation: https://docs.roguewave.com/sourcepro/11.1/html/toolsug/11-6.html
+	- Boilerplate for allocator templates in C++ 11 (and 03): https://howardhinnant.github.io/allocator_boilerplate.html
+	- Simple Memory Allocator
+		http://dmitrysoshnikov.com/compilers/writing-a-memory-allocator/#video-lecture
+		http://dmitrysoshnikov.com/compilers/writing-a-pool-allocator/#overview
+	-
 
 	TODO:
 	- For all allocators go through and verify that alignment is working

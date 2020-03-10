@@ -1,9 +1,9 @@
 #pragma once
 
-#include "App/Timer.h"
 #include "Core/ECS/ECSTypes.h"
 #include "Core/ECS/Entity.h"
 #include "Core/ECS/ISystem.h"
+#include "App/Timer.h"
 #include "nepch.h"
 
 namespace Neon { namespace ECS {

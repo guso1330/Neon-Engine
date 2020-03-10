@@ -3,6 +3,8 @@
 #include "Core/Memory/IAllocator.h"
 #include "Core/Memory/FreeList.h"
 
+// TODO: Is alignment really necessary here?
+
 namespace Neon { namespace Memory {
 	class PoolAllocator : public IAllocator {
 		public:

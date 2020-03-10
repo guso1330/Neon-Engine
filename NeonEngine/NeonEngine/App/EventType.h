@@ -3,7 +3,6 @@
 #include "eventManager.h"
 
 // TODO: Move event names to some macros
-
 #define NEON_EVENT_WINDOW_RESIZE "WindowResize"
 #define NEON_EVENT_KEY_PRESS "KeyPress"
 #define NEON_EVENT_MOUSE_PRESS "MousePress"

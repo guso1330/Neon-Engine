@@ -2,8 +2,8 @@
 
 #include "nepch.h"
 
-const int WIDTH = 512,
-		  HEIGHT = 256;
+const int WIDTH = 1280,
+		  HEIGHT = 768;
 
 /* Input Callback Functions */
 auto MoveCameraFunc = [](Neon::Camera* camera, Neon::Input* inputManager, float& camera_speed, float camera_velocity, float camera_speed_limit, float elapsed_time) {

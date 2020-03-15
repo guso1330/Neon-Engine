@@ -2,8 +2,8 @@
 
 #include "nepch.h"
 
-const int WIDTH = 1280,
-		  HEIGHT = 768;
+const int WIDTH = 1278,
+		  HEIGHT = 720;
 
 /* Input Callback Functions */
 auto MoveCameraFunc = [](Neon::Camera* camera, Neon::Input* inputManager, float& camera_speed, float camera_velocity, float camera_speed_limit, float elapsed_time) {
@@ -67,7 +67,77 @@ auto MoveCameraAroundFunc = [](Neon::IWindow* window, Neon::Camera* camera, int 
 	glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 };
 
-Neon::Memory::PoolAllocator PAllocator;
+/*
+	ECS Components & System testing - BEGIN
+*/
+struct CameraData {
+	Neon::Camera* camera;
+	glm::vec3 pos = glm::vec3(0.0);
+	float fov = 70.0f;
+	float aspectRatio = (float)WIDTH / (float)HEIGHT;
+	float near = 0.01f;
+	float far = 1000.0f;
+};
+
+struct TransformData {
+	Neon::Transform transform;
+};
+
+struct CameraComponent : public Neon::ECS::IComponent {
+	virtual bool Init(void* n_data) override {
+		cameraData = static_cast<CameraData*>(n_data);
+
+		cameraData->camera = new Neon::Camera(
+			cameraData->pos,
+			cameraData->fov,
+			cameraData->aspectRatio,
+			cameraData->near,
+			cameraData->far
+		);
+
+		return true;
+	}
+
+	CameraData* cameraData;
+};
+
+struct TransformComponent : public Neon::ECS::IComponent {
+	virtual bool Init(void* n_data) override {
+		transformData = static_cast<TransformData*>(n_data);
+		return true;
+	}
+
+	TransformData* transformData;
+};
+
+class CameraSystem : public Neon::ECS::ISystem {
+	public:
+		virtual bool Init() override {
+			return true;
+		}
+
+		virtual void Update(Neon::Timestep ts) override {
+			CameraComponent* camera_component;
+			TransformComponent* transform_component;
+			Neon::EntityMap entities;
+
+			entities = Neon::ECS::ECSManager::GetInstance().GetEntities();
+
+			for (Neon::EntityMap::const_iterator it = entities.begin(); it != entities.end(); ++it) {
+				camera_component = Neon::ECS::ECSManager::GetInstance().GetComponent<CameraComponent>((*it).first);
+				transform_component = Neon::ECS::ECSManager::GetInstance().GetComponent<TransformComponent>((*it).first);
+
+				camera_component->cameraData->camera->SetPosition(
+					transform_component->transformData->transform.GetPosition()
+				);
+				camera_component->cameraData->camera->Update();
+			}
+		}
+};
+
+/*
+	ECS Components & System testing - END
+*/
 
 class ExampleLayer : public Neon::Layer {
 	public:
@@ -80,6 +150,9 @@ class ExampleLayer : public Neon::Layer {
 			m_Camera = new Neon::Camera(glm::vec3(0.0f, 0.0f, -5.0f), fov, aspect_ratio, near, far);
 		}
 
+		~ExampleLayer() {
+			delete m_Camera;
+		}
 
 		/* Getter Functions */
 		inline Neon::Camera* GetCamera() const { return m_Camera; }
@@ -88,62 +161,28 @@ class ExampleLayer : public Neon::Layer {
 		void OnAttach() override {
 			srand(time(NULL));
 
-			/*
-				Memory testing - BEGIN
-			*/
-			struct Complex {
-				void* operator new (size_t alloc_size) {
-					void* return_address = PAllocator.Allocate(alloc_size);
-					if (return_address == nullptr) {
-						NE_ASSERT(false, "Complex New: Allocator is full. Please clean and reallocate.");
-					}
-					return return_address;
-				}
-
-				void operator delete (void* deletePtr) {
-					PAllocator.Free(deletePtr);
-				}
-
-				std::map<int, std::string> map;
-				std::string s;
-				double z;
-				int x;
-				int y;
-				char f;
-				char g;
-				char h;
-				bool a;
-				bool b;
-				bool c;
-			};
-
-			NE_WARN("Complex has a sizeof({}) and an alignof({})", sizeof(Complex), alignof(Complex));
-
+			/* ECS Testing - BEGIN */
+			size_t amount = 5000;
 			Neon::Timer timer;
 			Neon::Timestep initialTime;
-			Complex* t[1000];
-
-			PAllocator.Init<Complex>(1000, alignof(Complex));
+			Neon::ECS::EntityID e0;
+			CameraComponent* camComponent;
+			TransformComponent* tComp;
 
 			timer.Init();
 			initialTime = timer.GetTime();
 
-			for (int x=0; x < 5000; ++x) {
-				// Run New test
-				for (int i=0; i < 1000; ++i) {
-                    t[i] = new Complex();
-				}
+			e0 = Neon::ECS::ECSManager::GetInstance().CreateEntity();
+			camComponent = Neon::ECS::ECSManager::GetInstance().CreateComponent<CameraComponent>(e0, static_cast<void*>(new CameraData()));
+			tComp = Neon::ECS::ECSManager::GetInstance().CreateComponent<TransformComponent>(e0, static_cast<void*>(new TransformData()));
+			Neon::ECS::ECSManager::GetInstance().CreateSystem<CameraSystem>();
 
-				// Run Delete test
-				for (int j=0; j < 1000; ++j) {
-                    delete t[j];
-				}
-			}
+			tComp->transformData->transform.SetPosition(glm::vec3(0.0, 0.0, -5.0));
 
-			NE_WARN("Memory Alloc Test: New/Delete total time - {}\n", timer.GetTime() - initialTime);
-			/*
-				Memory testing - END
-			*/
+			NE_WARN("EntityPool used memory used: {}", Neon::ECS::ECSMemory::EntityPool.GetUsedMemory());
+			NE_WARN("ComponentPool used memory used: {}", Neon::ECS::ECSMemory::EntityPool.GetUsedMemory());
+			NE_WARN("EntityPool Alloc Test: New/Delete total time - {}\n", timer.GetTime() - initialTime);
+			/* ECS Testing - END */
 
 			Neon::BufferLayout model_layout = {
 				{ "vPosition", Neon::ShaderDataType::FLOAT3 },
@@ -153,12 +192,10 @@ class ExampleLayer : public Neon::Layer {
 
 			// Load all Models
 			Neon::Model Cube("res/models/cube_basic.obj");
-			Neon::Model Suzanne("res/models/m9.obj");
 			
 			std::vector<Neon::Mesh*> meshes;
-			meshes.reserve(Cube.GetMeshes().size() + Suzanne.GetMeshes().size());
+			meshes.reserve(Cube.GetMeshes().size());
 			meshes.insert(meshes.end(), Cube.GetMeshes().begin(), Cube.GetMeshes().end());
-			meshes.insert(meshes.end(), Suzanne.GetMeshes().begin(), Suzanne.GetMeshes().end());
 
 			for(std::vector<Neon::Mesh*>::iterator it=meshes.begin(); it != meshes.end(); ++it) {
 				std::vector<Neon::Vertex> c_verts = (*it)->GetVertexData();
@@ -205,10 +242,12 @@ class ExampleLayer : public Neon::Layer {
 			float angle;
 			float speed;
 			Neon::RenderMatrices mats;
+			Neon::Camera* camera;
+			CameraComponent* cameraComponent;
 
 			Neon::Renderer::GetInstance().Clear();
-
-			m_Camera->Update();
+			cameraComponent = Neon::ECS::ECSManager::GetInstance().GetComponent<CameraComponent>(0);
+			camera = cameraComponent->cameraData->camera;
 
 			// Set Up simple program
 			angle = 0.0f;
@@ -218,7 +257,7 @@ class ExampleLayer : public Neon::Layer {
 				angle = 0;
 			}
 			m_modelMatrix = m_modelMatrix * glm::rotate(angle, glm::vec3(0.0, 1.0f, 0.0));
-			mats.viewProjection = m_Camera->GetViewProjection();
+			mats.viewProjection = camera->GetViewProjection();
 
 			int i = 0;
 			for(std::vector<std::shared_ptr<Neon::IVertexArray> >::iterator it = m_vaos.begin(); it != m_vaos.end(); ++it) {
@@ -238,11 +277,11 @@ class ExampleLayer : public Neon::Layer {
 
 class SandBox : public Neon::Application {
 	public:
-		SandBox() {}
-
 		SandBox(const Neon::WindowSettings &settings) :
 			Neon::Application(settings)
-		{
+		{}
+
+		bool Init() override {
 			NE_INFO("SandBox: SandBox app initialized");
 
 			// Create window
@@ -279,7 +318,11 @@ class SandBox : public Neon::Application {
 			));
 
 			glfwSetInputMode(static_cast<GLFWwindow*>(window->GetNativeWindow()), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+			return true;
 		}
+
+		~SandBox() = default;
 
 		void Update(Neon::Timestep ts) override {
 			float update_ts = (60.0f * ts) / 1000.0f; // TODO: divide by 60.0f?
@@ -300,8 +343,6 @@ class SandBox : public Neon::Application {
 			// Disable the cursor
 			glfwSetCursorPos(static_cast<GLFWwindow*>(this->GetWindow()->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 		}
-
-		~SandBox() {}
 
 	private:
 		float m_cameraSpeed = 0.0f;

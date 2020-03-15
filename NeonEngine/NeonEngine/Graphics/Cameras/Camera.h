@@ -19,7 +19,7 @@ namespace Neon {
 			inline const float GetPitch() const { return m_pitch; }
 			inline const float GetYaw() const { return m_yaw; }
 
-			void SetPosition(glm::vec3 &n_pos);
+			void SetPosition(const glm::vec3 &n_pos);
 			void SetLookAt(const glm::vec3& n_pos);
 
 			void RotateYaw(float angle);

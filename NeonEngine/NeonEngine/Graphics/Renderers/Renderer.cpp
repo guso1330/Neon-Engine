@@ -13,8 +13,14 @@ namespace Neon {
 		return instance;
 	}
 
-	void Renderer::Init() {
-		NE_CORE_ASSERT(Instantiate(), "Renderer: Failed to initialize");
+	bool Renderer::Init() {
+		if (Instantiate()) {
+			return true;
+		}
+
+		NE_CORE_ASSERT(false, "Renderer: Failed to initialize");
+
+		return false;
 	}
 
 	bool Renderer::Instantiate() {

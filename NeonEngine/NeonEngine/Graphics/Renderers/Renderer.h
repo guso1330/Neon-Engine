@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Core/Core.h"
-
-// OpenGL
-#include "Core/Platforms/OpenGL/OpenGLContext.h"
+#include "Core/Types/Singleton.h"
+#include "Core/Platforms/OpenGL/OpenGLContext.h" // OpenGL
 
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -14,16 +13,10 @@ namespace Neon {
 		glm::mat4 viewProjection;
 	};
 
-	class Renderer {
+	class Renderer : public Singleton {
 		public:
-			/* Constructors */
-			Renderer(Renderer const&) = delete;
-
-			/* Operator Overrides */
-			void operator=(Renderer const&) = delete;
-
 			/* Methods */
-			static void Init();
+			static bool Init();
 			void Clear() const;
 			void Submit(std::shared_ptr<IVertexArray>& va, std::shared_ptr<IProgram>& program, const RenderMatrices& mats);
 
@@ -33,7 +26,6 @@ namespace Neon {
 
 		/* Private Methods */
 		private:
-			Renderer() {}
 			static bool Instantiate();
 			static IRendererAPI& GetRendererAPIInstance();
 

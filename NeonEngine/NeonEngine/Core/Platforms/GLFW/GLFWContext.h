@@ -7,6 +7,7 @@
 		- Is this class needed?
 		- Is it fine for each implementation to handle GLFW on it's own?
 */
+#include "Core/Types/Singleton.h"
 #include "nepch.h"
 
 #include <glad/glad.h>
@@ -29,14 +30,8 @@ namespace Neon { namespace GLFW {
 		{}
 	};
 
-	class GLFWContext {
+	class GLFWContext : public Singleton {
 		public:
-			/* Constructors */
-			GLFWContext(GLFWContext const&) = delete;
-
-			/* Operator overrides */
-			void operator=(GLFWContext const&) = delete;
-
 			/* Implementation functions */
 			bool CreateContext();
 			GLFWwindow* CreateWindow(
@@ -60,7 +55,6 @@ namespace Neon { namespace GLFW {
 			void SetInputMode(int mode, int value);
 
 		private:
-			GLFWContext() {}
 			static bool s_initialized;
 	};
 }}

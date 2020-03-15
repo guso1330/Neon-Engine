@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/Types/Singleton.h"
 #include "Graphics/Renderers/IGraphicContext.h"
 #include "Graphics/Renderers/IRendererAPI.h"
 #include "Core/Platforms/OpenGL/GL_Error.h"
@@ -18,6 +19,7 @@
 
 namespace Neon { namespace OpenGL {
 	class OpenGLContext :
+		public Singleton,
 		public IGraphicContext,
 		public IRendererAPI
 	{
@@ -28,12 +30,6 @@ namespace Neon { namespace OpenGL {
 		typedef std::unordered_map<unsigned int, std::shared_ptr<Texture> > TextureMap;
 
 		public:
-			/* Constructors */
-			OpenGLContext(OpenGLContext const&) = delete;
-			
-			/* Operator Overrides */
-			void operator=(OpenGLContext const&) = delete;
-
 			/* Methods */
 			virtual void Clear() override;
 			virtual void DrawIndexed(const std::shared_ptr<IVertexArray>& vao) override;
@@ -67,7 +63,6 @@ namespace Neon { namespace OpenGL {
 
 		/* Private Methods */
 		private:
-			OpenGLContext() {}
 			bool Init();
 
 		/* Private Variables */

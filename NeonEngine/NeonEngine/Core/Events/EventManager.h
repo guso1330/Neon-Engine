@@ -82,17 +82,17 @@ namespace Neon {
 				typedef Callback<ArgTypes...> CallbackType;
 				EventHandlerStore::const_iterator storeIt = s_eventHandlerStore.find(name);
 				std::vector<EventHandlerPtr> callbackVector; // TODO: maybe store vector as pointer to ensure you're not copying the vector
-				std::vector<EventHandlerPtr>::const_iterator vecIt;
+				std::vector<EventHandlerPtr>::const_iterator it;
 
 				if(storeIt != s_eventHandlerStore.end()) {
 					callbackVector = storeIt->second;
-					for (vecIt = callbackVector.begin(); vecIt != callbackVector.end(); ++vecIt) {
-						CallbackType* c = dynamic_cast<CallbackType*>((*vecIt)->callback.get());
+					for (it = callbackVector.begin(); it != callbackVector.end(); ++it) {
+						CallbackType* c = dynamic_cast<CallbackType*>((*it)->callback.get());
 						if(c)
 						{
 							(*c)(args...);
 						} else {
-							NE_CORE_WARN("EventHandler {}: {} doesn't contain callback", (*vecIt)->id, name);
+							NE_CORE_WARN("EventHandler {}: {} doesn't contain callback", (*it)->id, name);
 						}
 					}
 				} else {

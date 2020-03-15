@@ -1,8 +1,6 @@
 #pragma once
 
 /* Core */
-#include "Core/Memory/LinearAllocator.h"
-#include "Core/Memory/PoolAllocator.h"
 #include "Core/Events/EventManager.h"
 #include "Core/Events/EventTypes.h"
 

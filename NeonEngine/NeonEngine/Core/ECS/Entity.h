@@ -2,28 +2,29 @@
 
 #include "Core/ECS/ECSTypes.h"
 #include "Core/ECS/IComponent.h"
-#include "nepch.h"
 
 namespace Neon { namespace ECS {
 	class Entity {
 		public:
 			/* Constructor/Destructor */
-			explicit Entity(const EntityID id) : m_id(id) {}
+			explicit Entity(const EntityID id);
+
+			/* Operator Overload */
+			void* operator new (size_t alloc_size);
+			void operator delete (void* deletePtr);
+
+			/* Member Functions */
+			void AddComponent(IComponent* component);
 
 			/* Getters */
 			inline const EntityID GetID() { return m_id; }
-			template<class ComponentType>
-			ComponentType* GetComponent() const {
-				std::unordered_map<ComponentID, IComponent*>::const_iterator it = m_components.find(ComponentType::id);
-				if (it != m_components.end()) {
-					return it->second;
-				}
-
-				return nullptr;
-			}
+			template<class T>
+			IComponent* GetComponent() const;
 
 		private:
 			EntityID m_id;
-			std::unordered_map<ComponentID, IComponent*> m_components;
+			ComponentMap m_componentMap;
 	};
 }}
+
+#include "Core/ECS/Entity.tpp"

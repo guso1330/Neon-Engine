@@ -4,6 +4,11 @@
 
 #include "Core/Time/Timer.h"
 
+/*
+	TODO:
+	- Should the OnAttach, OnDetach, and OnUpdate be events that are emitted by the event system?
+*/
+
 namespace Neon {
 	class Layer {
 		public:

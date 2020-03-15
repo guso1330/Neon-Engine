@@ -3,6 +3,8 @@
 #include "Core/Memory/IAllocator.h"
 #include "Core/Memory/FreeList.h"
 
+#include "nepch.h"
+
 // TODO: Is alignment really necessary here?
 
 namespace Neon { namespace Memory {
@@ -11,7 +13,6 @@ namespace Neon { namespace Memory {
 			/* Constructor/Destructor */
 			PoolAllocator();
 			~PoolAllocator();
-
 
 			/* Members */
 			template<class T>
@@ -23,7 +24,7 @@ namespace Neon { namespace Memory {
 					m_pFreeListHead = AllocateBlock();
 					m_size = m_blockSize;
 					m_initialized = true;
-					NE_CORE_INFO("PoolAllocator: Initialized with size of {} bytes, and alignment of {}", m_size, alignment);
+					NE_CORE_INFO("PoolAllocator: Initialized with size of {} bytes, alignment of {}, and type {}", m_size, alignment, typeid(T).name());
 				}
 
 				return m_initialized;

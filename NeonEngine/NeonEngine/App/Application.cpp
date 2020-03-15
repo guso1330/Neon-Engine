@@ -9,26 +9,33 @@ namespace Neon {
 
 	Application::Application() :
 		m_pWindow(std::unique_ptr<IWindow>(IWindow::Create())),
-		m_isRunning(false)
+		m_isRunning(false),
+		m_initialized(false)
 	{
-		Init();
+		Initialize();
 	}
 
 	Application::Application(const WindowSettings &settings) :
 		m_pWindow(std::unique_ptr<IWindow>(IWindow::Create(settings))),
-		m_isRunning(false)
+		m_isRunning(false),
+		m_initialized(false)
 	{
-		Init();
+		Initialize();
 	}
 
-	void Application::Init() {
+	void Application::Initialize() {
 		NE_CORE_INFO("Neon Engine - Version {}", NEON_ENGINE_VERSION);
 
 		// Initialize Subsystems
-		Renderer::Init();
-		m_EntityManager.Init();
+		std::function<bool()> initializeSubSystemsFn = [this]() {
+			return Renderer::Init() && ECSManager::GetInstance().Init();
+		};
 
-		s_Instance = this;
+		if (!m_initialized &&
+			initializeSubSystemsFn()) {
+			m_initialized = true;
+			s_Instance = this;
+		}
 	}
 
 	void Application::PushLayer(Layer* layer) {
@@ -49,14 +56,14 @@ namespace Neon {
 			elapsed_time = m_Timer.GetElapsedTime();
 
 			// Update ECS Systems
-			m_EntityManager.Update(elapsed_time);
+			ECSManager::GetInstance().Update(elapsed_time);
 
 			// Update layers
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(elapsed_time);
 
 			// Update application
-			this->Update(elapsed_time);
+			Update(elapsed_time);
 
 			// Update window
 			m_pWindow->Update();

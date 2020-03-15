@@ -1,5 +1,4 @@
 #include "Core/Memory/PoolAllocator.h"
-
 #include "Core/Memory/Helpers.h"
 
 namespace Neon { namespace Memory {

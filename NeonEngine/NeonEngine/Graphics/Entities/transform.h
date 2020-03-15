@@ -14,7 +14,7 @@ namespace Neon {
 		public:
 			// Getters
 			inline const glm::mat4 &GetModelMatrix() const { return m_modelMatrix; }
-			inline const glm::vec3 &GetPositon() const { return m_position; }
+			inline const glm::vec3 &GetPosition() const { return m_position; }
 			inline const glm::vec3 &GetRotation() const { return m_rotation; }
 			inline const glm::vec3 &GetScale() const { return m_scale; }
 

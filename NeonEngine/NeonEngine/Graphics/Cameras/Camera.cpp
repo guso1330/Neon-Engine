@@ -10,7 +10,7 @@ namespace Neon {
 		m_yaw = m_pitch = 0.0;
 	}
 
-	void Camera::SetPosition(glm::vec3 &n_pos) { 
+	void Camera::SetPosition(const glm::vec3 &n_pos) { 
 		m_pos = n_pos;
 	}
 

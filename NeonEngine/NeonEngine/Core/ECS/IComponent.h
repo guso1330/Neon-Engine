@@ -15,9 +15,8 @@ namespace Neon { namespace ECS {
 		virtual ~IComponent() = default;
 
 		/* Operator Overloads */
-		inline void* operator new(size_t alloc_size) { return ::operator new(alloc_size); }
-		inline void operator delete(void* deletePtr) { std::free(deletePtr); }
-		void* operator new(size_t alloc_size, Memory::IAllocator& allocator) {
+		inline void* operator new(size_t alloc_size) { NE_CORE_ASSERT(false, "IComponent: Cannot call new on IComponent without allocator defined"); }
+		inline void* operator new(size_t alloc_size, Memory::IAllocator& allocator) {
 			void* return_address;
 
 			return_address = allocator.Allocate(alloc_size);
@@ -26,9 +25,7 @@ namespace Neon { namespace ECS {
 			
 			return return_address;
 		}
-		void operator delete(void* deletePtr, Memory::IAllocator& allocator) {
-			allocator.Free(deletePtr);
-		}
+		inline void operator delete(void* deletePtr) { NE_CORE_ASSERT(false, "IComponent: Cannot call delete on IComponent"); }
 
 		/* Methods */
 		virtual bool Init(void* data) = 0;

@@ -10,8 +10,9 @@ namespace Neon { namespace ECS {
 			explicit Entity(const EntityID id);
 
 			/* Operator Overload */
-			void* operator new (size_t alloc_size);
-			void operator delete (void* deletePtr);
+			inline void* operator new(size_t alloc_size) { NE_CORE_ASSERT(false, "Entity: Cannot call new on Entity without allocator defined"); }
+			void* operator new (size_t alloc_size, Memory::IAllocator& allocator);
+			inline void operator delete(void* deletePtr) { NE_CORE_ASSERT(false, "Entity: Cannot call delete on Entity"); }
 
 			/* Member Functions */
 			void AddComponent(IComponent* component);

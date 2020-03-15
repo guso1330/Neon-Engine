@@ -30,7 +30,7 @@ namespace Neon { namespace ECS {
 
 		n_id = m_entityID;
 		// TODO: Pass in allocators here instead of inside Entity.cpp
-		n_entity = new Entity(n_id);
+		n_entity = new (ECSMemory::EntityPool) Entity(n_id);
 		m_entityMap.insert(std::make_pair(n_id, n_entity));
 		++m_entityID;
 
@@ -56,7 +56,7 @@ namespace Neon { namespace ECS {
 		it = m_entityMap.find(id);
 		if (it != m_entityMap.end()) {
 			n_entity = it->second;
-			delete n_entity;
+			ECSMemory::EntityPool.Free(static_cast<void*>(n_entity));
 			m_entityMap.erase(it);
 		}
 	}

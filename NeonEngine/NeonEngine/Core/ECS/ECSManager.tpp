@@ -19,11 +19,11 @@ namespace Neon { namespace ECS {
 		}
 
 		n_entity = GetEntity(entityID);
-		n_component = new T();
+		n_component = new ((*n_PAllocator)) T;
 		n_component->type = type;
 
 		if(!n_component->Init(data)) {
-			delete n_component;
+			n_PAllocator->Free(n_component);
 			return nullptr;
 		}
 

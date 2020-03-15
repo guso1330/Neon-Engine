@@ -8,9 +8,8 @@ namespace Neon { namespace ECS {
 		/* Constructor/Destructor */
 		virtual ~ISystem() = default;
 
-		inline void* operator new(size_t alloc_size) { return ::operator new(alloc_size); }
-		inline void operator delete(void* deletePtr) { std::free(deletePtr); }
-		void* operator new(size_t alloc_size, Memory::IAllocator& allocator) {
+		inline void* operator new(size_t alloc_size) { NE_CORE_ASSERT(false, "ISystem: Cannot call new on ISystem without allocator defined"); }
+		inline void* operator new(size_t alloc_size, Memory::IAllocator& allocator) {
 			void* return_address;
 
 			return_address = allocator.Allocate(alloc_size);
@@ -19,9 +18,7 @@ namespace Neon { namespace ECS {
 			
 			return return_address;
 		}
-		void operator delete(void* deletePtr, Memory::IAllocator& allocator) {
-			allocator.Free(deletePtr);
-		}
+		inline void operator delete(void* deletePtr) { NE_CORE_ASSERT(false, "ISystem: Cannot call delete on ISystem"); }
 
 		/* Methods */
 		virtual bool Init() = 0;

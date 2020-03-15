@@ -7,16 +7,12 @@ namespace Neon { namespace ECS {
 		m_id(id)
 	{}
 
-	void* Entity::operator new (size_t alloc_size) {
-		void* return_address = ECSMemory::EntityPool.Allocate(alloc_size);
-		
+	void* Entity::operator new (size_t alloc_size, Memory::IAllocator& allocator) {
+		void* return_address = allocator.Allocate(alloc_size);
+
 		NE_ASSERT((return_address != nullptr), "Entity New: Memory address returned as nullptr");
 
 		return return_address;
-	}
-
-	void Entity::operator delete (void* deletePtr) {
-		ECSMemory::EntityPool.Free(deletePtr);
 	}
 
 	void Entity::AddComponent(IComponent* component) {

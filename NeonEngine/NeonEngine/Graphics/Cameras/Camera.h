@@ -35,21 +35,5 @@ namespace Neon {
 			glm::vec3 m_forward, m_dir;
 			glm::vec3 m_up;
 			float m_yaw, m_pitch;
-
-		// DEBUG CAMERA STUFF
-		// if(DEBUG_CAM) {
-		// 	int dx = x - WIN_W/2;
-		// 	int dy = y - WIN_H/2;
-		// 	if(dx) { // get rotation in the x direction
-		// 		camera.RotateYaw(-camera_rotate_speed*dx);
-		// 	}
-		// 	if(dy) {
-		// 		camera.RotatePitch(-camera_rotate_speed*dy);
-		// 	}
-
-		// 	glutWarpPointer(WIN_W/2, WIN_H/2);
-
-		// 	just_warped = true;
-		// }
 	};
 }

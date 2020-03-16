@@ -21,7 +21,7 @@ namespace Neon {
 			m_Keyboard.SetKey(key, false);
 		}
 
-		EventManager::DispatchEvent(NEON_EVENT_KEY_PRESS, key, action, mods);
+		EventManager::GetInstance().DispatchEvent(NEON_EVENT_KEY_PRESS, key, action, mods);
 
 		s_Timer.Tick();
 	}
@@ -33,7 +33,7 @@ namespace Neon {
 			m_Mouse.SetButton(button, false);
 		}
 
-		EventManager::DispatchEvent(NEON_EVENT_MOUSE_PRESS, button, action, mods);
+		EventManager::GetInstance().DispatchEvent(NEON_EVENT_MOUSE_PRESS, button, action, mods);
 
 		s_Timer.Tick();
 	}
@@ -41,14 +41,14 @@ namespace Neon {
 	void Input::MouseCursorEvent(int x, int y) {
 		m_Mouse.SetPosition(x, y);
 
-		EventManager::DispatchEvent(NEON_EVENT_MOUSE_CURSOR, x, y);
+		EventManager::GetInstance().DispatchEvent(NEON_EVENT_MOUSE_CURSOR, x, y);
 
 		s_Timer.Tick();
 	}
 
 	void Input::InitEvents() {
-		EventManager::AddEvent(NEON_EVENT_KEY_PRESS, EventPtr(new KeyPressEvent()));
-		EventManager::AddEvent(NEON_EVENT_MOUSE_PRESS, EventPtr(new struct MousePressEvent()));
-		EventManager::AddEvent(NEON_EVENT_MOUSE_CURSOR, EventPtr(new struct MouseCursorEvent()));
+		EventManager::GetInstance().AddEvent(NEON_EVENT_KEY_PRESS, EventPtr(new KeyPressEvent()));
+		EventManager::GetInstance().AddEvent(NEON_EVENT_MOUSE_PRESS, EventPtr(new struct MousePressEvent()));
+		EventManager::GetInstance().AddEvent(NEON_EVENT_MOUSE_CURSOR, EventPtr(new struct MouseCursorEvent()));
 	}
 }

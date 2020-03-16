@@ -60,9 +60,4 @@ namespace Neon { namespace ECS {
 			m_entityMap.erase(it);
 		}
 	}
-
-	// /* System Methods */
-	// void ECSManager::AddSystem(ISystem* system) {
-
-	// }
 }}

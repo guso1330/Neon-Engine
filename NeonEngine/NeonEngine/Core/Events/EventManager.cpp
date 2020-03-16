@@ -1,10 +1,6 @@
 #include "Core/Events/EventManager.h"
 
 namespace Neon {
-	EventStore EventManager::s_eventStore;
-	EventHandlerStore EventManager::s_eventHandlerStore;
-	unsigned int EventManager::s_handlerId = 0;
-
 	bool EventManager::AddEvent(std::string name, EventPtr event) {
 		if (s_eventStore.insert(std::make_pair(name, event)).second == true) {
 			NE_CORE_INFO("EventManager: event {} was just created", name);
@@ -21,5 +17,10 @@ namespace Neon {
 			NE_CORE_INFO("(PrintEvents) EventManager: {}, event {}", (*it).first, event_num);
 			++event_num;
 		}
+	}
+
+	EventManager& EventManager::GetInstance() {
+		static EventManager eventManager;
+		return eventManager;
 	}
 }

@@ -192,10 +192,12 @@ class ExampleLayer : public Neon::Layer {
 
 			// Load all Models
 			Neon::Model Cube("res/models/cube_basic.obj");
+			Neon::Model m9("res/models/m9.obj");
 			
 			std::vector<Neon::Mesh*> meshes;
-			meshes.reserve(Cube.GetMeshes().size());
+			meshes.reserve(Cube.GetMeshes().size() + m9.GetMeshes().size());
 			meshes.insert(meshes.end(), Cube.GetMeshes().begin(), Cube.GetMeshes().end());
+			meshes.insert(meshes.end(), m9.GetMeshes().begin(), m9.GetMeshes().end());
 
 			for(std::vector<Neon::Mesh*>::iterator it=meshes.begin(); it != meshes.end(); ++it) {
 				std::vector<Neon::Vertex> c_verts = (*it)->GetVertexData();
@@ -295,7 +297,7 @@ class SandBox : public Neon::Application {
 			// Initialize Application Events
 			float camera_rotate_speed = (M_PI / 180.0f) * 0.1;
 
-			Neon::EventManager::AddEventHandler(NEON_EVENT_KEY_PRESS, Neon::KeyPressCallback(
+			Neon::EventManager::GetInstance().AddEventHandler(NEON_EVENT_KEY_PRESS, Neon::KeyPressCallback(
 				[this](int key, int action, int mods) {
 					if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 						NE_WARN("SandBox: Closing application window");
@@ -304,7 +306,7 @@ class SandBox : public Neon::Application {
 				}
 			));
 
-			Neon::EventManager::AddEventHandler(NEON_EVENT_MOUSE_CURSOR, Neon::MouseCursorCallback(
+			Neon::EventManager::GetInstance().AddEventHandler(NEON_EVENT_MOUSE_CURSOR, Neon::MouseCursorCallback(
 				[this, window, camera_rotate_speed]
 				(int x, int y) {
 					MoveCameraAroundFunc(

@@ -28,7 +28,7 @@ namespace Neon {
 
 		// Initialize Subsystems
 		std::function<bool()> initializeSubSystemsFn = [this]() {
-			return Renderer::Init() && ECSManager::GetInstance().Init();
+			return Renderer::GetInstance().Init() && ECSManager::GetInstance().Init();
 		};
 
 		if (!m_initialized &&

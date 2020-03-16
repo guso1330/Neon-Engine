@@ -38,7 +38,7 @@ namespace Neon {
 		return false;
 	}
 
-	IRendererAPI& Renderer::GetRendererAPIInstance() {
+	IRendererAPI& Renderer::GetRendererAPIInstance() const {
 		switch(IRendererAPI::GetAPI()) {
 			case IRendererAPI::API::OPENGL: return OpenGL::OpenGLContext::GetInstance();
 			case IRendererAPI::API::NONE: break;

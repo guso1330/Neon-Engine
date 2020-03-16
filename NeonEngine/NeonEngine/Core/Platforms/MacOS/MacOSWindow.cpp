@@ -102,7 +102,7 @@ namespace Neon {
 				/* NOTE: For now, i'm leaving the callback calls as inline functions */
 				/* Set all callbacks */
 				glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* glfwWindow, int width, int height) {
-					EventManager::DispatchEvent(NEON_EVENT_WINDOW_RESIZE, width, height);
+					EventManager::GetInstance().DispatchEvent(NEON_EVENT_WINDOW_RESIZE, width, height);
 				});
 
 				glfwSetKeyCallback(m_Window, [](GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
@@ -139,8 +139,8 @@ namespace Neon {
 
 	void MacOSWindow::InitEvents() {
 		/* WindowResize Event */
-		EventManager::AddEvent(NEON_EVENT_WINDOW_RESIZE, EventPtr(new WindowResizeEvent()));
-		EventManager::AddEventHandler(NEON_EVENT_WINDOW_RESIZE, WindowResizeCallback(
+		EventManager::GetInstance().AddEvent(NEON_EVENT_WINDOW_RESIZE, EventPtr(new WindowResizeEvent()));
+		EventManager::GetInstance().AddEventHandler(NEON_EVENT_WINDOW_RESIZE, WindowResizeCallback(
 			// TODO replace this function with a more meaningful resize function
 			[](int width, int height) {
 				NE_CORE_INFO("WindowResize Event 1: Resize occurred {}, {}", width, height);

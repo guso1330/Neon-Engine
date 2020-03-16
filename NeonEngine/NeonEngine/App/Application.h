@@ -8,8 +8,6 @@
 
 /*
 	TODO:
-	- Support post construction initialization
-	- Ensure application class follows the singleton pattern 100%
 	- Rethink layers and overlays place inside Application
 */
 

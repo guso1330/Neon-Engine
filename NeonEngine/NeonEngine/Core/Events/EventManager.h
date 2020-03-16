@@ -8,6 +8,7 @@
 	 - Event bubbling
 	 - Make class a singleton?
 */
+#include "Core/Types/Singleton.h"
 #include "Core/Types/Callback.h"
 #include "nepch.h"
 
@@ -33,72 +34,17 @@ namespace Neon {
 	typedef std::unordered_map<std::string, EventPtr> EventStore;
 	typedef std::unordered_map<std::string, std::vector<EventHandlerPtr> > EventHandlerStore;
 
-	class EventManager {
+	class EventManager : public Singleton {
 		public:
 			/* Constructors and destructors */
-			EventManager() = default;
-
 			~EventManager() = default;
 
 			/* Public Member Functions */
-			static bool AddEvent(std::string name, EventPtr event);
+			bool AddEvent(std::string name, EventPtr event);
 			template<class T>
-			static std::pair<unsigned int, bool> AddEventHandler(std::string eventName, const T &callback) {
-				EventHandlerPtr n_eventHandlerPtr(new EventHandler());
-				std::shared_ptr<std::vector<EventHandlerPtr> > n_eventHandlerVector(new std::vector<EventHandlerPtr>());
-				EventStore::const_iterator eventIt = s_eventStore.find(eventName);
-				EventHandlerStore::iterator eventHandlerIt = s_eventHandlerStore.find(eventName);
-
-				// Search for event in s_eventStore to make sure it exists
-				if (eventIt == s_eventStore.end()) {
-					NE_CORE_WARN("EventManager: eventHandler couldn't be created since event {} doesn't exist", eventName);
-					return std::make_pair(0, false);
-				}
-
-				// Set n_eventHandler variables
-				n_eventHandlerPtr->id = ++s_handlerId;
-				n_eventHandlerPtr->callback = BaseCallbackPtr(new T(callback));
-				n_eventHandlerPtr->event = (*eventIt).second;
-
-				// If eventhandler isn't found create new entry and insert it
-				if (eventHandlerIt == s_eventHandlerStore.end()) {
-					NE_CORE_INFO("EventManager: eventHandler {} was just created and added to eventHandlerStore under {}", n_eventHandlerPtr->id, eventName);
-					n_eventHandlerVector->push_back(n_eventHandlerPtr);
-					s_eventHandlerStore.insert(std::make_pair(
-						eventName,
-						(*n_eventHandlerVector)
-					));
-				} else {
-					// Else insert new eventHandler into callback vector
-					NE_CORE_INFO("EventManager: eventHandler {} was added to eventHandlerStore under {}", n_eventHandlerPtr->id, eventName);
-					(*eventHandlerIt).second.push_back(n_eventHandlerPtr);
-				}
-
-				return std::make_pair(n_eventHandlerPtr->id, true);
-			}
-
+			std::pair<unsigned int, bool> AddEventHandler(std::string eventName, const T &callback);
 			template <class... ArgTypes>
-			static void DispatchEvent(std::string name, ArgTypes... args) {
-				typedef Callback<ArgTypes...> CallbackType;
-				EventHandlerStore::const_iterator storeIt = s_eventHandlerStore.find(name);
-				std::vector<EventHandlerPtr> callbackVector; // TODO: maybe store vector as pointer to ensure you're not copying the vector
-				std::vector<EventHandlerPtr>::const_iterator it;
-
-				if(storeIt != s_eventHandlerStore.end()) {
-					callbackVector = storeIt->second;
-					for (it = callbackVector.begin(); it != callbackVector.end(); ++it) {
-						CallbackType* c = dynamic_cast<CallbackType*>((*it)->callback.get());
-						if(c)
-						{
-							(*c)(args...);
-						} else {
-							NE_CORE_WARN("EventHandler {}: {} doesn't contain callback", (*it)->id, name);
-						}
-					}
-				} else {
-					NE_CORE_WARN("EventManager: {} was not found and not run", name);
-				}
-			}
+			void DispatchEvent(std::string name, ArgTypes... args);
 
 			// bool RemoveEvent(string name);
 			// bool RemoveEventHandler(string name, uint id);
@@ -107,11 +53,16 @@ namespace Neon {
 			// bool DispatchEventHandler(string name, uint id, Args ...);
 
 			/* Debug function */
-			static void PrintEvents();
+			void PrintEvents();
+
+			/* Getters */
+			static EventManager& GetInstance();
 
 		private:
-			static EventStore s_eventStore;
-			static EventHandlerStore s_eventHandlerStore;
-			static unsigned int s_handlerId;
+			EventStore s_eventStore;
+			EventHandlerStore s_eventHandlerStore;
+			unsigned int s_handlerId = 0;
 	};
 }
+
+#include "Core/Events/EventManager.tpp"

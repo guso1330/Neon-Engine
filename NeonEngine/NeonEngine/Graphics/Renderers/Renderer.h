@@ -16,7 +16,7 @@ namespace Neon {
 	class Renderer : public Singleton {
 		public:
 			/* Methods */
-			static bool Init();
+			bool Init();
 			void Clear() const;
 			void Submit(std::shared_ptr<IVertexArray>& va, std::shared_ptr<IProgram>& program, const RenderMatrices& mats);
 
@@ -27,7 +27,7 @@ namespace Neon {
 		/* Private Methods */
 		private:
 			static bool Instantiate();
-			static IRendererAPI& GetRendererAPIInstance();
+			IRendererAPI& GetRendererAPIInstance() const;
 
 		/* Private static Variables */
 		private:

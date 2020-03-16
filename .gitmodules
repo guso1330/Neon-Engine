@@ -1,3 +1,6 @@
+[submodule "NeonEngine/Dependencies/glad"]
+	path = NeonEngine/Dependencies/glad
+	url = https://github.com/Dav1dde/glad.git
 [submodule "NeonEngine/Dependencies/GLFW"]
 	path = NeonEngine/Dependencies/GLFW
 	url = https://github.com/glfw/glfw.git
@@ -7,9 +10,6 @@
 [submodule "NeonEngine/Dependencies/stb_image"]
 	path = NeonEngine/Dependencies/stb_image
 	url = https://github.com/nothings/stb.git
-[submodule "assimp"]
-	path = assimp
-	url = https://github.com/assimp/assimp.git
 [submodule "NeonEngine/Dependencies/assimp"]
 	path = NeonEngine/Dependencies/assimp
 	url = https://github.com/assimp/assimp.git

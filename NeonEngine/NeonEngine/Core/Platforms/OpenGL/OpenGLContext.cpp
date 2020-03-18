@@ -211,7 +211,7 @@ namespace Neon { namespace OpenGL {
 			GL_Call(glGetActiveUniformBlockiv(current_program->GetId(), block, GL_UNIFORM_BLOCK_NAME_LENGTH, &name_len));
 
 			// Get name
-			char name[name_len];
+			char* name;
 			GL_Call(glGetActiveUniformBlockName(current_program->GetId(), block, name_len, NULL, &name[0]));
 			std::string uniform_block_name((char*)&name[0], name_len-1);
 			

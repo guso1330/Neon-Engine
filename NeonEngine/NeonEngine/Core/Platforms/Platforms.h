@@ -10,7 +10,9 @@ namespace Neon {
 			return new MacOSWindow(settings);
 		}
 	#elif defined(NE_PLATFORM_WIN64)
-		#error "Windows x64 window isn't supported at this time"
+		IWindow* IWindow::Create(const WindowSettings& settings) {
+			return new MacOSWindow(settings);
+		}
 	#else
 		#error "Current platform window type isn't supported"
 	#endif

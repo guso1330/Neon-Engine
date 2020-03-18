@@ -14,9 +14,11 @@
 #include <tuple>
 #include <type_traits>
 #include <typeinfo>
-#include <unistd.h>
+#include <stdio.h>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#define _USE_MATH_DEFINES
+#include <cmath>
 
 #include "Utils/Debug/logger.hpp"

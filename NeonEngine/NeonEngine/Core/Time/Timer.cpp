@@ -5,6 +5,8 @@
 namespace Neon {
 	#ifdef NE_PLATFORM_MACOS
 		TimerAPI Timer::API = TimerAPI::GLFW;
+	#elif defined NE_PLATFORM_WIN64
+		TimerAPI Timer::API = TimerAPI::GLFW;
 	#else
 		TimerAPI Timer::API = TimerAPI::NONE;
 	#endif

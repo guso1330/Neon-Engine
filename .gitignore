@@ -25,6 +25,7 @@ NeonEngine.xcodeproj/*
 
 # Cmake exclude files
 CMakeCache.txt
+CMakeSettings.json
 [Mm]akefile
 CMakeFiles/
 cmake_install.cmake
@@ -39,7 +40,7 @@ cmake_install.cmake
 *.userprefs
 
 # Build results
-[Dd]ebug/
+*[Dd]ebug/
 !NeonEngine/NeonEngine/[Uu]tils/[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/

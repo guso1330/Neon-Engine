@@ -7,11 +7,16 @@
 		- Is this class needed?
 		- Is it fine for each implementation to handle GLFW on it's own?
 */
+#include "Core/Core.h"
 #include "Core/Types/Singleton.h"
 #include "nepch.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#ifdef NE_PLATFORM_WIN64
+	#undef CreateWindow
+#endif
 
 namespace Neon { namespace GLFW {
 	struct GLFWwindowSettings {

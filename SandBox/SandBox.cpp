@@ -5,6 +5,12 @@
 const int WIDTH = 1278,
 		  HEIGHT = 720;
 
+#ifdef NE_PLATFORM_WIN64
+#undef near
+#undef far
+#endif // NE_PLATFORM_WIN64
+
+
 /* Input Callback Functions */
 auto MoveCameraFunc = [](Neon::Camera* camera, Neon::Input* inputManager, float& camera_speed, float camera_velocity, float camera_speed_limit, float elapsed_time) {
 	glm::vec3 position = camera->GetPosition();

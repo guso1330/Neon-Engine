@@ -10,20 +10,12 @@ set(LIB_DIR "${PROJECT_SOURCE_DIR}/Dependencies")
 set(SRC_DIR "${PROJECT_SOURCE_DIR}/NeonEngine")
 set(TEST_DIR "${PROJECT_SOURCE_DIR}/NeonEngine-test")
 file(GLOB_RECURSE SRC_FILES "${SRC_DIR}/**.cpp")
-file(GLOB_RECURSE TEMPLATE_FILES "${SRC_DIR}/**/*.tpp")
+file(GLOB_RECURSE TEMPLATE_FILES "${SRC_DIR}/**.tpp")
 file(GLOB_RECURSE HEADER_FILES "${SRC_DIR}/**.h*")
 file(GLOB_RECURSE TEST_FILES "${TEST_DIR}/**-test.cpp")
 
-# tests
-set(CMAKE_MACOSX_RPATH 1)
-set(TEST_BINARY "NeonEngine-test")
-add_executable(${TEST_BINARY} ${TEST_FILES})
-add_test(NAME ${TEST_BINARY} COMMAND ${TEST_BINARY})
-set_property(TARGET ${TEST_BINARY} PROPERTY CXX_STANDARD 11)
-target_link_libraries(${TEST_BINARY} gtest ${PROJECT_NAME})
-
 # library
-add_library(${PROJECT_NAME} ${SRC_FILES}) # TODO: Add header files to add_library?
+add_library(${PROJECT_NAME} STATIC ${SRC_FILES}) # TODO: Add header files to add_library?
 
 # Executable definition and properties
 target_include_directories(${PROJECT_NAME} PUBLIC "${SRC_DIR}")
@@ -48,12 +40,12 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE "GLFW_INCLUDE_NONE")
 
 # glad
 set(GLAD_DIR "${LIB_DIR}/glad")
-add_library("glad" "${GLAD_DIR}/src/glad.c")
+add_library("glad" STATIC "${GLAD_DIR}/src/glad.c")
 target_include_directories("glad" PRIVATE "${GLAD_DIR}/include")
 target_include_directories(${PROJECT_NAME} PUBLIC "${GLAD_DIR}/include")
-target_link_libraries(${PROJECT_NAME} "glad" "${CMAKE_DL_LIBS}")
+target_link_libraries(${PROJECT_NAME} "glad")
 
-# glad
+# spdlog
 set(SPDLOG_DIR "${LIB_DIR}/spdlog")
 set(SPDLOG_BUILD_EXAMPLE OFF CACHE INTERNAL "Build the spdlog example programs")
 set(SPDLOG_BUILD_TESTS OFF CACHE INTERNAL "Build the spdlog test programs")
@@ -69,6 +61,14 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${LIB_DIR}/stb_image)
 # google test
 set(GOOGLETEST_DIR "${LIB_DIR}/googletest")
 add_subdirectory(${GOOGLETEST_DIR})
+
+# tests
+set(CMAKE_MACOSX_RPATH 1)
+set(TEST_BINARY "NeonEngine-test")
+add_executable(${TEST_BINARY} ${TEST_FILES})
+add_test(NAME ${TEST_BINARY} COMMAND ${TEST_BINARY})
+set_property(TARGET ${TEST_BINARY} PROPERTY CXX_STANDARD 11)
+target_link_libraries(${TEST_BINARY} gtest ${PROJECT_NAME})
 
 # Printing
 MESSAGE(STATUS "===============================================================" )

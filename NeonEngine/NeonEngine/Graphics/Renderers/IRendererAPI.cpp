@@ -14,6 +14,8 @@
 namespace Neon {
 	#ifdef NE_PLATFORM_MACOS
 		IRendererAPI::API IRendererAPI::s_API = IRendererAPI::API::OPENGL;
+	#elif defined NE_PLATFORM_WIN64
+		IRendererAPI::API IRendererAPI::s_API = IRendererAPI::API::OPENGL;
 	#endif
 
 	/* Static Functions defined */

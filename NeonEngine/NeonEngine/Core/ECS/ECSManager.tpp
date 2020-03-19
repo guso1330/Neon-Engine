@@ -78,7 +78,7 @@ namespace Neon { namespace ECS {
 
 		it = m_systemsMap.find(Type::GetType<T>());
 		if (it != m_systemsMap.end()) {
-			ECSMemory::SystemPool->Free(it->second);
+			ECSMemory::SystemPool.Free(it->second);
 			m_systemsMap.erase(it);
 		}
 	}

@@ -40,7 +40,10 @@ cmake_install.cmake
 *.userprefs
 
 # Build results
-*[Dd]ebug/
+x86-[Dd]ebug/
+x64-[Dd]ebug/
+[Dd]ebug/
+[Dd]ebug/
 !NeonEngine/NeonEngine/[Uu]tils/[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/

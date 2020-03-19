@@ -20,7 +20,7 @@ namespace Neon { namespace OpenGL {
 			
 			/* Getters */
 			inline const unsigned int GetId() { return m_ibo; }
-			virtual const inline unsigned int GetCount() const override { return m_count; }
+			virtual inline const unsigned int GetCount() const override { return m_count; }
 
 			void SetBufferData(const unsigned int* indices, size_t count);
 			void SetBufferData(const std::vector<unsigned int> &indices);

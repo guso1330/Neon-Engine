@@ -15,7 +15,7 @@ namespace Neon { namespace ECS {
 		return return_address;
 	}
 
-	void Entity::AddComponent(IComponent* component) {
+	void Entity::CreateComponent(IComponent* component) {
 		ComponentType type;
 		ComponentMap::const_iterator it;
 

@@ -140,7 +140,6 @@ class CameraSystem : public Neon::ECS::ISystem {
 			}
 		}
 };
-
 /*
 	ECS Components & System testing - END
 */
@@ -301,7 +300,7 @@ class SandBox : public Neon::Application {
 			PushLayer(m_exampleLayer);
 
 			// Initialize Application Events
-			float camera_rotate_speed = (M_PI / 180.0f) * 0.1;
+			float camera_rotate_speed = static_cast<float>((M_PI / 180.0f) * 0.1);
 
 			Neon::EventManager::GetInstance().AddEventHandler(NEON_EVENT_KEY_PRESS, Neon::KeyPressCallback(
 				[this](int key, int action, int mods) {

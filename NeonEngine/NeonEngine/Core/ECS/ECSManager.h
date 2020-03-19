@@ -33,14 +33,16 @@ namespace Neon { namespace ECS {
 			T* CreateComponent(EntityID entityID, void* data, size_t componentPoolSize = NE_DEFAULT_COMPONENT_POOL_SIZE);
 			template<class T>
 			T* GetComponent(EntityID entityID) const;
-			// TODO: DestroyComponent()
+			template<class T>
+			void DestroyComponent(EntityID entityID);
 
 			/* System Methods */
 			template<class T>
 			T* CreateSystem();
 			template<class T>
 			T* GetSystem() const;
-			// TODO: DestroySystem()
+			template<class T>
+			void DestroySystem();
 
 		private:
 			EntityID m_entityID;

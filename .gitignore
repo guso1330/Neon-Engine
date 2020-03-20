@@ -3,6 +3,33 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+## 					   ##
+## GUS' Custom ignores ##
+##					   ##
+main
+*.gch
+*.o
+*.a
+*.exe
+*.out
+*r8_gt.obj
+.DS_Store
+*.[Dd][Ss]_[Ss]tore
+Makefile*
+lib/
+bin/
+build/
+build*/
+*.dylib
+NeonEngine.xcodeproj/*
+
+# Cmake exclude files
+CMakeCache.txt
+CMakeSettings.json
+[Mm]akefile
+CMakeFiles/
+cmake_install.cmake
+
 # User-specific files
 *.suo
 *.user
@@ -13,7 +40,11 @@
 *.userprefs
 
 # Build results
+x86-[Dd]ebug/
+x64-[Dd]ebug/
 [Dd]ebug/
+[Dd]ebug/
+!NeonEngine/NeonEngine/[Uu]tils/[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -56,7 +87,6 @@ artifacts/
 *_i.h
 *.ilk
 *.meta
-*.obj
 *.pch
 *.pdb
 *.pgc

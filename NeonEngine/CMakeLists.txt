@@ -58,10 +58,6 @@ target_link_libraries(${PROJECT_NAME} "spdlog" ${DSPDLOG_COMPILED_LIB})
 target_include_directories(${PROJECT_NAME} PUBLIC ${LIB_DIR}/glm)
 target_include_directories(${PROJECT_NAME} PUBLIC ${LIB_DIR}/stb_image)
 
-# google test
-set(GOOGLETEST_DIR "${LIB_DIR}/googletest")
-add_subdirectory(${GOOGLETEST_DIR})
-
 # tests
 set(CMAKE_MACOSX_RPATH 1)
 set(TEST_BINARY "NeonEngine-test")
@@ -69,6 +65,10 @@ add_executable(${TEST_BINARY} ${TEST_FILES})
 add_test(NAME ${TEST_BINARY} COMMAND ${TEST_BINARY})
 set_property(TARGET ${TEST_BINARY} PROPERTY CXX_STANDARD 11)
 target_link_libraries(${TEST_BINARY} gtest ${PROJECT_NAME})
+
+# google test
+set(GOOGLETEST_DIR "${LIB_DIR}/googletest")
+add_subdirectory(${GOOGLETEST_DIR})
 
 # Printing
 MESSAGE(STATUS "===============================================================" )

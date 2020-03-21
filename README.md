@@ -4,8 +4,7 @@ Simple 2D and 3D game engine
 ## Installation
 - Mac & Linux
 ```
-git submodule init && git submodule update
-
+git submodule update --init
 mkdir build && cd build
 cmake ..
 make
@@ -14,5 +13,3 @@ make
 
 ## Notes:
 - Currently only supports OpenGL, but will eventually support DirectX
-- Only tested on mac, windows solution out of date (8/9/19)
-

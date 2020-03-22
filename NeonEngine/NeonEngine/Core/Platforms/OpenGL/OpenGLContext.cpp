@@ -32,13 +32,28 @@ namespace Neon { namespace OpenGL {
 		// OpenGL Setting
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		glEnable(GL_CULL_FACE);
 		glClearDepth(1.0f);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glFrontFace(GL_CW);
 
 		return true;
 	}
 
-	void OpenGLContext::DrawIndexed(IVertexArray* vao) {
+	void OpenGLContext::ResizeViewport(const unsigned int width, const unsigned int height) {
+		GL_Call(glViewport(0, 0, width, height));
+	}
+
+	void OpenGLContext::ResizeViewport(const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height) {
+		GL_Call(glViewport(x, y, width, height));
+	}
+
+	void OpenGLContext::Clear() {
+		GL_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+		GL_Call(glFlush());
+	}
+
+ 	void OpenGLContext::DrawIndexed(IVertexArray* vao) {
 		GL_Call(glDrawElements(GL_TRIANGLES, vao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, NULL));
 	}
 
@@ -53,11 +68,6 @@ namespace Neon { namespace OpenGL {
 
 			GL_Call(glDrawElements(draw_mode, num_elements, GL_UNSIGNED_INT, NULL));
 		}
-	}
-
-	void OpenGLContext::Clear() {
-		GL_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-		GL_Call(glFlush());
 	}
 
 	/********************/

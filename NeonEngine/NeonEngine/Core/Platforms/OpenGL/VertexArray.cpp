@@ -37,7 +37,8 @@ namespace Neon { namespace OpenGL {
 				i,
 				element.GetComponentCount(),
 				ConvertShaderDataTypeToOpenGLType(element.type),
-				element.normalized, layout.GetStride(),
+				element.normalized ? GL_TRUE : GL_FALSE,
+				layout.GetStride(),
 				(const void*)(element.offset)
 			));
 		}

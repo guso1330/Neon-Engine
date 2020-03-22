@@ -38,7 +38,9 @@ namespace Neon {
 		public:
 			/* Constructors and destructors */
 			~EventManager() = default;
-
+		private:
+			void InitCoreEvents();
+		public:
 			/* Public Member Functions */
 			bool AddEvent(std::string name, EventPtr event);
 			template<class T>
@@ -57,11 +59,11 @@ namespace Neon {
 
 			/* Getters */
 			static EventManager& GetInstance();
-
 		private:
+			bool s_initialized = false;
+			unsigned int s_handlerId = 0;
 			EventStore s_eventStore;
 			EventHandlerStore s_eventHandlerStore;
-			unsigned int s_handlerId = 0;
 	};
 }
 

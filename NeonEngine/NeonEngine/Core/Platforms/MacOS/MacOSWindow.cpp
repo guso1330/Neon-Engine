@@ -1,4 +1,5 @@
-#include "MacOSWindow.h"
+#include "Core/Platforms/MacOS/MacOSWindow.h"
+#include "Core/Platforms/OpenGL/OpenGLContext.h"
 
 /*
 	TODO:
@@ -29,47 +30,6 @@ namespace Neon {
 
 	MacOSWindow::~MacOSWindow() {
 		GLFW::GLFWContext::GetInstance().Destroy();
-	}
-
-	void MacOSWindow::Update() {
-		std::pair<int, int> dimensions = GLFW::GLFWContext::GetInstance().Update();
-		m_width = dimensions.first;
-		m_height = dimensions.second;
-	}
-
-	void MacOSWindow::Close() {
-		GLFW::GLFWContext::GetInstance().Close();
-	}
-
-	/* Getters */
-	bool MacOSWindow::isClosed() const {
-		return GLFW::GLFWContext::GetInstance().isCurrentWindowClosed();
-	}
-
-	/* Setters */
-	void MacOSWindow::SetSize(unsigned int width, unsigned int height) {
-		m_width = width;
-		m_height = height;
-		GLFW::GLFWContext::GetInstance().SetWindowDimensions(width, height);
-	}
-
-	void MacOSWindow::SetFullscreen(bool isFullscreen) {
-		m_isFullscreen = isFullscreen;
-		// TODO: set up full screen window
-	}
-
-	void MacOSWindow::SetVSync(bool enabled) {
-		GLFW::GLFWContext::GetInstance().SetVSync(enabled);
-
-		m_vsyncEnabled = enabled;
-	}
-
-	void MacOSWindow::SetTitle(const std::string& title) {
-		GLFW::GLFWContext::GetInstance().SetTitle(title.c_str());
-	}
-
-	void MacOSWindow::SetInputMode(int mode, int value) {
-		GLFW::GLFWContext::GetInstance().SetInputMode(mode, value);
 	}
 
 	/* Private Initializers */
@@ -139,12 +99,54 @@ namespace Neon {
 
 	void MacOSWindow::InitEvents() {
 		/* WindowResize Event */
-		EventManager::GetInstance().AddEvent(NEON_EVENT_WINDOW_RESIZE, EventPtr(new WindowResizeEvent()));
 		EventManager::GetInstance().AddEventHandler(NEON_EVENT_WINDOW_RESIZE, WindowResizeCallback(
-			// TODO replace this function with a more meaningful resize function
-			[](int width, int height) {
-				NE_CORE_INFO("WindowResize Event 1: Resize occurred {}, {}", width, height);
+			[](unsigned int width, unsigned int height) {
+				GLFW::GLFWContext::GetInstance().SetWindowDimensions(width, height);
+				OpenGL::OpenGLContext::GetInstance().ResizeViewport(width, height);
+				NE_CORE_INFO("WindowResize Event: Resize occurred {}, {}", width, height);
 			}
 		));
+	}
+
+	/* Public Methods */
+	void MacOSWindow::Update() {
+		std::pair<int, int> dimensions = GLFW::GLFWContext::GetInstance().Update();
+		m_width = dimensions.first;
+		m_height = dimensions.second;
+	}
+
+	void MacOSWindow::Close() {
+		GLFW::GLFWContext::GetInstance().Close();
+	}
+
+	/* Getters */
+	bool MacOSWindow::isClosed() const {
+		return GLFW::GLFWContext::GetInstance().isCurrentWindowClosed();
+	}
+
+	/* Setters */
+	void MacOSWindow::SetSize(unsigned int width, unsigned int height) {
+		m_width = width;
+		m_height = height;
+		GLFW::GLFWContext::GetInstance().SetWindowDimensions(width, height);
+	}
+
+	void MacOSWindow::SetFullscreen(bool isFullscreen) {
+		m_isFullscreen = isFullscreen;
+		// TODO: set up full screen window
+	}
+
+	void MacOSWindow::SetVSync(bool enabled) {
+		GLFW::GLFWContext::GetInstance().SetVSync(enabled);
+
+		m_vsyncEnabled = enabled;
+	}
+
+	void MacOSWindow::SetTitle(const std::string& title) {
+		GLFW::GLFWContext::GetInstance().SetTitle(title.c_str());
+	}
+
+	void MacOSWindow::SetInputMode(int mode, int value) {
+		GLFW::GLFWContext::GetInstance().SetInputMode(mode, value);
 	}
 }

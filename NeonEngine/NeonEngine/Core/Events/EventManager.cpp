@@ -1,6 +1,14 @@
 #include "Core/Events/EventManager.h"
+#include "Core/Events/EventTypes.h"
 
 namespace Neon {
+	void EventManager::InitCoreEvents() {
+		AddEvent(NEON_EVENT_WINDOW_RESIZE, EventPtr(new WindowResizeEvent()));
+		AddEvent(NEON_EVENT_KEY_PRESS, EventPtr(new KeyPressEvent()));
+		AddEvent(NEON_EVENT_MOUSE_PRESS, EventPtr(new struct MousePressEvent()));
+		AddEvent(NEON_EVENT_MOUSE_CURSOR, EventPtr(new struct MouseCursorEvent()));
+	}
+
 	bool EventManager::AddEvent(std::string name, EventPtr event) {
 		if (s_eventStore.insert(std::make_pair(name, event)).second == true) {
 			NE_CORE_INFO("EventManager: event {} was just created", name);
@@ -21,6 +29,13 @@ namespace Neon {
 
 	EventManager& EventManager::GetInstance() {
 		static EventManager eventManager;
+
+		if (!eventManager.s_initialized) {
+			eventManager.InitCoreEvents();
+		}
+
+		eventManager.s_initialized = true;
+
 		return eventManager;
 	}
 }

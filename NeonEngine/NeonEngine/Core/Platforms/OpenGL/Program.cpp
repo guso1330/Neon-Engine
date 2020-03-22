@@ -87,10 +87,20 @@ namespace Neon { namespace OpenGL {
 	}
 
 	/* Setters */
-	// Matrix
-	void Program::SetMat4(const std::string& name, const glm::mat4& matrix) {
-		GL_Call(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
+	// Int
+	void Program::SetInt(const std::string& name, const int value) {
+		GL_Call(glUniform1i(GetUniformLocation(name), value));
 	}
+
+	// Float
+	void Program::SetFloat(const std::string& name, const float value) {
+		GL_Call(glUniform1f(GetUniformLocation(name), value));
+	}
+
+	// Vec2
+	void Program::SetFloat2(const std::string& name, const glm::vec2& v2) {
+		GL_Call(glUniform2f(GetUniformLocation(name), v2.x, v2.y));
+	};
 
 	// Vec3
 	void Program::SetFloat3(const std::string& name, const glm::vec3& v3) {
@@ -102,8 +112,9 @@ namespace Neon { namespace OpenGL {
 		GL_Call(glUniform4f(GetUniformLocation(name), v4.x, v4.y, v4.z, v4.w));
 	}
 
-	// Int
-	void Program::SetInt(const std::string& name, int v0) {
-		GL_Call(glUniform1i(GetUniformLocation(name), v0));
+	// Matrix
+	void Program::SetMat4(const std::string& name, const glm::mat4& mat4) {
+		GL_Call(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &mat4[0][0]));
 	}
+
 }}

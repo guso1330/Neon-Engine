@@ -10,7 +10,6 @@ namespace Neon {
 
 	// Input Class
 	Input::Input() {
-		InitEvents();
 		s_Timer.Init();
 	}
 
@@ -44,11 +43,5 @@ namespace Neon {
 		EventManager::GetInstance().DispatchEvent(NEON_EVENT_MOUSE_CURSOR, x, y);
 
 		s_Timer.Tick();
-	}
-
-	void Input::InitEvents() {
-		EventManager::GetInstance().AddEvent(NEON_EVENT_KEY_PRESS, EventPtr(new KeyPressEvent()));
-		EventManager::GetInstance().AddEvent(NEON_EVENT_MOUSE_PRESS, EventPtr(new struct MousePressEvent()));
-		EventManager::GetInstance().AddEvent(NEON_EVENT_MOUSE_CURSOR, EventPtr(new struct MouseCursorEvent()));
 	}
 }

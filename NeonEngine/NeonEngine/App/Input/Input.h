@@ -29,9 +29,6 @@ namespace Neon {
 			void MousePressEvent(const int button, const int action, const int mods);
 			void MouseCursorEvent(int x, int y);
 
-			/* Member Functions */
-			void InitEvents();
-
 		private:
 			// Note: Each input class only has one associated mouse and keyboard
 			Keyboard m_Keyboard;

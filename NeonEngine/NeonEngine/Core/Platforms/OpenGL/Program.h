@@ -32,10 +32,12 @@ namespace Neon { namespace OpenGL {
 			inline virtual const std::string GetName() const override { return m_name; }
 
 			/* Set Functions */
-			virtual void SetInt(const std::string& name, int value) override;
-			virtual void SetFloat3(const std::string& name, const glm::vec3& value) override;
-			virtual void SetFloat4(const std::string& name, const glm::vec4& value) override;
-			virtual void SetMat4(const std::string& name, const glm::mat4& value) override;
+			virtual void SetInt(const std::string& name, const int value) override;
+			virtual void SetFloat(const std::string& name, const float value) override;
+			virtual void SetFloat2(const std::string& name, const glm::vec2& v2) override;
+			virtual void SetFloat3(const std::string& name, const glm::vec3& v3) override;
+			virtual void SetFloat4(const std::string& name, const glm::vec4& v4) override;
+			virtual void SetMat4(const std::string& name, const glm::mat4& mat4) override;
 
 		private:
 			void Init();

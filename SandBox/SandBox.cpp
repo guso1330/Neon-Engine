@@ -2,8 +2,8 @@
 
 #include "nepch.h"
 
-const int WIDTH = 1278,
-		  HEIGHT = 720;
+int WIDTH = 1280,
+	HEIGHT = 720;
 
 #ifdef NE_PLATFORM_WIN64
 	#undef near
@@ -166,10 +166,10 @@ class SandBox : public Neon::Application {
 
 		bool Init() override {
 			float vertices[] = {
-				 0.5f,  0.5f, 0.0f,  // top right
-				 0.5f, -0.5f, 0.0f,  // bottom right
-				-0.5f, -0.5f, 0.0f,  // bottom left
-				-0.5f,  0.5f, 0.0f   // top left 
+				 32.0f,  32.0f, 0.0f,  // top right
+				 32.0f, -32.0f, 0.0f,  // bottom right
+				-32.0f, -32.0f, 0.0f,  // bottom left
+				-32.0f,  32.0f, 0.0f   // top left
 			};
 			unsigned int indices[] = {  // note that we start from 0!
 				0, 1, 3, // first triangle
@@ -178,27 +178,41 @@ class SandBox : public Neon::Application {
 			Neon::BufferLayout layout_2d = {
 				{ "vPosition", Neon::ShaderDataType::FLOAT3 }
 			};
-			std::shared_ptr<Neon::IVertexBuffer> n_vbo(Neon::IVertexBuffer::Create(
+
+			p_vao = Neon::IVertexArray::Create();
+			std::shared_ptr<Neon::IVertexBuffer> n_vbo;
+			std::shared_ptr<Neon::IIndexBuffer> n_ibo;
+
+			p_vao->Bind();
+			n_vbo = std::shared_ptr<Neon::IVertexBuffer>(Neon::IVertexBuffer::Create(
 				&vertices[0],
-				3 * 4 * sizeof(float),
+				sizeof(vertices),
 				layout_2d
 			));
-			std::shared_ptr<Neon::IIndexBuffer> n_ibo(Neon::IIndexBuffer::Create(
+			n_ibo = std::shared_ptr<Neon::IIndexBuffer>(Neon::IIndexBuffer::Create(
 				&indices[0],
 				6
 			));
 
-			p_vao = Neon::IVertexArray::Create();
-			p_vao->Bind();
-
 			p_vao->AttachVertexBuffer(n_vbo);
 			p_vao->AttachIndexBuffer(n_ibo);
 
-			p_program = Neon::IProgram::Create(
+			p_program = (Neon::OpenGL::Program*)Neon::IProgram::Create(
 				"2dProgram",
 				"res/shaders/2dVShader.glsl",
 				"res/shaders/2dFShader.glsl"
 			);
+			p_program->Bind();
+			p_program->SetFloat2("screenSize", glm::vec2(WIDTH, HEIGHT));
+			Neon::EventManager::GetInstance().AddEventHandler(NEON_EVENT_WINDOW_RESIZE, Neon::WindowResizeCallback(
+				[this](unsigned int width, unsigned int height) {
+					p_program->Bind();
+					p_program->SetFloat2("screenSize", glm::vec2(width, height));
+					p_program->Unbind();
+					NE_INFO("WindowResize Event: Resize occurred {}, {}", width, height);
+				}
+			));
+			p_program->Unbind();
 
 			p_vao->Unbind();
 
@@ -214,7 +228,7 @@ class SandBox : public Neon::Application {
 
 	private:
 		Neon::IVertexArray* p_vao;
-		Neon::IProgram* p_program;
+		Neon::OpenGL::Program* p_program;
 };
 
 Neon::Application* Neon::CreateApplication() {

@@ -83,7 +83,7 @@ namespace Neon { namespace GLFW {
 		}
 	}
 
-	void GLFWContext::SetWindowDimensions(int width, int height) {
+	void GLFWContext::SetWindowDimensions(unsigned int width, unsigned int height) {
 		glfwSetWindowSize(glfwGetCurrentContext(), width, height);
 	}
 

@@ -31,6 +31,8 @@ namespace Neon { namespace OpenGL {
 
 		public:
 			/* Methods */
+			virtual void ResizeViewport(const unsigned int width, const unsigned int height) override;
+			void ResizeViewport(const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height);
 			virtual void Clear() override;
 			virtual void DrawIndexed(IVertexArray* vao) override;
 			void DrawIndexed(const unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode);

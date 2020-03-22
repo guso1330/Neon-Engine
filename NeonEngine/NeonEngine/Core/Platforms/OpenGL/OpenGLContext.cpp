@@ -38,7 +38,7 @@ namespace Neon { namespace OpenGL {
 		return true;
 	}
 
-	void OpenGLContext::DrawIndexed(const std::shared_ptr<IVertexArray>& vao) {
+	void OpenGLContext::DrawIndexed(IVertexArray* vao) {
 		GL_Call(glDrawElements(GL_TRIANGLES, vao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, NULL));
 	}
 
@@ -120,7 +120,7 @@ namespace Neon { namespace OpenGL {
 	}
 
 	unsigned int OpenGLContext::CreateUniformBuffer(const void* data, size_t data_size, BufferUsage usage) {
-		UniformBuffer* ubo = new UniformBuffer();
+		std::shared_ptr<UniformBuffer> ubo;
 		unsigned int ubo_id = ubo->GetUbo();
 
 		m_uniformBufferMap.insert(std::make_pair(ubo_id, ubo));

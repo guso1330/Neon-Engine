@@ -24,7 +24,7 @@ namespace Neon { namespace OpenGL {
 		public IRendererAPI
 	{
 		typedef std::unordered_map<unsigned int, std::shared_ptr<VertexArray> > VertexArrayMap;
-		typedef std::unordered_map<unsigned int, UniformBuffer*> UniformBufferMap;
+		typedef std::unordered_map<unsigned int, std::shared_ptr<UniformBuffer>> UniformBufferMap;
 		typedef std::unordered_map<unsigned int, std::shared_ptr<Shader> > ShaderMap;
 		typedef std::unordered_map<unsigned int, std::shared_ptr<Program> > ProgramMap;
 		typedef std::unordered_map<unsigned int, std::shared_ptr<Texture> > TextureMap;
@@ -32,7 +32,7 @@ namespace Neon { namespace OpenGL {
 		public:
 			/* Methods */
 			virtual void Clear() override;
-			virtual void DrawIndexed(const std::shared_ptr<IVertexArray>& vao) override;
+			virtual void DrawIndexed(IVertexArray* vao) override;
 			void DrawIndexed(const unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode);
 			void UpdateUbo(unsigned int ubo_id, const void* data, size_t data_size);
 

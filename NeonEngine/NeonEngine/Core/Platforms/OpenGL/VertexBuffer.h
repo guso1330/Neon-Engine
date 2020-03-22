@@ -37,8 +37,8 @@ namespace Neon { namespace OpenGL {
 		switch(type) {
 			case BufferUsage::STATIC:  return GL_STATIC_DRAW;
 			case BufferUsage::DYNAMIC: return GL_DYNAMIC_DRAW;
-			case BufferUsage::NONE: 	  return GL_NONE;
-			default: 			  break;
+			case BufferUsage::NONE:    return GL_NONE;
+			default:                   break;
 		}
 		NE_CORE_ASSERT(false, "BufferUsage to OpenGL Usage: Unknown BufferUsage type");
 		return 0;

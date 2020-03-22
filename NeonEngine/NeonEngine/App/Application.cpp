@@ -55,6 +55,9 @@ namespace Neon {
 		while (m_isRunning && !m_pWindow->isClosed()) {
 			elapsed_time = m_Timer.GetElapsedTime();
 
+			// Clear Renderer
+			Renderer::GetInstance().Clear();
+
 			// Update ECS Systems
 			ECSManager::GetInstance().Update(elapsed_time);
 
@@ -67,6 +70,8 @@ namespace Neon {
 
 			// Update window
 			m_pWindow->Update();
+
+			Renderer::GetInstance().Flush();
 
 			m_Timer.Tick();
 		}

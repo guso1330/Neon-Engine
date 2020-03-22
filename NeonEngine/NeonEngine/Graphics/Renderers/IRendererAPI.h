@@ -14,7 +14,7 @@ namespace Neon {
 		public:
 			/* Methods */
 			virtual void Clear() = 0;
-			virtual void DrawIndexed(const std::shared_ptr<IVertexArray>& va) = 0;
+			virtual void DrawIndexed(IVertexArray* va) = 0;
 
 			/* Setters */
 			virtual void SetClearColor(float r, float g, float b, float a) = 0;

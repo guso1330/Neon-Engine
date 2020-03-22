@@ -41,7 +41,7 @@ namespace Neon { namespace OpenGL {
 			void Init();
 
 		private:
-			std::vector<std::shared_ptr<Shader> > m_Shaders;
+			std::vector<std::shared_ptr<Shader>> m_Shaders;
 			unsigned int m_programID;
 			const std::string m_name;
 

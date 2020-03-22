@@ -178,12 +178,12 @@ class SandBox : public Neon::Application {
 			Neon::BufferLayout layout_2d = {
 				{ "vPosition", Neon::ShaderDataType::FLOAT3 }
 			};
-			std::shared_ptr<Neon::IVertexBuffer> n_vbo = std::make_shared<Neon::IVertexBuffer>(Neon::IVertexBuffer::Create(
+			std::shared_ptr<Neon::IVertexBuffer> n_vbo(Neon::IVertexBuffer::Create(
 				&vertices[0],
 				3 * 4 * sizeof(float),
 				layout_2d
 			));
-			std::shared_ptr<Neon::IIndexBuffer> n_ibo = std::make_shared<Neon::IIndexBuffer>(Neon::IIndexBuffer::Create(
+			std::shared_ptr<Neon::IIndexBuffer> n_ibo(Neon::IIndexBuffer::Create(
 				&indices[0],
 				6
 			));

@@ -9,8 +9,8 @@
 
 namespace Neon {
 	struct RenderMatrices {
-		glm::mat4 transform;
-		glm::mat4 viewProjection;
+		glm::mat4 transform = glm::mat4();
+		glm::mat4 viewProjection = glm::mat4();
 	};
 
 	class Renderer : public Singleton {

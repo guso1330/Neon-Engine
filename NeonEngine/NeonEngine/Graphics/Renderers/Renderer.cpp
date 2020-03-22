@@ -54,9 +54,9 @@ namespace Neon {
 	void Renderer::Submit(IVertexArray* va, IProgram* program, RenderMatrices mats) {
 		program->Bind();
 		va->Bind();
-		program->SetFloat4("vcolor", glm::vec4(1.0f));
-		program->SetMat4("model", mats.transform);
-		program->SetMat4("matrices.view_projection", mats.viewProjection);
+		//program->SetFloat4("vcolor", glm::vec4(1.0f));
+		//program->SetMat4("model", mats.transform);
+		//program->SetMat4("matrices.view_projection", mats.viewProjection);
 		GetRendererAPIInstance().DrawIndexed(va);
 		va->Unbind();
 		program->Unbind();

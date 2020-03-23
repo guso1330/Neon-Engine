@@ -5,12 +5,6 @@
 int WIDTH = 1280,
 	HEIGHT = 720;
 
-#ifdef NE_PLATFORM_WIN64
-	#undef near
-	#undef far
-#endif // NE_PLATFORM_WIN64
-
-
 /* Input Callback Functions */
 auto MoveCameraFunc = [](Neon::Camera* camera, Neon::Input* inputManager, float& camera_speed, float camera_velocity, float camera_speed_limit, float elapsed_time) {
 	glm::vec3 position = camera->GetPosition();
@@ -72,77 +66,6 @@ auto MoveCameraAroundFunc = [](Neon::IWindow* window, Neon::Camera* camera, int 
 	camera->Update();
 	glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 };
-
-/*
-	ECS Components & System testing - BEGIN
-*/
-struct CameraData {
-	Neon::Camera* camera;
-	glm::vec3 pos = glm::vec3(0.0);
-	float fov = 70.0f;
-	float aspectRatio = (float)WIDTH / (float)HEIGHT;
-	float near = 0.01f;
-	float far = 1000.0f;
-};
-
-struct TransformData {
-	Neon::Transform transform;
-};
-
-struct CameraComponent : public Neon::ECS::IComponent {
-	virtual bool Init(void* n_data) override {
-		cameraData = static_cast<CameraData*>(n_data);
-
-		cameraData->camera = new Neon::Camera(
-			cameraData->pos,
-			cameraData->fov,
-			cameraData->aspectRatio,
-			cameraData->near,
-			cameraData->far
-		);
-
-		return true;
-	}
-
-	CameraData* cameraData;
-};
-
-struct TransformComponent : public Neon::ECS::IComponent {
-	virtual bool Init(void* n_data) override {
-		transformData = static_cast<TransformData*>(n_data);
-		return true;
-	}
-
-	TransformData* transformData;
-};
-
-class CameraSystem : public Neon::ECS::ISystem {
-	public:
-		virtual bool Init() override {
-			return true;
-		}
-
-		virtual void Update(Neon::Timestep ts) override {
-			CameraComponent* camera_component;
-			TransformComponent* transform_component;
-			Neon::EntityMap entities;
-
-			entities = Neon::ECS::ECSManager::GetInstance().GetEntities();
-
-			for (Neon::EntityMap::const_iterator it = entities.begin(); it != entities.end(); ++it) {
-				camera_component = Neon::ECS::ECSManager::GetInstance().GetComponent<CameraComponent>((*it).first);
-				transform_component = Neon::ECS::ECSManager::GetInstance().GetComponent<TransformComponent>((*it).first);
-
-				camera_component->cameraData->camera->SetPosition(
-					transform_component->transformData->transform.GetPosition()
-				);
-				camera_component->cameraData->camera->Update();
-			}
-		}
-};
-/*
-	ECS Components & System testing - END
-*/
 
 class ExampleLayer : public Neon::Layer {
 	public:

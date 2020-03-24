@@ -4,36 +4,63 @@
 #include "glm/gtx/transform.hpp"
 
 namespace Neon {
+	struct CameraSettings {
+		float nearPlane;
+		float farPlane;
+		glm::vec3 position;
+	};
+
+	struct OrthagraphicCameraSettings : public CameraSettings {
+		float left;
+		float right;
+		float bottom;
+		float top;
+	};
+
+	struct PerspectiveCameraSettings : public CameraSettings {
+		float aspect;
+		float fov;
+	};
+
 	class Camera {
 		public: 
-			Camera() {};
-			Camera(const glm::vec3& pos, float fov, float aspect, float near, float far);
-			inline glm::mat4 GetViewProjection() const { return m_perspective * m_lookat; }
-			inline glm::mat4 GetProjection() const { return m_perspective; }
-			inline glm::mat4 GetViewMatrix() const { return m_lookat; }
+			Camera() = default;
 
-			inline const glm::vec3 &GetPosition() const { return m_pos; }
-			inline const glm::vec3 &GetRelativeUp() const { return m_up; }
-			inline const glm::vec3 &GetDirection() const { return m_dir; }
-
+			/* Getters */
 			inline const float GetPitch() const { return m_pitch; }
 			inline const float GetYaw() const { return m_yaw; }
+			inline const glm::vec3& GetPosition() const { return m_pos; }
+			inline const glm::vec3& GetRelativeUp() const { return m_up; }
+			inline const glm::vec3& GetDirection() const { return m_dir; }
+			inline const glm::mat4& GetViewProjection() const { return m_projection * m_lookat; }
+			inline const glm::mat4& GetProjection() const { return m_projection; }
+			inline const glm::mat4& GetViewMatrix() const { return m_lookat; }
 
-			void SetPosition(const glm::vec3 &n_pos);
+			/* Setters */
+			void SetPosition(const glm::vec3& n_pos);
 			void SetLookAt(const glm::vec3& n_pos);
 
+			/* Mutators */
 			void RotateYaw(float angle);
 			void RotatePitch(float angle);
 			void Rotate(float angle);
 
-			virtual void Update();
-			
-		private:	
-			glm::mat4 m_perspective, m_lookat;
+			/* Member Functions */
+			bool Init(OrthagraphicCameraSettings& settings);
+			bool Init(PerspectiveCameraSettings& settings);
+			void Update();
+
+		private:
+			void Initialize();
+		private:
+			float m_yaw;
+			float m_pitch;
 			glm::vec3 m_lookatPos;
+			glm::vec3 m_dir;
 			glm::vec3 m_pos;
-			glm::vec3 m_forward, m_dir;
+			glm::vec3 m_forward;
 			glm::vec3 m_up;
-			float m_yaw, m_pitch;
+			glm::mat4 m_projection;
+			glm::mat4 m_lookat;
 	};
 }

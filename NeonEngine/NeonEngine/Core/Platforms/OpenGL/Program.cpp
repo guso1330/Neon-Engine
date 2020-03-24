@@ -116,5 +116,4 @@ namespace Neon { namespace OpenGL {
 	void Program::SetMat4(const std::string& name, const glm::mat4& mat4) {
 		GL_Call(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &mat4[0][0]));
 	}
-
 }}

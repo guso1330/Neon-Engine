@@ -1,5 +1,7 @@
 #include "BaseECS/CameraSystem.h"
 
+#include "Core/ECS/ECSManager.h"
+
 namespace Neon { namespace ECS {
 	bool CameraSystem::Init() {
 		return true;

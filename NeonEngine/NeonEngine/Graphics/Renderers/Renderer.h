@@ -18,7 +18,7 @@ namespace Neon {
 			/* Methods */
 			bool Init();
 			void Clear() const;
-			void Submit(IVertexArray* va, IProgram* program, RenderMatrices mats);
+			void Submit(IVertexArray* va, IProgram* program, RenderMatrices& mats);
 			void Flush();
 
 			/* Getters */

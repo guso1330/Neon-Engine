@@ -53,7 +53,7 @@ namespace Neon {
 				}
 			}
 		} else {
-			NE_CORE_WARN("EventManager: {} was not found and not run", name);
+			// NE_CORE_WARN("EventManager: {} was not found and not run", name);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Core.h"
 #include "Core/Types/Singleton.h"
 #include "Core/Time/Timer.h"
 #include "Core/ECS/ECSTypes.h"
@@ -7,7 +8,11 @@
 #include "Core/ECS/Entity.h"
 #include "Core/ECS/IComponent.h"
 #include "Core/ECS/ISystem.h"
-#include "Core/Core.h"
+
+// Base ECS Systems
+#include "BaseECS/CameraComponent.h"
+#include "BaseECS/TransformComponent.h"
+#include "BaseECS/CameraSystem.h"
 
 namespace Neon { namespace ECS {
 	class ECSManager : public Singleton {

@@ -51,7 +51,7 @@ namespace Neon {
 		GetRendererAPIInstance().Clear();
 	}
 
-	void Renderer::Submit(IVertexArray* va, IProgram* program, RenderMatrices mats) {
+	void Renderer::Submit(IVertexArray* va, IProgram* program, RenderMatrices& mats) {
 		program->Bind();
 		va->Bind();
 		GetRendererAPIInstance().DrawIndexed(va);

@@ -1,13 +1,55 @@
 #include "Graphics/Cameras/Camera.h"
 
 namespace Neon {
-	Camera::Camera(const glm::vec3& pos, float fov, float aspect, float near, float far) {
-		m_perspective = glm::perspective(glm::radians(fov), aspect, near, far);
-		m_pos = pos;
-		m_forward = m_dir = glm::vec3(0, 0, 1);
+	bool Camera::Init(OrthagraphicCameraSettings& settings) {
+		float left;
+		float right;
+		float bottom;
+		float top;
+		float nearPlane;
+		float farPlane;
+
+		left = settings.left;
+		right = settings.right;
+		bottom = settings.bottom;
+		top = settings.top;
+		nearPlane = settings.nearPlane;
+		farPlane = settings.farPlane;
+
+		m_projection = glm::ortho(left, right, bottom, top, nearPlane, farPlane);
+		m_pos = settings.position;
+
+		Initialize();
+
+		return true;
+	}
+
+	bool Camera::Init(PerspectiveCameraSettings& settings) {
+		float fov;
+		float aspect;
+		float nearPlane;
+		float farPlane;
+
+		fov = settings.fov;
+		aspect = settings.aspect;
+		nearPlane = settings.nearPlane;
+		farPlane = settings.farPlane;
+
+		m_projection = glm::perspective(glm::radians(fov), aspect, nearPlane, farPlane);
+		m_pos = settings.position;
+
+		Initialize();
+
+		return true;
+	}
+
+	void Camera::Initialize() {
+		m_forward = glm::vec3(0, 0, 1);
+		m_dir = glm::vec3(0, 0, 1);
 		m_up = glm::vec3(0.0f, 1.0f, 0.0f);
 		m_lookat = glm::lookAt(m_pos, m_pos + m_dir, m_up);
-		m_yaw = m_pitch = 0.0;
+		m_yaw = 0.0f;
+		m_pitch = 0.0f;
 	}
 
 	void Camera::SetPosition(const glm::vec3 &n_pos) { 

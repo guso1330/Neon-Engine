@@ -5,7 +5,7 @@
 
 namespace Neon { namespace ECS {
 	struct TransformData {
-		Neon::Transform transform;
+		Transform transform;
 	};
 
 	struct TransformComponent : public Neon::ECS::IComponent {

@@ -5,7 +5,7 @@
 
 namespace Neon { namespace ECS {
 	struct CameraData {
-		Neon::Camera camera;
+		Camera camera;
 	};
 
 	struct CameraComponent : public Neon::ECS::IComponent {

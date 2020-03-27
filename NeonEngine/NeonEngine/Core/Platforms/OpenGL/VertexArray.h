@@ -1,11 +1,8 @@
 #pragma once
 
 #include "Graphics/Renderers/IVertexArray.h"
-#include "Core/Platforms/OpenGL/GL_Error.h"
 #include "Core/Platforms/OpenGL/VertexBuffer.h"
 #include "Core/Platforms/OpenGL/IndexBuffer.h"
-
-#include <glad/glad.h>
 
 namespace Neon { namespace OpenGL {
 	class VertexArray : public IVertexArray {

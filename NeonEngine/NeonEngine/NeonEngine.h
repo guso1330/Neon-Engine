@@ -11,16 +11,10 @@
 // #include "BaseECS/CameraSystem.h"
 
 /* Graphics */
-// #include "Graphics/Cameras/Camera.h"
-// #include "Graphics/Entities/vertex.h"
-// #include "Graphics/Entities/transform.h"
-// #include "Graphics/Entities/renderable3d.h"
-// #include "Graphics/Entities/renderableCollection.h"
-// #include "Graphics/Layers/layer.h"
+#include "ImGui/ImGuiLayer.h"
 #include "Graphics/Renderers/Renderer.h"
 
 /* Shaders */
-// #include "Graphics/Shaders/material.h"
 
 /* App */
 #include "App/Application.h"

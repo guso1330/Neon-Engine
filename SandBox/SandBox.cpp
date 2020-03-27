@@ -1,5 +1,7 @@
 #include "NeonEngine/NeonEngine.h"
 
+bool show_another_window = false;
+
 #include "nepch.h"
 
 int WIDTH = 1280,
@@ -69,27 +71,15 @@ auto MoveCameraAroundFunc = [](Neon::IWindow* window, Neon::Camera* camera, int 
 	glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
 };
 
-class ExampleLayer : public Neon::Layer {
+class RenderLayer : public Neon::Layer {
 	public:
-		ExampleLayer() : Layer("Example") {}
-
-		~ExampleLayer() {}
-
-		/* Member Functions */
-		void OnAttach() override {}
-
-		void OnUpdate(Neon::Timestep ts) override {}
-
-	private:
-};
-
-class SandBox : public Neon::Application {
-	public:
-		SandBox(const Neon::WindowSettings &settings) :
-			Neon::Application(settings)
+		RenderLayer() :
+			Neon::Layer("RenderLayer")
 		{}
 
-		bool Init() override {
+		~RenderLayer() = default;
+
+		virtual void OnAttach() override {
 			float vertices[] = {
 				 1.0f,  1.0f, 0.0f,  // top right
 				 1.0f, -1.0f, 0.0f,  // bottom right
@@ -135,26 +125,20 @@ class SandBox : public Neon::Application {
 			camSettings.nearPlane = 0.01f;
 			camSettings.farPlane = 1000.0f;
 			m_camera.Init(camSettings);
-
-			return true;
 		}
 
-		~SandBox() = default;
-
-		void Update(Neon::Timestep ts) override {
+		virtual void OnUpdate(Neon::Timestep ts) override {
 			Neon::RenderMatrices mats;
-			Neon::Debug::CalcFPS(this->GetWindow(), 1.0, "Neon Engine");
+			m_camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 			MoveCameraFunc(
 				m_camera,
-				(this->GetWindow())->GetInput(),
+				(Neon::Application::GetInstance().GetWindow())->GetInput(),
 				CAMERA_SPEED,
 				-0.2f,
 				5.0f,
 				ts
 			);
-
-			m_camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 
 			mats.transform = glm::mat4(1.0f);
 			mats.viewProjection = m_camera.GetViewProjection();
@@ -171,6 +155,30 @@ class SandBox : public Neon::Application {
 		Neon::IVertexArray* p_vao;
 		Neon::OpenGL::Program* p_program;
 		Neon::Camera m_camera;
+};
+
+class SandBox : public Neon::Application {
+	public:
+		SandBox(const Neon::WindowSettings &settings) :
+			Neon::Application(settings)
+		{}
+
+		bool Init() override {
+			PushLayer(new RenderLayer());
+			// ImGui
+			PushOverlay(new Neon::ImGuiLayer());
+
+			return true;
+		}
+
+		~SandBox() = default;
+
+		void Update(Neon::Timestep ts) override {
+			Neon::Debug::CalcFPS(this->GetWindow(), 1.0, "Neon Engine");
+		}
+
+	private:
+
 };
 
 Neon::Application* Neon::CreateApplication() {

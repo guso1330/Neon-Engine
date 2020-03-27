@@ -5,10 +5,8 @@
 */
 
 #include "Graphics/Renderers/IProgram.h"
-#include "Core/Platforms/OpenGL/GL_Error.h"
 #include "Core/Platforms/OpenGL/Shader.h"
 
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 
 namespace Neon { namespace OpenGL {

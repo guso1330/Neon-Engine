@@ -4,16 +4,14 @@
 #include "Core/Types/Singleton.h"
 #include "Graphics/Renderers/IGraphicContext.h"
 #include "Graphics/Renderers/IRendererAPI.h"
-#include "Core/Platforms/OpenGL/GL_Error.h"
 #include "Core/Platforms/OpenGL/VertexBuffer.h"
-#include "Core/Platforms/OpenGL/VertexArray.h"
 #include "Core/Platforms/OpenGL/IndexBuffer.h"
+#include "Core/Platforms/OpenGL/VertexArray.h"
 #include "Core/Platforms/OpenGL/uniformBuffer.h"
 #include "Core/Platforms/OpenGL/Shader.h"
 #include "Core/Platforms/OpenGL/Program.h"
 #include "Core/Platforms/OpenGL/Texture.h"
 
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 

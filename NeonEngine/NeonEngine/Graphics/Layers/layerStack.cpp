@@ -1,4 +1,4 @@
-#include "layerStack.h"
+#include "LayerStack.h"
 
 namespace Neon {
 	LayerStack::LayerStack() {}

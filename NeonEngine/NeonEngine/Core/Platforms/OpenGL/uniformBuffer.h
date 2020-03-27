@@ -1,8 +1,5 @@
 #pragma once
 
-#include "./GL_Error.h"
-
-#include <glad/glad.h>
 #include <iostream>
 #include <vector>
 

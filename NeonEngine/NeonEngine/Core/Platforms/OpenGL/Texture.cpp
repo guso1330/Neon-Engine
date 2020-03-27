@@ -1,6 +1,6 @@
 #include "Core/Core.h"
-
 #include "Core/Platforms/OpenGL/Texture.h"
+#include "Core/Platforms/OpenGL/GLHelpers.h" // includes glad.h
 
 #define STB_IMAGE_IMPLEMENTATION // needed to use the stb_image library
 #include <stb_image.h>

@@ -11,7 +11,6 @@
 #include "Core/Types/Singleton.h"
 #include "nepch.h"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #ifdef NE_PLATFORM_WIN64

@@ -7,7 +7,6 @@
 #include "Core/Platforms/OpenGL/VertexBuffer.h"
 #include "Core/Platforms/OpenGL/VertexArray.h"
 
-#include <glad/glad.h>
 #include <vector>
 #include <iostream>
 

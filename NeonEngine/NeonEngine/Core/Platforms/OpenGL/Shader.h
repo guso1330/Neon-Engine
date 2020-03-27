@@ -1,9 +1,7 @@
 #pragma once
 
-#include "Core/Platforms/OpenGL/GL_Error.h"
 #include "Graphics/Shaders/IShader.h"
 
-#include <glad/glad.h>
 #include <iostream>
 
 namespace Neon { namespace OpenGL {

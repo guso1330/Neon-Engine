@@ -1,10 +1,9 @@
 #pragma once
 
-#include "./GL_Error.h"
 #include "Graphics/Renderers/IVertexBuffer.h"
 #include "Graphics/Renderers/BufferLayout.h"
+#include "Core/Platforms/OpenGL/GLHelpers.h"
 
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 
 namespace Neon { namespace OpenGL {

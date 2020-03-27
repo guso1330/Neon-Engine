@@ -52,6 +52,15 @@ namespace Neon {
 		m_pitch = 0.0f;
 	}
 
+	/* Getters */
+	// TODO: Modify the way that this ViewProjection Matrix is calculated
+	const glm::mat4& Camera::GetViewProjection() const {
+		glm::mat4 result;
+		result = m_projection * m_lookat;
+		return result;
+	}
+
+	/* Setters */
 	void Camera::SetPosition(const glm::vec3 &n_pos) { 
 		m_pos = n_pos;
 	}

@@ -58,6 +58,14 @@ target_link_libraries(${PROJECT_NAME} "spdlog" ${DSPDLOG_COMPILED_LIB})
 target_include_directories(${PROJECT_NAME} PUBLIC ${LIB_DIR}/glm)
 target_include_directories(${PROJECT_NAME} PUBLIC ${LIB_DIR}/stb_image)
 
+# imgui
+set(IMGUI_DIR "${LIB_DIR}/imgui")
+file(GLOB IMGUI_FILES "${IMGUI_DIR}/*.cpp")
+add_library("imgui" STATIC "${IMGUI_FILES}")
+target_include_directories("imgui" PRIVATE "${IMGUI_DIR}")
+target_include_directories(${PROJECT_NAME} PUBLIC "${IMGUI_DIR}")
+target_link_libraries(${PROJECT_NAME} "imgui")
+
 # tests
 set(CMAKE_MACOSX_RPATH 1)
 set(TEST_BINARY "NeonEngine-test")
@@ -79,6 +87,7 @@ MESSAGE(STATUS "                     Variable Paths                            "
 MESSAGE(STATUS "						                                        " )
 MESSAGE(STATUS "LIB_DIR: " ${LIB_DIR})
 MESSAGE(STATUS "ASSIMP_DIR: " ${ASSIMP_DIR})
+MESSAGE(STATUS "IMGUI_DIR: " ${IMGUI_DIR})
 MESSAGE(STATUS "GLFW_DIR: " ${GLFW_DIR})
 MESSAGE(STATUS "GLAD_DIR: " ${GLAD_DIR})
 MESSAGE(STATUS "SPDLOG_DIR: " ${SPDLOG_DIR})

@@ -1,4 +1,6 @@
-#include "./IndexBuffer.h"
+#include "Core/Platforms/OpenGL/IndexBuffer.h"
+
+#include "Core/Platforms/OpenGL/GLHelpers.h" // includes glad.h
 
 namespace Neon { namespace OpenGL {
 	IndexBuffer::IndexBuffer() {

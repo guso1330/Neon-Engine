@@ -32,9 +32,9 @@ namespace Neon {
 			inline const glm::vec3& GetPosition() const { return m_pos; }
 			inline const glm::vec3& GetRelativeUp() const { return m_up; }
 			inline const glm::vec3& GetDirection() const { return m_dir; }
-			inline const glm::mat4& GetViewProjection() const { return m_projection * m_lookat; }
 			inline const glm::mat4& GetProjection() const { return m_projection; }
 			inline const glm::mat4& GetViewMatrix() const { return m_lookat; }
+			const glm::mat4& GetViewProjection() const;
 
 			/* Setters */
 			void SetPosition(const glm::vec3& n_pos);

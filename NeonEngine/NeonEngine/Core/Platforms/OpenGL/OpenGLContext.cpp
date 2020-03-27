@@ -1,6 +1,7 @@
 #include "Core/Platforms/OpenGL/OpenGLContext.h"
 
 #include "nepch.h"
+#include "Core/Platforms/OpenGL/GLHelpers.h" // includes glad.h
 
 namespace Neon { namespace OpenGL {
 	bool OpenGLContext::s_initialized = false;
@@ -30,12 +31,13 @@ namespace Neon { namespace OpenGL {
 		m_currentProgram = 0;
 
 		// OpenGL Setting
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
-		glClearDepth(1.0f);
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		glFrontFace(GL_CW);
+		// TODO: wrap these functions in GL_Call
+		GL_Call(glEnable(GL_DEPTH_TEST));
+		GL_Call(glDepthFunc(GL_LEQUAL));
+		GL_Call(glClearDepth(1.0f));
+		GL_Call(glEnable(GL_CULL_FACE));
+		GL_Call(glCullFace(GL_BACK));
+		GL_Call(glFrontFace(GL_CW));
 
 		return true;
 	}

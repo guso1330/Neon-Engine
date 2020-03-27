@@ -1,6 +1,7 @@
-#include "nepch.h"
-
 #include "Core/Platforms/OpenGL/Program.h"
+
+#include "nepch.h"
+#include "Core/Platforms/OpenGL/GLHelpers.h" // include glad.h
 
 namespace Neon { namespace OpenGL {
 	Program::Program(const std::string& name, const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath)

@@ -1,6 +1,7 @@
 #include "./VertexArray.h"
 
 #include "nepch.h"
+#include "Core/Platforms/OpenGL/GLHelpers.h" // includes glad.h
 
 namespace Neon { namespace OpenGL {
 	VertexArray::VertexArray() {

@@ -1,10 +1,11 @@
 // TODO: make a macro function that supports returned values
-
 #pragma once
 
-#include "glad/glad.h"
-
 #include "nepch.h"
+
+#ifndef __gl_h_
+	#include <glad/glad.h>
+#endif
 
 #ifdef _WIN32
 	#define DEBUG_BREAK __debugbreak()

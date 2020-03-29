@@ -60,9 +60,17 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${LIB_DIR}/stb_image)
 
 # imgui
 set(IMGUI_DIR "${LIB_DIR}/imgui")
-file(GLOB IMGUI_FILES "${IMGUI_DIR}/*.cpp")
+file(GLOB IMGUI_FILES 
+	"${IMGUI_DIR}/*.cpp"
+	"${IMGUI_DIR}/examples/imgui_impl_opengl3.cpp"
+	"${IMGUI_DIR}/examples/imgui_impl_glfw.cpp"
+)
 add_library("imgui" STATIC "${IMGUI_FILES}")
-target_include_directories("imgui" PRIVATE "${IMGUI_DIR}")
+target_include_directories("imgui" PRIVATE 
+	"${IMGUI_DIR}"
+	"${GLFW_DIR}/include"
+	"${GLAD_DIR}/include"
+)
 target_include_directories(${PROJECT_NAME} PUBLIC "${IMGUI_DIR}")
 target_link_libraries(${PROJECT_NAME} "imgui")
 

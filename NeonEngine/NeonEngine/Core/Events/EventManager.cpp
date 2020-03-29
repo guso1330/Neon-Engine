@@ -3,19 +3,17 @@
 
 namespace Neon {
 	void EventManager::InitCoreEvents() {
-		AddEvent(NEON_EVENT_WINDOW_RESIZE, EventPtr(new WindowResizeEvent()));
-		AddEvent(NEON_EVENT_KEY_PRESS, EventPtr(new KeyPressEvent()));
-		AddEvent(NEON_EVENT_MOUSE_PRESS, EventPtr(new struct MousePressEvent()));
-		AddEvent(NEON_EVENT_MOUSE_CURSOR, EventPtr(new struct MouseCursorEvent()));
-	}
-
-	bool EventManager::AddEvent(std::string name, EventPtr event) {
-		if (s_eventStore.insert(std::make_pair(name, event)).second == true) {
-			NE_CORE_INFO("EventManager: event {} was just created", name);
-			return true;
-		}
-
-		return false;
+		AddEvent<WindowResizeEvent>(NEON_EVENT_WINDOW_RESIZE);
+		AddEvent<KeyPressEvent>(NEON_EVENT_KEY_PRESS);
+		AddEvent<KeyDownEvent>(NEON_EVENT_KEY_DOWN);
+		AddEvent<KeyReleaseEvent>(NEON_EVENT_KEY_RELEASE);
+		AddEvent<KeyHoldEvent>(NEON_EVENT_KEY_HOLD);
+		AddEvent<MousePressEvent>(NEON_EVENT_MOUSE_PRESS);
+		AddEvent<MouseDownEvent>(NEON_EVENT_MOUSE_DOWN);
+		AddEvent<MouseReleaseEvent>(NEON_EVENT_MOUSE_RELEASE);
+		AddEvent<MouseHoldEvent>(NEON_EVENT_MOUSE_HOLD);
+		AddEvent<MouseCursorEvent>(NEON_EVENT_MOUSE_CURSOR);
+		AddEvent<MouseScrollEvent>(NEON_EVENT_MOUSE_SCROLL);
 	}
 
 	void EventManager::PrintEvents() {

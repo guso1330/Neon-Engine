@@ -4,6 +4,7 @@
 #include "Core/ECS/ECSManager.h"
 #include "Core/Events/EventManager.h"
 #include "Graphics/Layers/LayerStack.h"
+#include "ImGui/ImGuiLayer.h"
 #include "App/IWindow.h"
 
 /*
@@ -39,6 +40,7 @@ namespace Neon {
 			bool m_initialized;
 			bool m_isRunning;
 			Timer m_Timer;
+			ImGuiLayer* m_ImGuiLayer;
 			std::unique_ptr<IWindow> m_pWindow;
 			LayerStack m_LayerStack;
 

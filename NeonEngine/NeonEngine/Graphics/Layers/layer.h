@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 
 #include "nepch.h"
 
@@ -22,6 +22,7 @@ namespace Neon {
 			virtual void OnAttach() {}
 			virtual void OnDetach() {}
 			virtual void OnUpdate(Timestep ts) {}
+			virtual void OnUpdateImGui(Timestep ts) {}
 
 		private:
 			std::string m_name;

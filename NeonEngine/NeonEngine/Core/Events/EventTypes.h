@@ -3,76 +3,97 @@
 #include "Core/Events/EventManager.h"
 
 // TODO: Move event names to some macros
-#define NEON_EVENT_WINDOW_RESIZE "WindowResize"
-#define NEON_EVENT_KEY_PRESS "KeyPress"
-#define NEON_EVENT_MOUSE_PRESS "MousePress"
-#define NEON_EVENT_MOUSE_CURSOR "MouseCursor"
+#define NEON_EVENT_WINDOW_RESIZE "Neon::WindowResize"
+#define NEON_EVENT_KEY_PRESS     "Neon::KeyPress"
+#define NEON_EVENT_KEY_DOWN      "Neon::KeyDown"
+#define NEON_EVENT_KEY_RELEASE   "Neon::KeyRelease"
+#define NEON_EVENT_KEY_HOLD      "Neon::KeyHold"
+#define NEON_EVENT_MOUSE_PRESS   "Neon::MousePress"
+#define NEON_EVENT_MOUSE_DOWN    "Neon::MouseDown"
+#define NEON_EVENT_MOUSE_RELEASE "Neon::MouseRelease"
+#define NEON_EVENT_MOUSE_HOLD    "Neon::MouseHold"
+#define NEON_EVENT_MOUSE_CURSOR  "Neon::MouseCursor"
+#define NEON_EVENT_MOUSE_SCROLL  "NEON::MouseScroll"
 
 namespace Neon {
 	
 	/* Window Events */
-	struct WindowResizeEventData : EventData {
+	struct WindowResizeEventData {
 		unsigned int width;
 		unsigned int height;
 	};
-
 	struct WindowResizeEvent : Event {
-		WindowResizeEvent() {
-			std::shared_ptr<WindowResizeEventData> n_eventData(new WindowResizeEventData());
-			type = NEON_EVENT_WINDOW_RESIZE;
-			data = n_eventData;
-			dataSize = sizeof(n_eventData);
-		};
+		WindowResizeEvent();
 	};
 
-	/* Input Events */
-	struct KeyPressEventData : EventData {
+	/* Key Events */
+	struct KeyPressEventData {
+		int button;
+		int scancode;
+		int action;
+		int mods;
+	};
+	struct KeyEvent : Event {
+		KeyEvent();
+	};
+	struct KeyPressEvent : KeyEvent {
+		KeyPressEvent();
+	};
+	struct KeyDownEvent : KeyEvent {
+		KeyDownEvent();
+	};
+	struct KeyReleaseEvent : KeyEvent {
+		KeyReleaseEvent();
+	};
+	struct KeyHoldEvent : KeyEvent {
+		KeyHoldEvent();
+	};
+
+	/* Mouse Events */
+	struct MouseEventData {
 		int button;
 		int action;
 		int mods;
 	};
-
-	struct KeyPressEvent : Event {
-		KeyPressEvent() {
-			std::shared_ptr<KeyPressEventData> n_eventData(new KeyPressEventData());
-			type = NEON_EVENT_KEY_PRESS;
-			data = n_eventData;
-			dataSize = sizeof(n_eventData);
-		};
+	struct MouseEvent : Event {
+		MouseEvent();
+	};
+	struct MousePressEvent : MouseEvent {
+		MousePressEvent();
+	};
+	struct MouseDownEvent : MouseEvent {
+		MouseDownEvent();
+	};
+	struct MouseReleaseEvent : MouseEvent {
+		MouseReleaseEvent();
+	};
+	struct MouseHoldEvent : MouseEvent {
+		MouseHoldEvent();
 	};
 
-	struct MousePressEventData : EventData {
-		int button;
-		int action;
-		int mods;
+	/* Mouse Cursor Events */
+	struct MouseCursorEventData {
+		double x;
+		double y;
 	};
-
-	struct MousePressEvent : Event {
-		MousePressEvent() {
-			std::shared_ptr<MousePressEventData> n_eventData(new MousePressEventData());
-			type = NEON_EVENT_MOUSE_PRESS;
-			data = n_eventData;
-			dataSize = sizeof(n_eventData);
-		}
-	};
-	
-	struct MouseCursorEventData : EventData {
-		int x;
-		int y;
-	};
-
 	struct MouseCursorEvent : Event {
-		MouseCursorEvent() {
-			std::shared_ptr<MouseCursorEventData> n_eventData(new MouseCursorEventData());
-			type = NEON_EVENT_MOUSE_CURSOR;
-			data = n_eventData;
-			dataSize = sizeof(n_eventData);
-		}
+		MouseCursorEvent();
 	};
 
- 	/* typedef callback functions */
+	/* Mouse Scroll Events */
+	struct MouseScrollEventData {
+		double xOffset;
+		double yOffset;
+	};
+	struct MouseScrollEvent : Event {
+		MouseScrollEvent();
+	};
+
+	/* typedef callback functions */
+	typedef Callback<Event&> EventCallback;
 	typedef Callback<int, int> WindowResizeCallback;
-	typedef Callback<int, int, int> KeyPressCallback;
+	typedef Callback<int, int, int, int> KeyPressCallback;
 	typedef Callback<int, int, int> MousePressCallback;
-	typedef Callback<int, int> MouseCursorCallback;
+	typedef Callback<double, double> MouseCursorCallback;
+	typedef Callback<double, double> MouseScrollCallback;
 }

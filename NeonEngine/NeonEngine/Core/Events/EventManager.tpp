@@ -1,10 +1,24 @@
 namespace Neon {
-	template<class T>
-	std::pair<unsigned int, bool> EventManager::AddEventHandler(std::string eventName, const T &callback) {
+	template<class E>
+	bool EventManager::AddEvent(std::string name) {
+		EventPtr event(new E());
+
+		if (s_eventStore.insert(std::make_pair(name, event)).second == true) {
+			NE_CORE_INFO("EventManager: event {} was just created", name);
+			return true;
+		}
+
+		return false;
+	}
+	template<class C>
+	std::pair<unsigned int, bool> EventManager::AddEventHandler(std::string eventName, const C &callback) {
 		EventHandlerPtr n_eventHandlerPtr(new EventHandler());
 		std::shared_ptr<std::vector<EventHandlerPtr> > n_eventHandlerVector(new std::vector<EventHandlerPtr>());
-		EventStore::const_iterator eventIt = s_eventStore.find(eventName);
-		EventHandlerStore::iterator eventHandlerIt = s_eventHandlerStore.find(eventName);
+		EventStore::const_iterator eventIt;
+		EventHandlerStore::iterator eventHandlerIt;
+
+		eventIt = s_eventStore.find(eventName);
+		eventHandlerIt = s_eventHandlerStore.find(eventName);
 
 		// Search for event in s_eventStore to make sure it exists
 		if (eventIt == s_eventStore.end()) {
@@ -14,7 +28,7 @@ namespace Neon {
 
 		// Set n_eventHandler variables
 		n_eventHandlerPtr->id = ++s_handlerId;
-		n_eventHandlerPtr->callback = BaseCallbackPtr(new T(callback));
+		n_eventHandlerPtr->callback = BaseCallbackPtr(new C(callback));
 		n_eventHandlerPtr->event = (*eventIt).second;
 
 		// If eventhandler isn't found create new entry and insert it

@@ -1,6 +1,7 @@
 #include "App/Application.h"
-#include "Graphics/Renderers/Renderer.h"
+
 #include "Core/Platforms/Platforms.h"
+#include "Graphics/Renderers/Renderer.h"
 
 #include "nepch.h"
 
@@ -36,6 +37,10 @@ namespace Neon {
 			m_initialized = true;
 			s_Instance = this;
 		}
+
+		// Push default imgui layer
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	void Application::PushLayer(Layer* layer) {
@@ -64,6 +69,11 @@ namespace Neon {
 			// Update layers
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(elapsed_time);
+
+			m_ImGuiLayer->Begin();
+			for(Layer* layer : m_LayerStack)
+				layer->OnUpdateImGui(elapsed_time);
+			m_ImGuiLayer->End();
 
 			// Update application
 			Update(elapsed_time);

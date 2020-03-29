@@ -32,5 +32,6 @@ namespace Neon {
 		private:
 			bool m_buttons[MAX_BUTTONS];
 			glm::vec2 m_pos;
+			// TODO: Save mouse scroll state?
 	};
 }

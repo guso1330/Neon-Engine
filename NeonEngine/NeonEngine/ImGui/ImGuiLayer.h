@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Events/EventTypes.h"
 #include "Graphics/Layers/Layer.h"
 
 namespace Neon {
@@ -7,14 +8,12 @@ namespace Neon {
 		public:
 			/* Constructor & Destructor */
 			ImGuiLayer();
-			~ImGuiLayer();
+			~ImGuiLayer() = default;
 
 			/* Public Methods */
-			virtual void OnAttach();
-			virtual void OnDetach();
-			virtual void OnUpdate(Timestep ts);
-
-		private:
-			float m_Time = 0.0f;
+			void Begin();
+			void End();
+			virtual void OnAttach() override;
+			virtual void OnDetach() override;
 	};
 }

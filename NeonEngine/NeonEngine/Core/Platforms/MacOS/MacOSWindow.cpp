@@ -59,8 +59,12 @@ namespace Neon {
 				/* Initialize all events */
 				InitEvents();
 
-				/* NOTE: For now, i'm leaving the callback calls as inline functions */
-				/* Set all callbacks */
+				/*
+					NOTE: For now, i'm leaving the callback calls as inline functions
+
+					TODO:
+					- Set all callbacks
+				*/
 				glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* glfwWindow, int width, int height) {
 					EventManager::GetInstance().DispatchEvent(NEON_EVENT_WINDOW_RESIZE, width, height);
 				});
@@ -68,9 +72,15 @@ namespace Neon {
 				glfwSetKeyCallback(m_Window, [](GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
 					void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
 					MacOSWindow *window = static_cast<MacOSWindow *>(ptr_window);
-					// TODO: Pass arguments from the window object ot this
-					//		 event function
-					window->GetInput()->KeyboardEvent(key, action, mods);
+
+					window->GetInput()->KeyboardEvent(key, scancode, action, mods);
+				});
+
+				glfwSetMouseButtonCallback(m_Window, [](GLFWwindow *glfwWindow, int button, int action, int mods) {
+					void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
+					MacOSWindow *window = static_cast<MacOSWindow *>(ptr_window);
+
+					window->GetInput()->MousePressEvent(button, action, mods);
 				});
 
 				glfwSetCursorPosCallback(m_Window, [](GLFWwindow *glfwWindow, double x_pos, double y_pos) {
@@ -80,16 +90,12 @@ namespace Neon {
 					window->GetInput()->MouseCursorEvent(x_pos, y_pos);
 				});
 
-				glfwSetMouseButtonCallback(m_Window, [](GLFWwindow *glfwWindow, int button, int action, int mods) {
+				glfwSetScrollCallback(m_Window, [](GLFWwindow *glfwWindow, double xoffset, double yoffset) {
 					void *ptr_window = glfwGetWindowUserPointer(glfwWindow);
-					MacOSWindow *window = static_cast<MacOSWindow *>(ptr_window);
-					// TODO: Pass arguments from the window object ot this
-					//		 event function
+					MacOSWindow *window = static_cast<MacOSWindow*>(ptr_window);
 
-					window->GetInput()->MousePressEvent(button, action, mods);
+					window->GetInput()->MouseScrollEvent(xoffset, yoffset);
 				});
-
-				glfwSetScrollCallback(m_Window, [](GLFWwindow *glfwWindow, double xoffset, double yoffset) {});
 			}
 
 		}

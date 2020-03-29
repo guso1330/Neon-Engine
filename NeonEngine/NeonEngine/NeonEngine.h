@@ -11,7 +11,6 @@
 // #include "BaseECS/CameraSystem.h"
 
 /* Graphics */
-#include "ImGui/ImGuiLayer.h"
 #include "Graphics/Renderers/Renderer.h"
 
 /* Shaders */

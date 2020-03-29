@@ -13,12 +13,12 @@ namespace Neon {
 		typedef std::function<void(ArgTypes...)> Func;
 
 		public:
-			Func _f;
-
 			Callback() {}
-			Callback(Func f) { _f = f; }
+			Callback(Func func) { m_func = func; }
 			~Callback() {}
 
-			void operator()(ArgTypes... args) { if(_f) _f(args...); }
+			void operator()(ArgTypes... args) { if(m_func) m_func(args...); }
+		private:
+			Func m_func;
 	};
 }

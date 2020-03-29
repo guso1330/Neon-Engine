@@ -3,6 +3,7 @@
 bool show_another_window = false;
 
 #include "nepch.h"
+#include "imgui.h"
 
 int WIDTH = 1280,
 	HEIGHT = 720;
@@ -151,6 +152,11 @@ class RenderLayer : public Neon::Layer {
 			Neon::Renderer::GetInstance().Submit(p_vao, p_program, mats);
 		}
 
+		virtual void OnUpdateImGui(Neon::Timestep ts) override {
+			static bool show = true;
+			ImGui::ShowDemoWindow(&show);
+		}
+
 	private:
 		Neon::IVertexArray* p_vao;
 		Neon::OpenGL::Program* p_program;
@@ -165,8 +171,6 @@ class SandBox : public Neon::Application {
 
 		bool Init() override {
 			PushLayer(new RenderLayer());
-			// ImGui
-			PushOverlay(new Neon::ImGuiLayer());
 
 			return true;
 		}

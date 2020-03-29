@@ -8,17 +8,21 @@
 	 - Event bubbling
 	 - Make class a singleton?
 */
+#include "Core/Core.h"
 #include "Core/Types/Singleton.h"
 #include "Core/Types/Callback.h"
+
 #include "nepch.h"
 
 namespace Neon {
-
-	struct EventData {};
+	typedef std::shared_ptr<void> EventData;
 
 	struct Event {
+		template<typename T>
+		T* GetData() { return static_cast<T*>(data.get()); }
+
 		std::string type;
-		std::shared_ptr<EventData> data;
+		EventData data;
 		size_t dataSize; // Size in bytes [e.g sizeof(SomeEventData)]
 	};
 
@@ -42,9 +46,10 @@ namespace Neon {
 			void InitCoreEvents();
 		public:
 			/* Public Member Functions */
-			bool AddEvent(std::string name, EventPtr event);
-			template<class T>
-			std::pair<unsigned int, bool> AddEventHandler(std::string eventName, const T &callback);
+			template<class E>
+			bool AddEvent(std::string name);
+			template<class C>
+			std::pair<unsigned int, bool> AddEventHandler(std::string eventName, const C &callback);
 			template <class... ArgTypes>
 			void DispatchEvent(std::string name, ArgTypes... args);
 

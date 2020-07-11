@@ -34,11 +34,13 @@ namespace Neon {
 			inline const glm::vec3& GetDirection() const { return m_dir; }
 			inline const glm::mat4& GetProjection() const { return m_projection; }
 			inline const glm::mat4& GetViewMatrix() const { return m_lookat; }
-			const glm::mat4& GetViewProjection() const;
+			const glm::mat4& GetViewProjection();
 
 			/* Setters */
-			void SetPosition(const glm::vec3& n_pos);
 			void SetLookAt(const glm::vec3& n_pos);
+			void SetPitch(const float pitch) { m_pitch = pitch; }
+			void SetPosition(const glm::vec3& n_pos);
+			void SetYaw(const float yaw) { m_yaw = yaw; }
 
 			/* Mutators */
 			void RotateYaw(float angle);
@@ -55,11 +57,11 @@ namespace Neon {
 		private:
 			float m_yaw;
 			float m_pitch;
-			glm::vec3 m_lookatPos;
 			glm::vec3 m_dir;
 			glm::vec3 m_pos;
 			glm::vec3 m_forward;
 			glm::vec3 m_up;
+			glm::mat4 m_viewProjection;
 			glm::mat4 m_projection;
 			glm::mat4 m_lookat;
 	};

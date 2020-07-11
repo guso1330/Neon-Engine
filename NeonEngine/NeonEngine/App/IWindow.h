@@ -3,7 +3,6 @@
 #include "Core/Core.h"
 
 #include "App/Input/Input.h"
-#include "Core/Events/EventManager.h"
 #include "Core/Events/EventTypes.h"
 
 namespace Neon {

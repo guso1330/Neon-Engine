@@ -58,6 +58,13 @@ target_link_libraries(${PROJECT_NAME} "spdlog" ${DSPDLOG_COMPILED_LIB})
 target_include_directories(${PROJECT_NAME} PUBLIC ${LIB_DIR}/glm)
 target_include_directories(${PROJECT_NAME} PUBLIC ${LIB_DIR}/stb_image)
 
+# EventSystem
+set(EVENTSYSTEM_DIR "${LIB_DIR}/EventSystem")
+set(EVENT_SYSTEM_BUILD_MAIN OFF CACHE INTERNAL "Build the EventSystem main")
+add_subdirectory(${EVENTSYSTEM_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC "${EVENTSYSTEM_DIR}/include")
+target_link_libraries(${PROJECT_NAME} "EventSystemLib")
+
 # imgui
 set(IMGUI_DIR "${LIB_DIR}/imgui")
 file(GLOB IMGUI_FILES 
@@ -99,6 +106,7 @@ MESSAGE(STATUS "IMGUI_DIR: " ${IMGUI_DIR})
 MESSAGE(STATUS "GLFW_DIR: " ${GLFW_DIR})
 MESSAGE(STATUS "GLAD_DIR: " ${GLAD_DIR})
 MESSAGE(STATUS "SPDLOG_DIR: " ${SPDLOG_DIR})
+MESSAGE(STATUS "EVENTSYSTEM_DIR: " ${EVENTSYSTEM_DIR})
 MESSAGE(STATUS "GOOGLETEST_DIR: " ${GOOGLETEST_DIR})
 MESSAGE(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 MESSAGE(STATUS "SRC_DIR:" ${SRC_DIR})

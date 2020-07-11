@@ -16,6 +16,7 @@ namespace Neon {
 		nearPlane = settings.nearPlane;
 		farPlane = settings.farPlane;
 
+		m_viewProjection = glm::mat4(1.0f);
 		m_projection = glm::ortho(left, right, bottom, top, nearPlane, farPlane);
 		m_pos = settings.position;
 
@@ -35,6 +36,7 @@ namespace Neon {
 		nearPlane = settings.nearPlane;
 		farPlane = settings.farPlane;
 
+		m_viewProjection = glm::mat4(1.0f);
 		m_projection = glm::perspective(glm::radians(fov), aspect, nearPlane, farPlane);
 		m_pos = settings.position;
 
@@ -44,20 +46,19 @@ namespace Neon {
 	}
 
 	void Camera::Initialize() {
-		m_forward = glm::vec3(0, 0, 1);
-		m_dir = glm::vec3(0, 0, 1);
-		m_up = glm::vec3(0.0f, 1.0f, 0.0f);
-		m_lookat = glm::lookAt(m_pos, m_pos + m_dir, m_up);
-		m_yaw = 0.0f;
+		m_forward = glm::vec3(0, 0, -1.0f);
+		m_dir = glm::vec3(0, 0, -1.0f);
+		m_up = glm::vec3(0, 1.0f, 0);
+		m_yaw = -90.0f;
 		m_pitch = 0.0f;
+		SetLookAt(m_pos - m_dir);
 	}
 
 	/* Getters */
 	// TODO: Modify the way that this ViewProjection Matrix is calculated
-	const glm::mat4& Camera::GetViewProjection() const {
-		glm::mat4 result;
-		result = m_projection * m_lookat;
-		return result;
+	const glm::mat4& Camera::GetViewProjection() {
+		m_viewProjection = glm::mat4(m_projection * m_lookat);
+		return m_viewProjection;
 	}
 
 	/* Setters */
@@ -75,15 +76,7 @@ namespace Neon {
 	}
 
 	void Camera::RotatePitch(float angle) {
-		const float limit = 89.0 * glm::pi<float>() / 180.0;
-
 		m_pitch += angle;
-
-		if(m_pitch < -limit)
-			m_pitch = -limit;
-
-		if(m_pitch > limit)
-			m_pitch = limit;
 	}
 
 	void Camera::Rotate(float angle) { // General rotate
@@ -96,10 +89,14 @@ namespace Neon {
 	}
 
 	void Camera::Update() {
-		m_dir.x = glm::sin(m_yaw) * glm::cos(m_pitch);
-		m_dir.y = glm::sin(m_pitch);
-		m_dir.z = glm::cos(m_yaw) * glm::cos(m_pitch);
+		glm::vec3 new_dir;
 
-		m_lookat = glm::lookAt(m_pos, m_pos + m_dir, m_up);
+		m_dir.x = glm::cos(glm::radians(m_yaw)) * glm::cos(glm::radians(m_pitch));
+		m_dir.y = glm::sin(glm::radians(m_pitch));
+		m_dir.z = glm::sin(glm::radians(m_yaw)) * glm::cos(glm::radians(m_pitch));
+
+		new_dir = m_pos + glm::normalize(m_dir);
+
+		SetLookAt(new_dir);
 	}
 }

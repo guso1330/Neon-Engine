@@ -1,9 +1,7 @@
 #pragma once
 
 /* Core */
-// #include "Core/Events/EventManager.h"
-// #include "Core/Events/EventTypes.h"
-// #include "Core/ECS/ECSManager.h"
+#include "Core/ECS/ECSManager.h"
 
 /* Base ECS */
 #include "BaseECS/CameraComponent.h"

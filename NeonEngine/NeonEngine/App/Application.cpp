@@ -70,6 +70,7 @@ namespace Neon {
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(elapsed_time);
 
+			// Update ImGui layers
 			m_ImGuiLayer->Begin();
 			for(Layer* layer : m_LayerStack)
 				layer->OnUpdateImGui(elapsed_time);

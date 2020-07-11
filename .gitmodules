@@ -22,3 +22,6 @@
 [submodule "NeonEngine/Dependencies/imgui"]
 	path = NeonEngine/Dependencies/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "NeonEngine/Dependencies/EventSystem"]
+	path = NeonEngine/Dependencies/EventSystem
+	url = https://github.com/guso1330/EventSystem.git

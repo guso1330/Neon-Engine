@@ -1,5 +1,6 @@
 #include "Core/Platforms/MacOS/MacOSWindow.h"
 #include "Core/Platforms/OpenGL/OpenGLContext.h"
+#include "EventSystem/EventSystem.h"
 
 /*
 	TODO:
@@ -66,7 +67,12 @@ namespace Neon {
 					- Set all callbacks
 				*/
 				glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* glfwWindow, int width, int height) {
-					EventManager::GetInstance().DispatchEvent(NEON_EVENT_WINDOW_RESIZE, width, height);
+					WindowResizeEvent event = EventSystem::EventManager::GetInstance().CreateEvent<WindowResizeEvent>();
+
+					event.height = (unsigned int)height;
+					event.width = (unsigned int)width;
+
+					EventSystem::EventManager::GetInstance().DispatchEvent(NEON_WINDOW_RESIZE_EVENT, (const WindowResizeEvent&)event);
 				});
 
 				glfwSetKeyCallback(m_Window, [](GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
@@ -105,13 +111,17 @@ namespace Neon {
 
 	void MacOSWindow::InitEvents() {
 		/* WindowResize Event */
-		EventManager::GetInstance().AddEventHandler(NEON_EVENT_WINDOW_RESIZE, WindowResizeCallback(
-			[](unsigned int width, unsigned int height) {
-				GLFW::GLFWContext::GetInstance().SetWindowDimensions(width, height);
-				OpenGL::OpenGLContext::GetInstance().ResizeViewport(width, height);
-				NE_CORE_INFO("WindowResize Event: Resize occurred {}, {}", width, height);
-			}
-		));
+		EventSystem::EventManager::GetInstance().AddEventListener<const WindowResizeEvent&>(NEON_WINDOW_RESIZE_EVENT, [](const WindowResizeEvent& event) {
+			unsigned int height, width;
+
+			height = event.height;
+			width = event.width;
+
+			// TODO: Fix the resizing issues with the window
+			GLFW::GLFWContext::GetInstance().SetWindowDimensions(width, height);
+			OpenGL::OpenGLContext::GetInstance().ResizeViewport(width, height);
+			NE_CORE_INFO("WindowResize Event: Resize occurred {}, {}", width, height);
+		});
 	}
 
 	/* Public Methods */
@@ -138,8 +148,8 @@ namespace Neon {
 	}
 
 	void MacOSWindow::SetFullscreen(bool isFullscreen) {
-		m_isFullscreen = isFullscreen;
 		// TODO: set up full screen window
+		m_isFullscreen = isFullscreen;
 	}
 
 	void MacOSWindow::SetVSync(bool enabled) {

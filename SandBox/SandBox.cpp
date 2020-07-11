@@ -1,4 +1,5 @@
 #include "NeonEngine/NeonEngine.h"
+#include "EventSystem/EventSystem.h"
 
 bool show_another_window = false;
 
@@ -30,46 +31,66 @@ auto MoveCameraFunc = [](Neon::Camera& camera, Neon::Input* inputManager, float&
 	}
 
 	if(inputManager->IsKeyDown(GLFW_KEY_W) || inputManager->IsKeyDown(GLFW_KEY_S)) {
-		float lx = glm::sin(camera.GetYaw())*glm::cos(camera.GetPitch());
-		float ly = glm::sin(camera.GetPitch());
-		float lz = glm::cos(camera.GetYaw())*glm::cos(camera.GetPitch());
+		float lx = glm::cos(glm::radians(camera.GetYaw())) * glm::cos(glm::radians(camera.GetPitch()));
+		float ly = glm::sin(glm::radians(camera.GetPitch()));
+		float lz = glm::sin(glm::radians(camera.GetYaw())) * glm::cos(glm::radians(camera.GetPitch()));
 
 		if(inputManager->IsKeyDown(GLFW_KEY_S)) {
-			position.x = position.x + (-camera_speed*lx);
-			position.y = position.y + (-camera_speed*ly);
-			position.z = position.z + (-camera_speed*lz);
+			position.x = position.x + camera_speed * lx;
+			position.y = position.y + camera_speed * ly;
+			position.z = position.z + camera_speed * lz;
 		} else {
-			position.x = position.x + camera_speed*lx;
-			position.y = position.y + camera_speed*ly;
-			position.z = position.z + camera_speed*lz;
+			position.x = position.x + (-camera_speed * lx);
+			position.y = position.y + (-camera_speed * ly);
+			position.z = position.z + (-camera_speed * lz);
 		}
 	}
 
 	if(inputManager->IsKeyDown(GLFW_KEY_A) || inputManager->IsKeyDown(GLFW_KEY_D)) {
 		if(inputManager->IsKeyDown(GLFW_KEY_A)) {				
-			position += glm::cross(camera.GetRelativeUp(), camera.GetDirection()) * camera_speed;
+			position += glm::cross(camera.GetRelativeUp(), camera.GetDirection()) * -camera_speed;
 			
 		} else {
-			position += glm::cross(camera.GetRelativeUp(), camera.GetDirection()) * -camera_speed;
+			position += glm::cross(camera.GetRelativeUp(), camera.GetDirection()) * camera_speed;
 		}
 	}
 
 	camera.SetPosition(position);
 };
 
-auto MoveCameraAroundFunc = [](Neon::IWindow* window, Neon::Camera* camera, int x, int y, float camera_rotate_speed) {
-	int dx = x - WIDTH/2,
-		dy = y - HEIGHT/2;
+auto MoveCameraAroundFunc = [](Neon::IWindow* window, Neon::Camera& camera, double x, double y, float sensitivity) {
+	static bool isFirstMouseMove = true;
+	static double lastX, lastY;
+	float pitch;
+	int dx, dy;
 
-	if(dx) { // get rotation in the x direction
-		camera->RotateYaw(-camera_rotate_speed * dx);
-	}
-	if(dy) {
-		camera->RotatePitch(-camera_rotate_speed * dy);
+	glfwSetInputMode((GLFWwindow*)Neon::Application::GetInstance().GetWindow()->GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	if (isFirstMouseMove) {
+		lastX = x;
+		lastY = y;
+		isFirstMouseMove = false;
 	}
 
-	camera->Update();
-	glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetNativeWindow()), WIDTH/2, HEIGHT/2);
+	dx = x - lastX;
+	dy = lastY - y;
+	lastX = x;
+	lastY = y;
+
+	pitch = camera.GetPitch();
+
+	if (pitch > 89.0f || pitch < -89.0f) {
+		if(pitch > 89.0f)
+			pitch = 89.0f;
+		if(pitch < -89.0f)
+			pitch = -89.0f;
+
+		camera.SetPitch(pitch);
+	} else {
+		camera.RotatePitch(sensitivity * dy);
+	}
+
+	camera.RotateYaw(sensitivity * dx);
 };
 
 class RenderLayer : public Neon::Layer {
@@ -82,14 +103,36 @@ class RenderLayer : public Neon::Layer {
 
 		virtual void OnAttach() override {
 			float vertices[] = {
-				 1.0f,  1.0f, 0.0f,  // top right
-				 1.0f, -1.0f, 0.0f,  // bottom right
-				-1.0f, -1.0f, 0.0f,  // bottom left
-				-1.0f,  1.0f, 0.0f   // top left
+				// front
+				-1.0, -1.0,  1.0,
+				 1.0, -1.0,  1.0,
+				 1.0,  1.0,  1.0,
+				-1.0,  1.0,  1.0,
+				// back
+				-1.0, -1.0, -1.0,
+				 1.0, -1.0, -1.0,
+				 1.0,  1.0, -1.0,
+				-1.0,  1.0, -1.0
 			};
 			unsigned int indices[] = {  // note that we start from 0!
-				0, 1, 3, // first triangle
-				1, 2, 3  // second triangle
+				// front
+				0, 1, 2,
+				2, 3, 0,
+				// right
+				1, 5, 6,
+				6, 2, 1,
+				// back
+				7, 6, 5,
+				5, 4, 7,
+				// left
+				4, 0, 3,
+				3, 7, 4,
+				// bottom
+				4, 5, 1,
+				1, 0, 4,
+				// top
+				3, 2, 6,
+				6, 7, 3
 			};
 			Neon::BufferLayout layout_2d = {
 				{ "vPosition", Neon::ShaderDataType::FLOAT3 }
@@ -107,7 +150,7 @@ class RenderLayer : public Neon::Layer {
 			));
 			n_ibo = std::shared_ptr<Neon::IIndexBuffer>(Neon::IIndexBuffer::Create(
 				&indices[0],
-				6
+				6 * 6
 			));
 
 			p_vao->AttachVertexBuffer(n_vbo);
@@ -126,11 +169,24 @@ class RenderLayer : public Neon::Layer {
 			camSettings.nearPlane = 0.01f;
 			camSettings.farPlane = 1000.0f;
 			m_camera.Init(camSettings);
+
+			EventSystem::EventManager::GetInstance().AddEventListener<const Neon::KeyPressEvent&>(NEON_KEY_PRESS_EVENT, [this](const Neon::KeyPressEvent& event) {
+				if (event.key == GLFW_KEY_ESCAPE) {
+					Neon::Application::GetInstance().GetWindow()->Close();
+				}
+			});
 		}
 
 		virtual void OnUpdate(Neon::Timestep ts) override {
 			Neon::RenderMatrices mats;
-			m_camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
+
+			MoveCameraAroundFunc(
+				Neon::Application::GetInstance().GetWindow(),
+				m_camera,
+				(double)Neon::Application::GetInstance().GetWindow()->GetInput()->GetCursorPosition().x,
+				(double)Neon::Application::GetInstance().GetWindow()->GetInput()->GetCursorPosition().y,
+				0.1f
+			);
 
 			MoveCameraFunc(
 				m_camera,
@@ -140,6 +196,8 @@ class RenderLayer : public Neon::Layer {
 				5.0f,
 				ts
 			);
+
+			m_camera.Update();
 
 			mats.transform = glm::mat4(1.0f);
 			mats.viewProjection = m_camera.GetViewProjection();

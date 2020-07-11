@@ -2,7 +2,6 @@
 
 #include "Core/Time/Timer.h"
 #include "Core/ECS/ECSManager.h"
-#include "Core/Events/EventManager.h"
 #include "Graphics/Layers/LayerStack.h"
 #include "ImGui/ImGuiLayer.h"
 #include "App/IWindow.h"

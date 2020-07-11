@@ -1,5 +1,7 @@
 #include "./uniformBuffer.h"
 
+#include "Core/Platforms/OpenGL/GLHelpers.h" // includes glad.h
+
 namespace Neon { namespace OpenGL {	
 	UniformBuffer::UniformBuffer() {
 		GL_Call(glGenBuffers(1, &m_ubo));

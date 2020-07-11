@@ -1,5 +1,6 @@
 #include "renderableCollection.h"
-#include <math.h>
+#include "nepch.h"
+#include "Core/Platforms/OpenGL/GLHelpers.h" // includes glad.h
 
 namespace Neon {
 	RenderableCollection::RenderableCollection(Renderable3d *renderable, Program *program) :

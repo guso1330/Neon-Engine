@@ -1,6 +1,7 @@
 #include "./VertexArray.h"
 
 #include "nepch.h"
+#include "Core/Platforms/OpenGL/GLHelpers.h" // includes glad.h
 
 namespace Neon { namespace OpenGL {
 	VertexArray::VertexArray() {
@@ -37,7 +38,8 @@ namespace Neon { namespace OpenGL {
 				i,
 				element.GetComponentCount(),
 				ConvertShaderDataTypeToOpenGLType(element.type),
-				element.normalized, layout.GetStride(),
+				element.normalized ? GL_TRUE : GL_FALSE,
+				layout.GetStride(),
 				(const void*)(element.offset)
 			));
 		}

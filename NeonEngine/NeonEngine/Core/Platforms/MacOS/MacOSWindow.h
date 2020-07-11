@@ -10,6 +10,13 @@ namespace Neon {
 			MacOSWindow(std::string title, unsigned int width, unsigned int height, bool fullscreen);
 			~MacOSWindow();
 
+		private:
+			void RunInit();
+			bool Init();
+			void InitEvents();
+
+		public:
+			/* Public Methods */
 			void Update() override;
 			void Close() override;
 
@@ -26,11 +33,6 @@ namespace Neon {
 			void SetVSync(bool enabled) override;
 			void SetTitle(const std::string& title) override;
 			void SetInputMode(int mode, int value) override;
-
-		private:
-			void RunInit();
-			bool Init();
-			void InitEvents();
 
 		private:
 			unsigned int m_width;

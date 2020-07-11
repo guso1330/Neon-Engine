@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.9.1)
 project(SandBox VERSION 0.0.1 DESCRIPTION "NeonEngine SandBox Application")
 
 # Source files
-file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/*.cpp)
+file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/**.cpp)
 
 # Executable definition and properties
 add_executable(${PROJECT_NAME} ${SRC_FILES})

@@ -4,16 +4,14 @@
 #include "Core/Types/Singleton.h"
 #include "Graphics/Renderers/IGraphicContext.h"
 #include "Graphics/Renderers/IRendererAPI.h"
-#include "Core/Platforms/OpenGL/GL_Error.h"
 #include "Core/Platforms/OpenGL/VertexBuffer.h"
-#include "Core/Platforms/OpenGL/VertexArray.h"
 #include "Core/Platforms/OpenGL/IndexBuffer.h"
+#include "Core/Platforms/OpenGL/VertexArray.h"
 #include "Core/Platforms/OpenGL/uniformBuffer.h"
 #include "Core/Platforms/OpenGL/Shader.h"
 #include "Core/Platforms/OpenGL/Program.h"
 #include "Core/Platforms/OpenGL/Texture.h"
 
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
@@ -24,15 +22,17 @@ namespace Neon { namespace OpenGL {
 		public IRendererAPI
 	{
 		typedef std::unordered_map<unsigned int, std::shared_ptr<VertexArray> > VertexArrayMap;
-		typedef std::unordered_map<unsigned int, UniformBuffer*> UniformBufferMap;
+		typedef std::unordered_map<unsigned int, std::shared_ptr<UniformBuffer>> UniformBufferMap;
 		typedef std::unordered_map<unsigned int, std::shared_ptr<Shader> > ShaderMap;
 		typedef std::unordered_map<unsigned int, std::shared_ptr<Program> > ProgramMap;
 		typedef std::unordered_map<unsigned int, std::shared_ptr<Texture> > TextureMap;
 
 		public:
 			/* Methods */
+			virtual void ResizeViewport(const unsigned int width, const unsigned int height) override;
+			void ResizeViewport(const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height);
 			virtual void Clear() override;
-			virtual void DrawIndexed(const std::shared_ptr<IVertexArray>& vao) override;
+			virtual void DrawIndexed(IVertexArray* vao) override;
 			void DrawIndexed(const unsigned int vao_id, unsigned int num_elements, unsigned int draw_mode);
 			void UpdateUbo(unsigned int ubo_id, const void* data, size_t data_size);
 

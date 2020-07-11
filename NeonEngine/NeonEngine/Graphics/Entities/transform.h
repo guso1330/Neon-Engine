@@ -12,14 +12,14 @@ namespace Neon {
 			~Transform();
 		
 		public:
-			// Getters
-			inline const glm::mat4 &GetModelMatrix() const { return m_modelMatrix; }
-			inline const glm::vec3 &GetPosition() const { return m_position; }
-			inline const glm::vec3 &GetRotation() const { return m_rotation; }
-			inline const glm::vec3 &GetScale() const { return m_scale; }
+			/* Getters */
+			inline const glm::mat4& GetModelMatrix() const { return m_modelMatrix; }
+			inline const glm::vec3& GetPosition() const { return m_position; }
+			inline const glm::vec3& GetRotation() const { return m_rotation; }
+			inline const glm::vec3& GetScale() const { return m_scale; }
 
 
-			// Setters
+			/* Setters */
 			inline void SetModelMatrix(const glm::mat4 &n_modelMatrix) { m_modelMatrix = n_modelMatrix; }
 			void SetPosition(const glm::vec3 &n_pos);
 			void SetScale(const glm::vec3 &n_scale);

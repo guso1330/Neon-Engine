@@ -6,6 +6,7 @@ namespace Neon { namespace ECS {
 			ECSMemory::EntityPool.Init<Entity>(entityPoolSize, alignof(Entity)) &&
 			ECSMemory::SystemPool.Init<ISystem>(systemPoolSize, alignof(ISystem))
 		) {
+			CreateSystem<CameraSystem>()->Init();
 			return true;
 		}
 

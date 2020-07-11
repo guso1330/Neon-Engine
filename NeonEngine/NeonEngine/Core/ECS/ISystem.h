@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Core/Memory/IAllocator.h"
 #include "Core/Time/Timer.h"
 #include "Core/ECS/ECSTypes.h"
+#include "Core/Core.h"
 
 namespace Neon { namespace ECS {
 	struct ISystem {

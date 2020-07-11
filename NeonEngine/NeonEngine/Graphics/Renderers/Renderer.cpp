@@ -51,14 +51,15 @@ namespace Neon {
 		GetRendererAPIInstance().Clear();
 	}
 
-	void Renderer::Submit(std::shared_ptr<IVertexArray>& va, std::shared_ptr<IProgram>& program, const RenderMatrices& mats) {
+	void Renderer::Submit(IVertexArray* va, IProgram* program, RenderMatrices& mats) {
 		program->Bind();
 		va->Bind();
-		program->SetFloat4("vcolor", glm::vec4(1.0f));
-		program->SetMat4("model", mats.transform);
-		program->SetMat4("matrices.view_projection", mats.viewProjection);
 		GetRendererAPIInstance().DrawIndexed(va);
 		va->Unbind();
 		program->Unbind();
+	}
+
+	void Renderer::Flush() {
+		
 	}
 }

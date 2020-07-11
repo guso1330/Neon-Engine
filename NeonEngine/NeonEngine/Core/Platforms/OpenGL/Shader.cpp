@@ -1,6 +1,7 @@
 #include "Core/Core.h"
 #include "Core/Platforms/OpenGL/Shader.h"
 
+#include "Core/Platforms/OpenGL/GLHelpers.h"
 #include "Utils/FileUtils/FileUtils.h"
 
 namespace Neon { namespace OpenGL {	

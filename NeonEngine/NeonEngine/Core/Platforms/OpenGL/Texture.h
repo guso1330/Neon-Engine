@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Graphics/Renderers/ITexture.h"
-#include "Core/Platforms/OpenGL/GL_Error.h"
 
-#include <glad/glad.h>
 #include <string>
 
 using namespace std;

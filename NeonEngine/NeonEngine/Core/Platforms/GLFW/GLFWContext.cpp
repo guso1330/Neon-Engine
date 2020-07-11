@@ -18,7 +18,7 @@ namespace Neon { namespace GLFW {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		#ifdef NE_PLATFORM_MACOS // handle mac compatibility
 			NE_CORE_WARN("GLFW: Setting MacOS forward compatibility");
-			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
 		#endif
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_SAMPLES, 4);
@@ -83,7 +83,7 @@ namespace Neon { namespace GLFW {
 		}
 	}
 
-	void GLFWContext::SetWindowDimensions(int width, int height) {
+	void GLFWContext::SetWindowDimensions(unsigned int width, unsigned int height) {
 		glfwSetWindowSize(glfwGetCurrentContext(), width, height);
 	}
 

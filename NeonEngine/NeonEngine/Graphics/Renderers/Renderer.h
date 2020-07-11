@@ -9,8 +9,8 @@
 
 namespace Neon {
 	struct RenderMatrices {
-		glm::mat4 transform;
-		glm::mat4 viewProjection;
+		glm::mat4 transform = glm::mat4();
+		glm::mat4 viewProjection = glm::mat4();
 	};
 
 	class Renderer : public Singleton {
@@ -18,7 +18,8 @@ namespace Neon {
 			/* Methods */
 			bool Init();
 			void Clear() const;
-			void Submit(std::shared_ptr<IVertexArray>& va, std::shared_ptr<IProgram>& program, const RenderMatrices& mats);
+			void Submit(IVertexArray* va, IProgram* program, RenderMatrices& mats);
+			void Flush();
 
 			/* Getters */
 			static Renderer& GetInstance();

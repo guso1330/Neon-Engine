@@ -1,6 +1,7 @@
 #include "Core/Platforms/OpenGL/OpenGLContext.h"
 
 #include "nepch.h"
+#include "Core/Platforms/OpenGL/GLHelpers.h" // includes glad.h
 
 namespace Neon { namespace OpenGL {
 	bool OpenGLContext::s_initialized = false;
@@ -30,15 +31,31 @@ namespace Neon { namespace OpenGL {
 		m_currentProgram = 0;
 
 		// OpenGL Setting
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
-		glEnable(GL_CULL_FACE);
-		glClearDepth(1.0f);
+		// TODO: wrap these functions in GL_Call
+		GL_Call(glEnable(GL_DEPTH_TEST));
+		GL_Call(glDepthFunc(GL_LEQUAL));
+		GL_Call(glClearDepth(1.0f));
+		GL_Call(glEnable(GL_CULL_FACE));
+		GL_Call(glCullFace(GL_BACK));
+		GL_Call(glFrontFace(GL_CW));
 
 		return true;
 	}
 
-	void OpenGLContext::DrawIndexed(const std::shared_ptr<IVertexArray>& vao) {
+	void OpenGLContext::ResizeViewport(const unsigned int width, const unsigned int height) {
+		GL_Call(glViewport(0, 0, width, height));
+	}
+
+	void OpenGLContext::ResizeViewport(const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height) {
+		GL_Call(glViewport(x, y, width, height));
+	}
+
+	void OpenGLContext::Clear() {
+		GL_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+		GL_Call(glFlush());
+	}
+
+ 	void OpenGLContext::DrawIndexed(IVertexArray* vao) {
 		GL_Call(glDrawElements(GL_TRIANGLES, vao->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, NULL));
 	}
 
@@ -53,11 +70,6 @@ namespace Neon { namespace OpenGL {
 
 			GL_Call(glDrawElements(draw_mode, num_elements, GL_UNSIGNED_INT, NULL));
 		}
-	}
-
-	void OpenGLContext::Clear() {
-		GL_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-		GL_Call(glFlush());
 	}
 
 	/********************/
@@ -120,7 +132,7 @@ namespace Neon { namespace OpenGL {
 	}
 
 	unsigned int OpenGLContext::CreateUniformBuffer(const void* data, size_t data_size, BufferUsage usage) {
-		UniformBuffer* ubo = new UniformBuffer();
+		std::shared_ptr<UniformBuffer> ubo;
 		unsigned int ubo_id = ubo->GetUbo();
 
 		m_uniformBufferMap.insert(std::make_pair(ubo_id, ubo));

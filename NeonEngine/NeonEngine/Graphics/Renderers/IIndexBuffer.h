@@ -1,5 +1,7 @@
 #pragma once
 
+#include "nepch.h"
+
 namespace Neon {
 	class IIndexBuffer {
 		public:

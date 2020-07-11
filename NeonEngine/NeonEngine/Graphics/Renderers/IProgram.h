@@ -17,10 +17,12 @@ namespace Neon {
 			virtual const std::string GetName() const = 0;
 
 			/* Setters */
-			virtual void SetInt(const std::string& name, int value) = 0;
-			virtual void SetFloat3(const std::string& name, const glm::vec3& value) = 0;
-			virtual void SetFloat4(const std::string& name, const glm::vec4& value) = 0;
-			virtual void SetMat4(const std::string& name, const glm::mat4& value) = 0;
+			virtual void SetInt(const std::string& name, const int value) = 0;
+			virtual void SetFloat(const std::string& name, const float value) = 0;
+			virtual void SetFloat2(const std::string& name, const glm::vec2& v2) = 0;
+			virtual void SetFloat3(const std::string& name, const glm::vec3& v3) = 0;
+			virtual void SetFloat4(const std::string& name, const glm::vec4& v4) = 0;
+			virtual void SetMat4(const std::string& name, const glm::mat4& mat4) = 0;
 
 			static IProgram* Create(const std::string& name, const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
 	};

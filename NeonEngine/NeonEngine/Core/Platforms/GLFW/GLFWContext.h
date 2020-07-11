@@ -11,7 +11,6 @@
 #include "Core/Types/Singleton.h"
 #include "nepch.h"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #ifdef NE_PLATFORM_WIN64
@@ -37,7 +36,7 @@ namespace Neon { namespace GLFW {
 
 	class GLFWContext : public Singleton {
 		public:
-			/* Implementation functions */
+			/* Public Members */
 			bool CreateContext();
 			GLFWwindow* CreateWindow(
 				const GLFWwindowSettings& settings = GLFWwindowSettings(),
@@ -55,7 +54,7 @@ namespace Neon { namespace GLFW {
 			/* Setters */
 			void SetWindowHint(int hint, int value);
 			void SetVSync(bool enabled);
-			void SetWindowDimensions(int width, int height);
+			void SetWindowDimensions(unsigned int width, unsigned int height);
 			void SetTitle(const char* title);
 			void SetInputMode(int mode, int value);
 

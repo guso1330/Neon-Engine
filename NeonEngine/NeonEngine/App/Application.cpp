@@ -1,6 +1,7 @@
 #include "App/Application.h"
-#include "Graphics/Renderers/Renderer.h"
+
 #include "Core/Platforms/Platforms.h"
+#include "Graphics/Renderers/Renderer.h"
 
 #include "nepch.h"
 
@@ -36,6 +37,10 @@ namespace Neon {
 			m_initialized = true;
 			s_Instance = this;
 		}
+
+		// Push default imgui layer
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	void Application::PushLayer(Layer* layer) {
@@ -55,6 +60,9 @@ namespace Neon {
 		while (m_isRunning && !m_pWindow->isClosed()) {
 			elapsed_time = m_Timer.GetElapsedTime();
 
+			// Clear Renderer
+			Renderer::GetInstance().Clear();
+
 			// Update ECS Systems
 			ECSManager::GetInstance().Update(elapsed_time);
 
@@ -62,11 +70,19 @@ namespace Neon {
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(elapsed_time);
 
+			// Update ImGui layers
+			m_ImGuiLayer->Begin();
+			for(Layer* layer : m_LayerStack)
+				layer->OnUpdateImGui(elapsed_time);
+			m_ImGuiLayer->End();
+
 			// Update application
 			Update(elapsed_time);
 
 			// Update window
 			m_pWindow->Update();
+
+			Renderer::GetInstance().Flush();
 
 			m_Timer.Tick();
 		}

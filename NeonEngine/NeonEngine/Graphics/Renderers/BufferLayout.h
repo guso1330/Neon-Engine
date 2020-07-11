@@ -73,12 +73,6 @@ namespace Neon {
 			normalized(n_normalized)
 		{}
 
-		std::string name;
-		ShaderDataType type;
-		uint32_t size;
-		uint32_t offset;
-		bool normalized;
-
 		uint32_t GetComponentCount() const {
 			switch (type) {
 				case ShaderDataType::BOOL:   return 1;
@@ -102,6 +96,12 @@ namespace Neon {
 			NE_CORE_ASSERT(false, "BufferLayout (GetComponentCount): Type submitted isn't defined");
 			return 0;
 		}
+
+		bool normalized;
+		uint32_t size;
+		uint32_t offset;
+		ShaderDataType type;
+		std::string name;
 	};
 
 	/* 

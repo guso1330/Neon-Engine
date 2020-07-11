@@ -2,8 +2,8 @@
 
 #include "Core/Time/Timer.h"
 #include "Core/ECS/ECSManager.h"
-#include "Core/Events/EventManager.h"
-#include "Graphics/Layers/layerStack.h"
+#include "Graphics/Layers/LayerStack.h"
+#include "ImGui/ImGuiLayer.h"
 #include "App/IWindow.h"
 
 /*
@@ -23,13 +23,12 @@ namespace Neon {
 
 			/* Getters */
 			inline IWindow* GetWindow() { return m_pWindow.get(); }
-			inline static Application& Get() { return *s_Instance; }
+			inline static Application& GetInstance() { return *s_Instance; }
 
 			/* Public Methods */
 			virtual bool Init() = 0;
 			void Run();
 			virtual void Update(Timestep ts) = 0;
-			// Layer Functions
 			void PushLayer(Layer* layer);
 			void PushOverlay(Layer* overlay);
 
@@ -40,6 +39,7 @@ namespace Neon {
 			bool m_initialized;
 			bool m_isRunning;
 			Timer m_Timer;
+			ImGuiLayer* m_ImGuiLayer;
 			std::unique_ptr<IWindow> m_pWindow;
 			LayerStack m_LayerStack;
 

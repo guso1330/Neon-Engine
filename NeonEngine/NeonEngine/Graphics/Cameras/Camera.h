@@ -59,7 +59,6 @@ namespace Neon {
 			float m_pitch;
 			glm::vec3 m_dir;
 			glm::vec3 m_pos;
-			glm::vec3 m_forward;
 			glm::vec3 m_up;
 			glm::mat4 m_viewProjection;
 			glm::mat4 m_projection;

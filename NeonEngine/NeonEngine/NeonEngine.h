@@ -6,7 +6,7 @@
 /* Base ECS */
 #include "BaseECS/CameraComponent.h"
 #include "BaseECS/TransformComponent.h"
-// #include "BaseECS/CameraSystem.h"
+#include "BaseECS/CameraSystem.h"
 
 /* Graphics */
 #include "Graphics/Renderers/Renderer.h"
@@ -15,7 +15,6 @@
 
 /* App */
 #include "App/Application.h"
-//#include "App/Input/Input.h"
 
 /* Utils */
 #include "Utils/Debug/logger.hpp"

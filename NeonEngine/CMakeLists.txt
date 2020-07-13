@@ -3,7 +3,7 @@
 
 # Project definition
 cmake_minimum_required(VERSION 3.9.1)
-project(NeonEngine_lib VERSION 0.0.1 DESCRIPTION "NeonEngine library")
+project(NeonEngineLib VERSION 0.0.1 DESCRIPTION "NeonEngine library")
 
 # Source files
 set(LIB_DIR "${PROJECT_SOURCE_DIR}/Dependencies")
@@ -15,7 +15,7 @@ file(GLOB_RECURSE HEADER_FILES "${SRC_DIR}/**.h*")
 file(GLOB_RECURSE TEST_FILES "${TEST_DIR}/**-test.cpp")
 
 # library
-add_library(${PROJECT_NAME} STATIC ${SRC_FILES}) # TODO: Add header files to add_library?
+add_library(${PROJECT_NAME} STATIC ${SRC_FILES})
 
 # Executable definition and properties
 target_include_directories(${PROJECT_NAME} PUBLIC "${SRC_DIR}")
@@ -91,14 +91,20 @@ target_link_libraries(${TEST_BINARY} gtest ${PROJECT_NAME})
 
 # google test
 set(GOOGLETEST_DIR "${LIB_DIR}/googletest")
+option(NEON_ENGINE_BUILD_DOCS "Build Neon Engine Docs" ON)
 add_subdirectory(${GOOGLETEST_DIR})
+
+# doxygen
+# TODO: Handle the installation of doxygen (should there be a bash file)?
+set(DOCS_DIR "${PROJECT_SOURCE_DIR}/Docs")
+add_subdirectory(${DOCS_DIR})
 
 # Printing
 MESSAGE(STATUS "===============================================================" )
 MESSAGE(STATUS "========================NEON ENGINE============================" )
 MESSAGE(STATUS "===============================================================" )
 MESSAGE(STATUS "						                                        " )
-MESSAGE(STATUS "                     Variable Paths                            " )
+MESSAGE(STATUS "                     Variable Paths                 " )
 MESSAGE(STATUS "						                                        " )
 MESSAGE(STATUS "LIB_DIR: " ${LIB_DIR})
 MESSAGE(STATUS "ASSIMP_DIR: " ${ASSIMP_DIR})
@@ -108,6 +114,7 @@ MESSAGE(STATUS "GLAD_DIR: " ${GLAD_DIR})
 MESSAGE(STATUS "SPDLOG_DIR: " ${SPDLOG_DIR})
 MESSAGE(STATUS "EVENTSYSTEM_DIR: " ${EVENTSYSTEM_DIR})
 MESSAGE(STATUS "GOOGLETEST_DIR: " ${GOOGLETEST_DIR})
+MESSAGE(STATUS "DOCS_DIR: " ${DOCS_DIR})
 MESSAGE(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 MESSAGE(STATUS "SRC_DIR:" ${SRC_DIR})
 MESSAGE(STATUS "TEST_DIR: ${TEST_DIR}")

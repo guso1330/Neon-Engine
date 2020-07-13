@@ -25,3 +25,6 @@
 [submodule "NeonEngine/Dependencies/EventSystem"]
 	path = NeonEngine/Dependencies/EventSystem
 	url = https://github.com/guso1330/EventSystem.git
+[submodule "NeonEngine/Dependencies/doxygen"]
+	path = NeonEngine/Dependencies/doxygen
+	url = https://github.com/doxygen/doxygen.git

@@ -46,7 +46,6 @@ namespace Neon {
 	}
 
 	void Camera::Initialize() {
-		m_forward = glm::vec3(0, 0, -1.0f);
 		m_dir = glm::vec3(0, 0, -1.0f);
 		m_up = glm::vec3(0, 1.0f, 0);
 		m_yaw = -90.0f;
@@ -84,7 +83,7 @@ namespace Neon {
 
 		glm::mat4 rotation = glm::rotate(angle, m_dir);
 
-		m_forward = glm::normalize(rotation * glm::vec4(m_forward, 0.0f));
+		m_dir = glm::normalize(rotation * glm::vec4(m_dir, 0.0f));
 		m_up = glm::normalize(rotation * UP);
 	}
 

@@ -8,7 +8,7 @@ file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/**.cpp)
 # Executable definition and properties
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
-target_link_libraries(${PROJECT_NAME} NeonEngine_lib)
+target_link_libraries(${PROJECT_NAME} NeonEngineLib)
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/NeonEngine")
 
